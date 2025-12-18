@@ -15,25 +15,22 @@
         .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: bold; cursor: pointer; border-radius: 40px; transition: all 0.3s; font-size: 0.9em;}
         .tab-btn.active { background: #E50914; color: white; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4); }
 
-        /* SALA DE VOZ (OTIMIZADA) */
+        /* SALA DE CINEMA (KOSMI) */
         #tab-call { display: none; width: 100%; height: 600px; background: #202225; border-radius: 20px; overflow: hidden; border: 1px solid #333; position: relative; }
         #tab-call.active { display: block; }
         
-        /* TRUQUE PARA FORÇAR GPU (EVITAR TRAVAMENTO) */
-        iframe { 
-            width: 100%; height: 100%; border: none; 
-            transform: translate3d(0, 0, 0); /* Força aceleração de hardware */
-            will-change: transform;
-        }
+        /* Ajuste para o Kosmi rodar liso */
+        iframe { width: 100%; height: 100%; border: none; }
         
-        /* Botão para abrir em tela cheia (Caso a internet esteja ruim) */
+        /* Botão para abrir em tela cheia (Recomendado para filmes) */
         .popout-btn {
             position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
-            background: #E50914; color: white; border: none;
-            padding: 8px 15px; border-radius: 20px; font-size: 0.85em; cursor: pointer;
+            background: #5865F2; color: white; border: none; /* Azul estilo Discord/Kosmi */
+            padding: 10px 20px; border-radius: 20px; font-size: 0.9em; cursor: pointer;
             z-index: 100; text-decoration: none; font-weight: bold;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             opacity: 0.9;
+            white-space: nowrap;
         }
 
         /* BUSCA */
@@ -104,18 +101,18 @@
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('todo')">Filmes</button>
             <button class="tab-btn" onclick="switchTab('watched')">Histórico</button>
-            <button class="tab-btn" onclick="switchTab('call')">📞 Sala de Voz</button>
+            <button class="tab-btn" onclick="switchTab('call')">🍿 Sala Cine</button>
         </div>
 
         <div id="tab-call">
             <iframe 
-                src="https://recriar.whereby.com/sabadinhob00e346b-2172-423e-9fe7-376c6189ffb9?minimal=on" 
-                allow="camera; microphone; fullscreen; display-capture; autoplay; encrypted-media; picture-in-picture"
+                src="https://kosmi.to/@leonardodia" 
+                allow="camera; microphone; fullscreen; display-capture; autoplay"
                 allowfullscreen>
             </iframe>
             
-            <a href="https://recriar.whereby.com/sabadinhob00e346b-2172-423e-9fe7-376c6189ffb9" target="_blank" class="popout-btn">
-                🎦 Abrir em Tela Cheia (Sem travar)
+            <a href="https://kosmi.to/@leonardodia" target="_blank" class="popout-btn">
+                🎦 Abrir Cinema Tela Cheia
             </a>
         </div>
 
