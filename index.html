@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cine Sábado 🍿</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src='https://meet.jit.si/external_api.js'></script>
-
     <style>
         body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #141414; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         h1 { color: #E50914; text-transform: uppercase; margin-bottom: 20px; font-size: 1.5em; text-align: center; }
@@ -17,27 +15,11 @@
         .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: bold; cursor: pointer; border-radius: 40px; transition: all 0.3s; font-size: 0.9em;}
         .tab-btn.active { background: #E50914; color: white; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4); }
 
-        /* SALA DE VOZ (ESTILO DISCORD) */
-        #tab-call { display: none; width: 100%; height: 500px; background: #202225; border-radius: 20px; overflow: hidden; border: 1px solid #333; position: relative; }
+        /* SALA DE VOZ (WHEREBY) */
+        #tab-call { display: none; width: 100%; height: 550px; background: #202225; border-radius: 20px; overflow: hidden; border: 1px solid #333; position: relative; }
         #tab-call.active { display: block; }
+        iframe { width: 100%; height: 100%; border: none; }
         
-        /* Onde o vídeo/audio vai aparecer */
-        #jitsi-container { width: 100%; height: 100%; background: #202225; }
-
-        /* Tela de "Entrar" */
-        #connect-screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: #2f3136; z-index: 10;
-        }
-        .discord-btn {
-            background: #5865F2; color: white; border: none; padding: 15px 30px;
-            border-radius: 5px; font-weight: bold; font-size: 1.1em; cursor: pointer;
-            display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 4px 0 #4752c4; transition: transform 0.1s;
-        }
-        .discord-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #4752c4; }
-
         /* BUSCA */
         .input-group { display: flex; gap: 10px; background: #2F2F2F; padding: 8px; border-radius: 50px; margin-bottom: 20px; position: relative; z-index: 20; }
         input { flex: 1; background: transparent; border: none; color: white; padding: 10px; font-size: 16px; outline: none; }
@@ -106,17 +88,19 @@
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('todo')">Filmes</button>
             <button class="tab-btn" onclick="switchTab('watched')">Histórico</button>
-            <button class="tab-btn" onclick="switchTab('call')">🔊 Sala de Voz</button>
+            <button class="tab-btn" onclick="switchTab('call')">📞 Sala de Voz</button>
         </div>
 
         <div id="tab-call">
-            <div id="connect-screen">
-                <div style="color:#aaa; margin-bottom:20px; font-weight:bold;">SALA: #GERAL (LÉO & EMI)</div>
-                <button class="discord-btn" onclick="startJitsiCall()">
-                    🔊 Conectar Áudio
-                </button>
-            </div>
-            <div id="jitsi-container"></div>
+            <iframe 
+                src="https://recriar.whereby.com/cinesabado-leod6403b02-3b77-42ad-bdf3-a297386291a6" 
+                allow="camera; microphone; fullscreen; display-capture"
+                allowfullscreen>
+            </iframe>
+            
+            <p style="text-align:center; color:#555; font-size:0.8em; margin-top:5px;">
+                Dica: Se a sala pedir permissão, clique em "Permitir".
+            </p>
         </div>
 
         <div class="input-group" id="searchBox">
@@ -138,9 +122,6 @@
         const NOME_1 = "LÉO";
         const NOME_2 = "EMI";
 
-        // Variável para guardar a ligação
-        let jitsiApi = null;
-
         window.addEventListener('load', async function() {
             if (typeof window.supabase === 'undefined') return alert("Erro: Supabase não carregou.");
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -161,34 +142,6 @@
                     document.getElementById('list-' + tabName).classList.add('active');
                     if (tabName === 'todo') document.getElementById('searchBox').style.display = 'flex';
                 }
-            }
-
-            // --- FUNÇÃO PARA INICIAR A CHAMADA (API JITSI) ---
-            window.startJitsiCall = function() {
-                // Esconde o botão e mostra o container
-                document.getElementById('connect-screen').style.display = 'none';
-
-                if (jitsiApi) return; // Já está conectado
-
-                const domain = 'meet.jit.si';
-                const options = {
-                    roomName: 'CineSabadoSalaVozLeoEmi', // Nome da Sala
-                    width: '100%',
-                    height: '100%',
-                    parentNode: document.querySelector('#jitsi-container'),
-                    configOverwrite: { 
-                        startWithAudioMuted: false, 
-                        startWithVideoMuted: true, // Começa sem vídeo (estilo Discord)
-                        prejoinPageEnabled: false // Tenta pular a pré-sala
-                    },
-                    interfaceConfigOverwrite: {
-                        TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup', 'tileview', 'chat'],
-                        SHOW_JITSI_WATERMARK: false
-                    }
-                };
-                
-                // Cria a chamada usando a API oficial
-                jitsiApi = new JitsiMeetExternalAPI(domain, options);
             }
 
             const input = document.getElementById('movieInput');
