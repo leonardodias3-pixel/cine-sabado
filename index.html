@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine Sábado 🍿</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #141414; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        h1 { color: #E50914; text-transform: uppercase; margin-bottom: 20px; font-size: 1.5em; text-align: center; }
+        .container { width: 100%; max-width: 500px; position: relative; }
+        
+        /* ABAS */
+        .tabs { display: flex; width: 100%; margin-bottom: 20px; background: #222; border-radius: 50px; padding: 5px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: bold; cursor: pointer; border-radius: 40px; transition: all 0.3s; }
+        .tab-btn.active { background: #E50914; color: white; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4); }
+
+        /* BUSCA */
+        .input-group { display: flex; gap: 10px; background: #2F2F2F; padding: 8px; border-radius: 50px; margin-bottom: 20px; position: relative; z-index: 20; }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 10px; font-size: 16px; outline: none; }
+        
+        /* AUTOCOMPLETAR */
+        #suggestions { position: absolute; top: 55px; left: 10px; right: 10px; background: #222; border-radius: 10px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 20px rgba(0,0,0,0.8); z-index: 100; display: none; border: 1px solid #444; }
+        .suggestion-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; cursor: pointer; }
+        .suggestion-item:hover { background: #333; }
+        .thumb-tiny { width: 40px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 10px; background: #000; }
+        .suggestion-info { display: flex; flex-direction: column; text-align: left; }
+        .suggestion-title { font-weight: bold; font-size: 0.9em; color: white; }
+        .suggestion-year { font-size: 0.75em; color: #aaa; }
+
+        /* LISTAS */
+        ul { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        .movie-list-container { display: none; animation: fadeIn 0.3s ease; }
+        .movie-list-container.active { display: grid; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        li.movie-card { background-color: #1f1f1f; border-radius: 8px; overflow: hidden; position: relative; display: flex; flex-direction: column; transition: all 0.3s ease; }
+        .poster-img { width: 100%; height: 250px; object-fit: cover; background-color: #333; display: block; }
+        
+        /* ÁREA DE CRÍTICAS (CHAT) */
+        .movie-info { padding: 0; text-align: center; font-size: 0.85em; font-weight: bold; display: flex; flex-direction: column;}
+        .title-box { padding: 10px; border-bottom: 1px solid #333; background: #252525; }
+        
+        .critic-section { padding: 10px; border-bottom: 1px solid #333; text-align: left; display: flex; flex-direction: column; gap: 5px;}
+        .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid #2196F3; } /* Azul */
+        .critic-section.p2 { background: rgba(233, 30, 99, 0.05); border-left: 3px solid #E91E63; } /* Rosa */
+        
+        .person-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .person-name { font-size: 0.8em; text-transform: uppercase; color: #aaa; font-weight: 900; letter-spacing: 1px;}
+        
+        .stars { font-size: 1.1em; cursor: pointer; letter-spacing: 1px; }
+        .star { color: #444; transition: color 0.2s; }
+        .star.gold { color: #FFD700; } 
+        
+        /* BALÕES DE COMENTÁRIOS (TIPO WHATSAPP) */
+        .chat-area { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; max-height: 150px; overflow-y: auto; }
+        .msg-bubble { 
+            background: rgba(255,255,255,0.1); 
+            padding: 6px 10px; 
+            border-radius: 8px; 
+            font-size: 0.9em; 
+            color: #ddd; 
+            word-wrap: break-word;
+            border-bottom-left-radius: 2px;
+        }
+
+        .review-box { display: flex; gap: 5px; margin-top: auto; }
+        .review-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #444; color: #ddd; padding: 8px; border-radius: 20px; font-size: 0.9em; outline: none;}
+        .btn-save-review { background: #333; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1.1em; display: flex; align-items: center; justify-content: center;}
+        .btn-save-review:active { transform: scale(0.9); }
+
+        /* BOTÕES DE AÇÃO */
+        .actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; z-index: 10;}
+        .btn-icon { border: none; padding: 0; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; opacity: 0.95; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .btn-check { background: #2e7d32; color: white; }
+        .btn-undo { background: #fbc02d; color: black; }
+        .btn-del { background: #d32f2f; color: white; }
+        
+        .loading { text-align: center; color: #aaa; margin-top: 20px; font-size: 0.9em; display: none;}
+        .empty-msg { grid-column: span 2; text-align: center; color: #555; padding: 20px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <h1>🎬 Cine Sábado</h1>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('todo')">Para Assistir</button>
+            <button class="tab-btn" onclick="switchTab('watched')">Já Vistos</button>
+        </div>
+
+        <div class="input-group" id="searchBox">
+            <input type="text" id="movieInput" placeholder="Adicionar filme novo..." autocomplete="off">
+        </div>
+        
+        <div id="suggestions"></div>
+        <div id="status" class="loading"></div>
+
+        <ul id="list-todo" class="movie-list-container active"></ul>
+        <ul id="list-watched" class="movie-list-container"></ul>
+    </div>
+
+    <script>
+        // SUAS CHAVES (Já configuradas)
+        const SUPABASE_URL = 'https://surcxurqjaelqudeqzic.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmN4dXJxamFlbHF1ZGVxemljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4OTk2NTYsImV4cCI6MjA4MTQ3NTY1Nn0.Ab0BRqSbqoWyb7A5lQMDNW9iBjb0FBxv27MhnZ8L8tk'; 
+        const TMDB_API_KEY = 'c96d86cf59c6c7fb0af651ec5059bcbf';
+
+        // ===============================================
+        // NOMES ATUALIZADOS
+        // ===============================================
+        const NOME_1 = "LÉO";
+        const NOME_2 = "EME";
+        // ===============================================
+
+        window.addEventListener('load', async function() {
+            if (typeof window.supabase === 'undefined') return alert("Erro: Supabase não carregou.");
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            let searchTimeout = null;
+
+            // ABAS
+            window.switchTab = function(tabName) {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                document.getElementById('list-todo').classList.remove('active');
+                document.getElementById('list-watched').classList.remove('active');
+                document.getElementById('list-' + tabName).classList.add('active');
+                document.getElementById('searchBox').style.display = (tabName === 'todo') ? 'flex' : 'none';
+            }
+
+            // BUSCA
+            const input = document.getElementById('movieInput');
+            const suggestionsBox = document.getElementById('suggestions');
+            input.addEventListener('input', function() {
+                const query = input.value.trim();
+                clearTimeout(searchTimeout);
+                if (query.length < 2) { suggestionsBox.style.display = 'none'; return; }
+                searchTimeout = setTimeout(() => fetchSuggestions(query), 500);
+            });
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) suggestionsBox.style.display = 'none';
+            });
+
+            async function fetchSuggestions(query) {
+                try {
+                    const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=pt-BR`);
+                    const data = await response.json();
+                    showSuggestionsList(data.results || []);
+                } catch (e) { console.error(e); }
+            }
+
+            function showSuggestionsList(movies) {
+                suggestionsBox.innerHTML = '';
+                if (movies.length === 0) { suggestionsBox.style.display = 'none'; return; }
+                suggestionsBox.style.display = 'block';
+                movies.slice(0, 5).forEach(movie => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    const year = movie.release_date ? movie.release_date.split('-')[0] : '';
+                    const thumb = movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : 'https://via.placeholder.com/40x60';
+                    div.innerHTML = `<img src="${thumb}" class="thumb-tiny"><div class="suggestion-info"><span class="suggestion-title">${movie.title}</span><span class="suggestion-year">${year}</span></div>`;
+                    div.onclick = () => { suggestionsBox.style.display = 'none'; input.value = ''; const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w342${movie.poster_path}` : null; saveToSupabase(movie.title, poster); };
+                    suggestionsBox.appendChild(div);
+                });
+            }
+
+            async function saveToSupabase(title, posterUrl) {
+                const { error } = await supabase.from('movies').insert([{ title: title, poster: posterUrl, watched: false }]);
+                if (error) alert("Erro ao salvar."); else fetchMovies();
+            }
+            window.markWatched = async function(id) {
+                const el = document.getElementById(`movie-${id}`);
+                if(el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }
+                const { error } = await supabase.from('movies').update({ watched: true }).eq('id', id);
+                if(error) fetchMovies();
+            }
+            window.restoreMovie = async function(id) {
+                const el = document.getElementById(`movie-${id}`);
+                if(el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }
+                const { error } = await supabase.from('movies').update({ watched: false }).eq('id', id);
+                if(error) fetchMovies();
+            }
+            window.deleteMovie = async function(id) {
+                if(confirm("Excluir definitivamente?")) {
+                    const el = document.getElementById(`movie-${id}`);
+                    if(el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }
+                    await supabase.from('movies').delete().eq('id', id);
+                }
+            }
+
+            // ===========================================
+            // SISTEMA DE CHAT E AVALIAÇÃO (MODIFICADO)
+            // ===========================================
+            
+            window.updateRating = async function(id, person, rating) {
+                renderStars(id, person, rating);
+                const updateData = {};
+                updateData[`rating_${person}`] = rating;
+                await supabase.from('movies').update(updateData).eq('id', id);
+            }
+
+            window.saveReview = async function(id, person) {
+                const input = document.getElementById(`review-input-${person}-${id}`);
+                const newComment = input.value.trim();
+                if (!newComment) return;
+
+                const btn = document.getElementById(`btn-save-${person}-${id}`);
+                const oldComments = btn.getAttribute('data-old-review') || ""; // Pega o histórico
+                
+                // Junta o antigo com o novo (separado por quebra de linha especial)
+                // Usamos "|||" como separador invisível para depois criar os balões
+                const finalReview = oldComments ? oldComments + "|||" + newComment : newComment;
+
+                btn.innerText = "⏳";
+                const updateData = {};
+                updateData[`review_${person}`] = finalReview;
+                
+                await supabase.from('movies').update(updateData).eq('id', id);
+                
+                // Limpa o input e avisa que salvou
+                input.value = '';
+                btn.innerText = "💾";
+            }
+
+            function renderStars(id, person, currentRating) {
+                let html = '';
+                for (let i = 1; i <= 5; i++) {
+                    const isGold = i <= currentRating ? 'gold' : '';
+                    html += `<span class="star ${isGold}" onclick="updateRating('${id}', ${person}, ${i})">★</span>`;
+                }
+                const container = document.getElementById(`stars-${person}-${id}`);
+                if(container) container.innerHTML = html;
+                return html;
+            }
+
+            function renderChatBubbles(rawText) {
+                if (!rawText) return '';
+                // Separa por "|||" ou por quebra de linha antiga "\n" para compatibilidade
+                const messages = rawText.split(/\|\|\||\n/);
+                return messages.map(msg => {
+                    if(!msg.trim()) return '';
+                    return `<div class="msg-bubble">${msg}</div>`;
+                }).join('');
+            }
+
+            async function fetchMovies() {
+                const { data, error } = await supabase.from('movies').select('*').order('created_at', { ascending: false });
+                if (error) return;
+
+                const listTodo = document.getElementById('list-todo');
+                const listWatched = document.getElementById('list-watched');
+                listTodo.innerHTML = '';
+                listWatched.innerHTML = '';
+                let countTodo = 0; let countWatched = 0;
+
+                data.forEach(movie => {
+                    const imgSrc = movie.poster || 'https://via.placeholder.com/342x513?text=Sem+Imagem';
+                    const li = document.createElement('li');
+                    li.className = 'movie-card';
+                    li.id = `movie-${movie.id}`;
+
+                    if (movie.watched === true) {
+                        countWatched++;
+                        
+                        // Pessoa 1
+                        const r1 = movie.rating_1 || 0;
+                        const c1 = movie.review_1 || '';
+                        let stars1 = '';
+                        for (let i = 1; i <= 5; i++) stars1 += `<span class="star ${i<=r1?'gold':''}" onclick="updateRating('${movie.id}', 1, ${i})">★</span>`;
+
+                        // Pessoa 2
+                        const r2 = movie.rating_2 || 0;
+                        const c2 = movie.review_2 || '';
+                        let stars2 = '';
+                        for (let i = 1; i <= 5; i++) stars2 += `<span class="star ${i<=r2?'gold':''}" onclick="updateRating('${movie.id}', 2, ${i})">★</span>`;
+
+                        li.innerHTML = `
+                            <img src="${imgSrc}" class="poster-img" style="filter: grayscale(100%); opacity: 0.7;">
+                            <div class="actions">
+                                <button class="btn-icon btn-undo" onclick="restoreMovie('${movie.id}')">↩</button>
+                                <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
+                            </div>
+                            <div class="movie-info">
+                                <div class="title-box">✅ ${movie.title}</div>
+                                
+                                <div class="critic-section p1">
+                                    <div class="person-header">
+                                        <div class="person-name">${NOME_1}</div>
+                                        <div class="stars" id="stars-1-${movie.id}">${stars1}</div>
+                                    </div>
+                                    <div class="chat-area" id="chat-1-${movie.id}">
+                                        ${renderChatBubbles(c1)}
+                                    </div>
+                                    <div class="review-box">
+                                        <input type="text" class="review-input" id="review-input-1-${movie.id}" placeholder="Escrever...">
+                                        <button class="btn-save-review" id="btn-save-1-${movie.id}" data-old-review="${c1.replace(/"/g, '&quot;')}" onclick="saveReview('${movie.id}', 1)">➤</button>
+                                    </div>
+                                </div>
+
+                                <div class="critic-section p2">
+                                    <div class="person-header">
+                                        <div class="person-name">${NOME_2}</div>
+                                        <div class="stars" id="stars-2-${movie.id}">${stars2}</div>
+                                    </div>
+                                    <div class="chat-area" id="chat-2-${movie.id}">
+                                        ${renderChatBubbles(c2)}
+                                    </div>
+                                    <div class="review-box">
+                                        <input type="text" class="review-input" id="review-input-2-${movie.id}" placeholder="Escrever...">
+                                        <button class="btn-save-review" id="btn-save-2-${movie.id}" data-old-review="${c2.replace(/"/g, '&quot;')}" onclick="saveReview('${movie.id}', 2)">➤</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        listWatched.appendChild(li);
+                    } else {
+                        countTodo++;
+                        li.innerHTML = `
+                            <img src="${imgSrc}" class="poster-img">
+                            <div class="actions">
+                                <button class="btn-icon btn-check" onclick="markWatched('${movie.id}')">✔</button>
+                                <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
+                            </div>
+                            <div class="movie-info" style="padding:8px">${movie.title}</div>
+                        `;
+                        listTodo.appendChild(li);
+                    }
+                });
+
+                if(countTodo === 0) listTodo.innerHTML = '<div class="empty-msg">Nenhum filme na lista.</div>';
+                if(countWatched === 0) listWatched.innerHTML = '<div class="empty-msg">Nenhum filme assistido ainda.</div>';
+            }
+            
+            fetchMovies();
+            supabase.channel('public:movies').on('postgres_changes', { event: '*', schema: 'public', table: 'movies' }, fetchMovies).subscribe();
+        });
+    </script>
+</body>
+</html>
