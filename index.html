@@ -35,6 +35,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         li.movie-card { background-color: #1f1f1f; border-radius: 8px; overflow: hidden; position: relative; display: flex; flex-direction: column; transition: all 0.3s ease; }
+        /* OTIMIZAÇÃO: Altura fixa para evitar pulos na tela */
         .poster-img { width: 100%; height: 250px; object-fit: cover; background-color: #333; display: block; }
         
         /* ÁREA DE CRÍTICAS (CHAT) */
@@ -42,8 +43,8 @@
         .title-box { padding: 10px; border-bottom: 1px solid #333; background: #252525; }
         
         .critic-section { padding: 10px; border-bottom: 1px solid #333; text-align: left; display: flex; flex-direction: column; gap: 5px;}
-        .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid #2196F3; } /* Azul */
-        .critic-section.p2 { background: rgba(233, 30, 99, 0.05); border-left: 3px solid #E91E63; } /* Rosa */
+        .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid #2196F3; } 
+        .critic-section.p2 { background: rgba(233, 30, 99, 0.05); border-left: 3px solid #E91E63; } 
         
         .person-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .person-name { font-size: 0.8em; text-transform: uppercase; color: #aaa; font-weight: 900; letter-spacing: 1px;}
@@ -52,7 +53,7 @@
         .star { color: #444; transition: color 0.2s; }
         .star.gold { color: #FFD700; } 
         
-        /* BALÕES DE COMENTÁRIOS (TIPO WHATSAPP) */
+        /* BALÕES DE COMENTÁRIOS */
         .chat-area { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; max-height: 150px; overflow-y: auto; }
         .msg-bubble { 
             background: rgba(255,255,255,0.1); 
@@ -107,12 +108,8 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmN4dXJxamFlbHF1ZGVxemljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4OTk2NTYsImV4cCI6MjA4MTQ3NTY1Nn0.Ab0BRqSbqoWyb7A5lQMDNW9iBjb0FBxv27MhnZ8L8tk'; 
         const TMDB_API_KEY = 'c96d86cf59c6c7fb0af651ec5059bcbf';
 
-        // ===============================================
-        // NOMES ATUALIZADOS
-        // ===============================================
         const NOME_1 = "LÉO";
-        const NOME_2 = "EME";
-        // ===============================================
+        const NOME_2 = "EMI";
 
         window.addEventListener('load', async function() {
             if (typeof window.supabase === 'undefined') return alert("Erro: Supabase não carregou.");
@@ -160,7 +157,7 @@
                     const year = movie.release_date ? movie.release_date.split('-')[0] : '';
                     const thumb = movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : 'https://via.placeholder.com/40x60';
                     div.innerHTML = `<img src="${thumb}" class="thumb-tiny"><div class="suggestion-info"><span class="suggestion-title">${movie.title}</span><span class="suggestion-year">${year}</span></div>`;
-                    div.onclick = () => { suggestionsBox.style.display = 'none'; input.value = ''; const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w342${movie.poster_path}` : null; saveToSupabase(movie.title, poster); };
+                    div.onclick = () => { suggestionsBox.style.display = 'none'; input.value = ''; const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w185${movie.poster_path}` : null; saveToSupabase(movie.title, poster); };
                     suggestionsBox.appendChild(div);
                 });
             }
@@ -189,10 +186,7 @@
                 }
             }
 
-            // ===========================================
-            // SISTEMA DE CHAT E AVALIAÇÃO (MODIFICADO)
-            // ===========================================
-            
+            // CHAT E AVALIAÇÃO
             window.updateRating = async function(id, person, rating) {
                 renderStars(id, person, rating);
                 const updateData = {};
@@ -206,10 +200,7 @@
                 if (!newComment) return;
 
                 const btn = document.getElementById(`btn-save-${person}-${id}`);
-                const oldComments = btn.getAttribute('data-old-review') || ""; // Pega o histórico
-                
-                // Junta o antigo com o novo (separado por quebra de linha especial)
-                // Usamos "|||" como separador invisível para depois criar os balões
+                const oldComments = btn.getAttribute('data-old-review') || ""; 
                 const finalReview = oldComments ? oldComments + "|||" + newComment : newComment;
 
                 btn.innerText = "⏳";
@@ -217,8 +208,6 @@
                 updateData[`review_${person}`] = finalReview;
                 
                 await supabase.from('movies').update(updateData).eq('id', id);
-                
-                // Limpa o input e avisa que salvou
                 input.value = '';
                 btn.innerText = "💾";
             }
@@ -236,7 +225,6 @@
 
             function renderChatBubbles(rawText) {
                 if (!rawText) return '';
-                // Separa por "|||" ou por quebra de linha antiga "\n" para compatibilidade
                 const messages = rawText.split(/\|\|\||\n/);
                 return messages.map(msg => {
                     if(!msg.trim()) return '';
@@ -255,57 +243,46 @@
                 let countTodo = 0; let countWatched = 0;
 
                 data.forEach(movie => {
-                    const imgSrc = movie.poster || 'https://via.placeholder.com/342x513?text=Sem+Imagem';
+                    // OTIMIZAÇÃO: Força o uso da imagem leve w185 mesmo se salvou a pesada antes
+                    let imgSrc = movie.poster || 'https://via.placeholder.com/185x278?text=Sem+Imagem';
+                    if (imgSrc.includes('w342')) imgSrc = imgSrc.replace('w342', 'w185'); // Troca automática para leve
+                    if (imgSrc.includes('w500')) imgSrc = imgSrc.replace('w500', 'w185'); // Troca automática para leve
+
                     const li = document.createElement('li');
                     li.className = 'movie-card';
                     li.id = `movie-${movie.id}`;
 
+                    // IMPORTANTÍSSIMO: loading="lazy" faz a mágica da velocidade
+                    const imgTag = `<img src="${imgSrc}" class="poster-img" loading="lazy">`;
+
                     if (movie.watched === true) {
                         countWatched++;
                         
-                        // Pessoa 1
-                        const r1 = movie.rating_1 || 0;
-                        const c1 = movie.review_1 || '';
-                        let stars1 = '';
-                        for (let i = 1; i <= 5; i++) stars1 += `<span class="star ${i<=r1?'gold':''}" onclick="updateRating('${movie.id}', 1, ${i})">★</span>`;
+                        const r1 = movie.rating_1 || 0; const c1 = movie.review_1 || '';
+                        let stars1 = ''; for (let i = 1; i <= 5; i++) stars1 += `<span class="star ${i<=r1?'gold':''}" onclick="updateRating('${movie.id}', 1, ${i})">★</span>`;
 
-                        // Pessoa 2
-                        const r2 = movie.rating_2 || 0;
-                        const c2 = movie.review_2 || '';
-                        let stars2 = '';
-                        for (let i = 1; i <= 5; i++) stars2 += `<span class="star ${i<=r2?'gold':''}" onclick="updateRating('${movie.id}', 2, ${i})">★</span>`;
+                        const r2 = movie.rating_2 || 0; const c2 = movie.review_2 || '';
+                        let stars2 = ''; for (let i = 1; i <= 5; i++) stars2 += `<span class="star ${i<=r2?'gold':''}" onclick="updateRating('${movie.id}', 2, ${i})">★</span>`;
 
                         li.innerHTML = `
-                            <img src="${imgSrc}" class="poster-img" style="filter: grayscale(100%); opacity: 0.7;">
+                            <img src="${imgSrc}" class="poster-img" style="filter: grayscale(100%); opacity: 0.7;" loading="lazy">
                             <div class="actions">
                                 <button class="btn-icon btn-undo" onclick="restoreMovie('${movie.id}')">↩</button>
                                 <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
                             </div>
                             <div class="movie-info">
                                 <div class="title-box">✅ ${movie.title}</div>
-                                
                                 <div class="critic-section p1">
-                                    <div class="person-header">
-                                        <div class="person-name">${NOME_1}</div>
-                                        <div class="stars" id="stars-1-${movie.id}">${stars1}</div>
-                                    </div>
-                                    <div class="chat-area" id="chat-1-${movie.id}">
-                                        ${renderChatBubbles(c1)}
-                                    </div>
+                                    <div class="person-header"><div class="person-name">${NOME_1}</div><div class="stars" id="stars-1-${movie.id}">${stars1}</div></div>
+                                    <div class="chat-area" id="chat-1-${movie.id}">${renderChatBubbles(c1)}</div>
                                     <div class="review-box">
                                         <input type="text" class="review-input" id="review-input-1-${movie.id}" placeholder="Escrever...">
                                         <button class="btn-save-review" id="btn-save-1-${movie.id}" data-old-review="${c1.replace(/"/g, '&quot;')}" onclick="saveReview('${movie.id}', 1)">➤</button>
                                     </div>
                                 </div>
-
                                 <div class="critic-section p2">
-                                    <div class="person-header">
-                                        <div class="person-name">${NOME_2}</div>
-                                        <div class="stars" id="stars-2-${movie.id}">${stars2}</div>
-                                    </div>
-                                    <div class="chat-area" id="chat-2-${movie.id}">
-                                        ${renderChatBubbles(c2)}
-                                    </div>
+                                    <div class="person-header"><div class="person-name">${NOME_2}</div><div class="stars" id="stars-2-${movie.id}">${stars2}</div></div>
+                                    <div class="chat-area" id="chat-2-${movie.id}">${renderChatBubbles(c2)}</div>
                                     <div class="review-box">
                                         <input type="text" class="review-input" id="review-input-2-${movie.id}" placeholder="Escrever...">
                                         <button class="btn-save-review" id="btn-save-2-${movie.id}" data-old-review="${c2.replace(/"/g, '&quot;')}" onclick="saveReview('${movie.id}', 2)">➤</button>
@@ -317,7 +294,7 @@
                     } else {
                         countTodo++;
                         li.innerHTML = `
-                            <img src="${imgSrc}" class="poster-img">
+                            ${imgTag}
                             <div class="actions">
                                 <button class="btn-icon btn-check" onclick="markWatched('${movie.id}')">✔</button>
                                 <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
