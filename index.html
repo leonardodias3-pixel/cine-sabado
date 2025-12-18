@@ -11,39 +11,45 @@
         .container { width: 100%; max-width: 500px; position: relative; }
         
         /* ABAS */
-        .tabs { display: flex; width: 100%; margin-bottom: 20px; background: #222; border-radius: 50px; padding: 5px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: bold; cursor: pointer; border-radius: 40px; transition: all 0.3s; font-size: 0.9em;}
+        .tabs { display: flex; width: 100%; margin-bottom: 20px; background: #222; border-radius: 50px; padding: 5px; overflow-x: auto; white-space: nowrap; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: bold; cursor: pointer; border-radius: 40px; transition: all 0.3s; font-size: 0.9em; min-width: 80px;}
         .tab-btn.active { background: #E50914; color: white; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4); }
 
-        /* PORTAL DO CINEMA (KOSMI) */
+        /* ABA SORTEIO (NOVO) */
+        #tab-sorteio { display: none; width: 100%; background: #1a1a1a; border-radius: 20px; padding: 20px; border: 1px solid #333; text-align: center; box-sizing: border-box; }
+        #tab-sorteio.active { display: block; }
+
+        .genre-select { width: 100%; padding: 15px; background: #333; color: white; border: 1px solid #555; border-radius: 10px; font-size: 1em; margin-bottom: 20px; outline: none;}
+        
+        .btn-draw { 
+            background: linear-gradient(45deg, #E50914, #ff6b6b); color: white; 
+            border: none; padding: 20px; width: 100%;
+            border-radius: 15px; font-size: 1.2em; font-weight: bold; 
+            cursor: pointer; box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4);
+            transition: transform 0.1s;
+        }
+        .btn-draw:active { transform: scale(0.95); }
+
+        /* Resultado do Sorteio */
+        #draw-result { margin-top: 20px; display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .winner-card { background: #2F2F2F; border-radius: 15px; padding: 15px; border: 2px solid #E50914; }
+        .winner-img { width: 100%; height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        .winner-title { font-size: 1.5em; font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .winner-genre { color: #aaa; font-size: 0.9em; margin-bottom: 15px; }
+
+        /* ABA CINEMA (KOSMI) */
         #tab-call { display: none; width: 100%; background: #1a1a1a; border-radius: 20px; padding: 40px 20px; border: 1px solid #333; text-align: center; box-sizing: border-box; }
         #tab-call.active { display: block; }
-        
-        .cinema-card {
-            background: linear-gradient(135deg, #2b2b2b 0%, #1f1f1f 100%);
-            border-radius: 15px; padding: 30px 20px;
-            border: 1px solid #444;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        .cinema-card { background: linear-gradient(135deg, #2b2b2b 0%, #1f1f1f 100%); border-radius: 15px; padding: 30px 20px; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .cinema-icon { font-size: 3em; margin-bottom: 10px; display: block; }
         .cinema-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; color: #fff; }
         .cinema-desc { color: #aaa; font-size: 0.9em; margin-bottom: 25px; line-height: 1.5; }
-        
-        .btn-enter-room { 
-            background: #5865F2; color: white; /* Cor do Kosmi */
-            border: none; padding: 15px 30px; 
-            border-radius: 50px; font-size: 1.1em; font-weight: bold; 
-            cursor: pointer; text-decoration: none; display: inline-block;
-            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
-            transition: transform 0.2s; width: 80%;
-        }
+        .btn-enter-room { background: #5865F2; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.1em; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4); transition: transform 0.2s; width: 80%; }
         .btn-enter-room:active { transform: scale(0.95); }
 
         /* BUSCA */
         .input-group { display: flex; gap: 10px; background: #2F2F2F; padding: 8px; border-radius: 50px; margin-bottom: 20px; position: relative; z-index: 20; }
         input { flex: 1; background: transparent; border: none; color: white; padding: 10px; font-size: 16px; outline: none; }
-        
-        /* AUTOCOMPLETAR */
         #suggestions { position: absolute; top: 55px; left: 10px; right: 10px; background: #222; border-radius: 10px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 20px rgba(0,0,0,0.8); z-index: 100; display: none; border: 1px solid #444; }
         .suggestion-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; cursor: pointer; }
         .suggestion-item:hover { background: #333; }
@@ -56,6 +62,7 @@
         ul { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
         .movie-list-container { display: none; animation: fadeIn 0.3s ease; }
         .movie-list-container.active { display: grid; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         li.movie-card { background-color: #1f1f1f; border-radius: 8px; overflow: hidden; position: relative; display: flex; flex-direction: column; transition: all 0.3s ease; }
@@ -64,6 +71,7 @@
         /* CRÍTICAS */
         .movie-info { padding: 0; text-align: center; font-size: 0.85em; font-weight: bold; display: flex; flex-direction: column;}
         .title-box { padding: 10px; border-bottom: 1px solid #333; background: #252525; }
+        .genre-tag { font-size: 0.7em; color: #888; font-weight: normal; display: block; margin-top: 2px;}
         
         .critic-section { padding: 10px; border-bottom: 1px solid #333; text-align: left; display: flex; flex-direction: column; gap: 5px;}
         .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid #2196F3; } 
@@ -106,8 +114,41 @@
     <div class="container">
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('todo')">Filmes</button>
+            <button class="tab-btn" onclick="switchTab('sorteio')">🎲 Sorteio</button>
             <button class="tab-btn" onclick="switchTab('watched')">Histórico</button>
-            <button class="tab-btn" onclick="switchTab('call')">🍿 Sala Kosmi</button>
+            <button class="tab-btn" onclick="switchTab('call')">🍿 Sala Cine</button>
+        </div>
+
+        <div id="tab-sorteio">
+            <h2 style="margin-bottom: 20px; color: #E50914;">O que vamos ver?</h2>
+            
+            <p style="color:#aaa; font-size:0.9em; margin-bottom:10px;">Escolha uma categoria:</p>
+            <select id="genre-selector" class="genre-select">
+                <option value="all">🎲 Qualquer Coisa (Mistureba)</option>
+                <option value="Ação">💥 Ação</option>
+                <option value="Aventura">🗺️ Aventura</option>
+                <option value="Animação">🧸 Animação</option>
+                <option value="Comédia">😂 Comédia</option>
+                <option value="Crime">🚔 Crime</option>
+                <option value="Documentário">🎥 Documentário</option>
+                <option value="Drama">🎭 Drama</option>
+                <option value="Família">👨‍👩‍👧‍👦 Família</option>
+                <option value="Fantasia">🧙‍♂️ Fantasia</option>
+                <option value="Terror">👻 Terror</option>
+                <option value="Romance">💘 Romance</option>
+                <option value="Ficção">👽 Ficção Científica</option>
+            </select>
+
+            <button class="btn-draw" onclick="drawMovie()">GIRAR A ROLETA! 🎰</button>
+
+            <div id="draw-result">
+                <div class="winner-card">
+                    <img src="" id="winner-img" class="winner-img">
+                    <div id="winner-title" class="winner-title"></div>
+                    <div id="winner-genre" class="winner-genre"></div>
+                    <div style="font-size:0.9em; color:#fff;">Este é o escolhido! Bora?</div>
+                </div>
+            </div>
         </div>
 
         <div id="tab-call">
@@ -116,17 +157,14 @@
                 <div class="cinema-title">Cinema Virtual Kosmi</div>
                 <div class="cinema-desc">
                     Sala pronta para Léo & Emi.<br>
-                    Vídeo sincronizado e bate-papo.<br>
-                    Abrir em tela cheia para melhor experiência.
+                    Vídeo sincronizado e bate-papo.
                 </div>
-                
                 <a href="https://kosmi.to/@leonardodia" target="_blank" class="btn-enter-room">
                     ENTRAR NA SESSÃO ➤
                 </a>
             </div>
-            
             <p style="color:#555; font-size:0.8em; margin-top:20px; font-style:italic;">
-                A sala abrirá em uma nova janela para não travar.
+                A sala abrirá em uma nova janela.
             </p>
         </div>
 
@@ -149,6 +187,18 @@
         const NOME_1 = "LÉO";
         const NOME_2 = "EMI";
 
+        // MAPA DE GÊNEROS DO TMDB
+        const GENRES = {
+            28: "Ação", 12: "Aventura", 16: "Animação", 35: "Comédia", 80: "Crime",
+            99: "Documentário", 18: "Drama", 10751: "Família", 14: "Fantasia",
+            36: "História", 27: "Terror", 10402: "Música", 9648: "Mistério",
+            10749: "Romance", 878: "Ficção", 10770: "Cinema TV", 53: "Thriller",
+            10752: "Guerra", 37: "Faroeste"
+        };
+
+        // Cache dos filmes para o sorteio
+        let cachedMovies = [];
+
         window.addEventListener('load', async function() {
             if (typeof window.supabase === 'undefined') return alert("Erro: Supabase não carregou.");
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -161,14 +211,48 @@
                 document.getElementById('list-todo').classList.remove('active');
                 document.getElementById('list-watched').classList.remove('active');
                 document.getElementById('tab-call').classList.remove('active');
+                document.getElementById('tab-sorteio').classList.remove('active');
                 document.getElementById('searchBox').style.display = 'none';
 
-                if (tabName === 'call') {
-                    document.getElementById('tab-call').classList.add('active');
-                } else {
+                if (tabName === 'call') document.getElementById('tab-call').classList.add('active');
+                else if (tabName === 'sorteio') document.getElementById('tab-sorteio').classList.add('active');
+                else {
                     document.getElementById('list-' + tabName).classList.add('active');
                     if (tabName === 'todo') document.getElementById('searchBox').style.display = 'flex';
                 }
+            }
+
+            // --- LÓGICA DO SORTEIO ---
+            window.drawMovie = function() {
+                const genreFilter = document.getElementById('genre-selector').value;
+                const resultDiv = document.getElementById('draw-result');
+                
+                // Filtra apenas os filmes NÃO ASSISTIDOS (watched = false)
+                let availableMovies = cachedMovies.filter(m => m.watched === false);
+
+                // Aplica filtro de categoria se não for "all"
+                if (genreFilter !== 'all') {
+                    availableMovies = availableMovies.filter(m => m.genres && m.genres.includes(genreFilter));
+                }
+
+                if (availableMovies.length === 0) {
+                    alert("Nenhum filme encontrado nessa categoria na sua lista 'Para Assistir'!");
+                    resultDiv.style.display = 'none';
+                    return;
+                }
+
+                // Sorteia
+                const randomIndex = Math.floor(Math.random() * availableMovies.length);
+                const winner = availableMovies[randomIndex];
+
+                // Mostra resultado
+                resultDiv.style.display = 'none'; // Reseta animação
+                setTimeout(() => {
+                    document.getElementById('winner-img').src = winner.poster || 'https://via.placeholder.com/300x450';
+                    document.getElementById('winner-title').innerText = winner.title;
+                    document.getElementById('winner-genre').innerText = winner.genres || 'Sem categoria';
+                    resultDiv.style.display = 'block';
+                }, 100);
             }
 
             const input = document.getElementById('movieInput');
@@ -200,16 +284,34 @@
                     div.className = 'suggestion-item';
                     const year = movie.release_date ? movie.release_date.split('-')[0] : '';
                     const thumb = movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : 'https://via.placeholder.com/40x60';
-                    div.innerHTML = `<img src="${thumb}" class="thumb-tiny"><div class="suggestion-info"><span class="suggestion-title">${movie.title}</span><span class="suggestion-year">${year}</span></div>`;
-                    div.onclick = () => { suggestionsBox.style.display = 'none'; input.value = ''; const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w185${movie.poster_path}` : null; saveToSupabase(movie.title, poster); };
+                    
+                    // CONVERTE IDs DE GÊNERO PARA TEXTO
+                    const genreNames = movie.genre_ids ? movie.genre_ids.map(id => GENRES[id]).filter(Boolean).join(', ') : '';
+
+                    div.innerHTML = `<img src="${thumb}" class="thumb-tiny"><div class="suggestion-info"><span class="suggestion-title">${movie.title}</span><span class="suggestion-year">${year} • ${genreNames}</span></div>`;
+                    
+                    // Passa os gêneros para a função de salvar
+                    div.onclick = () => { 
+                        suggestionsBox.style.display = 'none'; 
+                        input.value = ''; 
+                        const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w185${movie.poster_path}` : null; 
+                        saveToSupabase(movie.title, poster, genreNames); 
+                    };
                     suggestionsBox.appendChild(div);
                 });
             }
 
-            async function saveToSupabase(title, posterUrl) {
-                const { error } = await supabase.from('movies').insert([{ title: title, poster: posterUrl, watched: false }]);
+            async function saveToSupabase(title, posterUrl, genreString) {
+                // AGORA SALVA O GÊNERO TAMBÉM!
+                const { error } = await supabase.from('movies').insert([{ 
+                    title: title, 
+                    poster: posterUrl, 
+                    watched: false,
+                    genres: genreString // Coluna nova
+                }]);
                 if (error) alert("Erro ao salvar."); else fetchMovies();
             }
+
             window.markWatched = async function(id) {
                 const el = document.getElementById(`movie-${id}`);
                 if(el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }
@@ -318,6 +420,9 @@
                 const { data, error } = await supabase.from('movies').select('*').order('created_at', { ascending: false });
                 if (error) return;
 
+                // Salva no cache para o sorteio usar
+                cachedMovies = data;
+
                 const listTodo = document.getElementById('list-todo');
                 const listWatched = document.getElementById('list-watched');
                 listTodo.innerHTML = '';
@@ -331,6 +436,8 @@
                     const li = document.createElement('li');
                     li.className = 'movie-card';
                     li.id = `movie-${movie.id}`;
+                    
+                    const genreDisplay = movie.genres ? `<span class="genre-tag">${movie.genres}</span>` : '';
 
                     if (movie.watched === true) {
                         countWatched++;
@@ -346,7 +453,7 @@
                                 <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
                             </div>
                             <div class="movie-info">
-                                <div class="title-box">✅ ${movie.title}</div>
+                                <div class="title-box">✅ ${movie.title} ${genreDisplay}</div>
                                 <div class="critic-section p1">
                                     <div class="person-header"><div class="person-name">${NOME_1}</div><div class="stars" id="stars-1-${movie.id}">${stars1}</div></div>
                                     <div class="chat-area" id="chat-1-${movie.id}">${renderChatBubbles(c1, movie.id, 1)}</div>
@@ -376,7 +483,10 @@
                                 <button class="btn-icon btn-check" onclick="markWatched('${movie.id}')">✔</button>
                                 <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
                             </div>
-                            <div class="movie-info" style="padding:8px">${movie.title}</div>
+                            <div class="movie-info" style="padding:8px">
+                                ${movie.title}
+                                ${genreDisplay}
+                            </div>
                         `;
                         listTodo.appendChild(li);
                     }
