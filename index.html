@@ -15,7 +15,7 @@
         .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: bold; cursor: pointer; border-radius: 40px; transition: all 0.3s; font-size: 0.9em; min-width: 80px;}
         .tab-btn.active { background: #E50914; color: white; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4); }
 
-        /* ABA SORTEIO (NOVO) */
+        /* ABA SORTEIO */
         #tab-sorteio { display: none; width: 100%; background: #1a1a1a; border-radius: 20px; padding: 20px; border: 1px solid #333; text-align: center; box-sizing: border-box; }
         #tab-sorteio.active { display: block; }
 
@@ -159,10 +159,12 @@
                     Sala pronta para Léo & Emi.<br>
                     Vídeo sincronizado e bate-papo.
                 </div>
-                <a href="https://kosmi.to/@leonardodia" target="_blank" class="btn-enter-room">
+                
+                <a href="https://app.kosmi.io/room/oypj2e" target="_blank" class="btn-enter-room">
                     ENTRAR NA SESSÃO ➤
                 </a>
             </div>
+            
             <p style="color:#555; font-size:0.8em; margin-top:20px; font-style:italic;">
                 A sala abrirá em uma nova janela.
             </p>
@@ -227,7 +229,7 @@
                 const genreFilter = document.getElementById('genre-selector').value;
                 const resultDiv = document.getElementById('draw-result');
                 
-                // Filtra apenas os filmes NÃO ASSISTIDOS (watched = false)
+                // Filtra apenas os filmes NÃO ASSISTIDOS
                 let availableMovies = cachedMovies.filter(m => m.watched === false);
 
                 // Aplica filtro de categoria se não for "all"
@@ -290,7 +292,6 @@
 
                     div.innerHTML = `<img src="${thumb}" class="thumb-tiny"><div class="suggestion-info"><span class="suggestion-title">${movie.title}</span><span class="suggestion-year">${year} • ${genreNames}</span></div>`;
                     
-                    // Passa os gêneros para a função de salvar
                     div.onclick = () => { 
                         suggestionsBox.style.display = 'none'; 
                         input.value = ''; 
@@ -302,12 +303,11 @@
             }
 
             async function saveToSupabase(title, posterUrl, genreString) {
-                // AGORA SALVA O GÊNERO TAMBÉM!
                 const { error } = await supabase.from('movies').insert([{ 
                     title: title, 
                     poster: posterUrl, 
                     watched: false,
-                    genres: genreString // Coluna nova
+                    genres: genreString
                 }]);
                 if (error) alert("Erro ao salvar."); else fetchMovies();
             }
@@ -420,7 +420,6 @@
                 const { data, error } = await supabase.from('movies').select('*').order('created_at', { ascending: false });
                 if (error) return;
 
-                // Salva no cache para o sorteio usar
                 cachedMovies = data;
 
                 const listTodo = document.getElementById('list-todo');
