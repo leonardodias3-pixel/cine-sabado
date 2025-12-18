@@ -35,7 +35,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         li.movie-card { background-color: #1f1f1f; border-radius: 8px; overflow: hidden; position: relative; display: flex; flex-direction: column; transition: all 0.3s ease; }
-        /* OTIMIZAÇÃO: Altura fixa para evitar pulos na tela */
         .poster-img { width: 100%; height: 250px; object-fit: cover; background-color: #333; display: block; }
         
         /* ÁREA DE CRÍTICAS (CHAT) */
@@ -43,8 +42,8 @@
         .title-box { padding: 10px; border-bottom: 1px solid #333; background: #252525; }
         
         .critic-section { padding: 10px; border-bottom: 1px solid #333; text-align: left; display: flex; flex-direction: column; gap: 5px;}
-        .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid #2196F3; } 
-        .critic-section.p2 { background: rgba(233, 30, 99, 0.05); border-left: 3px solid #E91E63; } 
+        .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid #2196F3; } /* Azul */
+        .critic-section.p2 { background: rgba(233, 30, 99, 0.05); border-left: 3px solid #E91E63; } /* Rosa */
         
         .person-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .person-name { font-size: 0.8em; text-transform: uppercase; color: #aaa; font-weight: 900; letter-spacing: 1px;}
@@ -54,16 +53,26 @@
         .star.gold { color: #FFD700; } 
         
         /* BALÕES DE COMENTÁRIOS */
-        .chat-area { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; max-height: 150px; overflow-y: auto; }
+        .chat-area { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; max-height: 200px; overflow-y: auto; padding-right: 5px;}
         .msg-bubble { 
-            background: rgba(255,255,255,0.1); 
-            padding: 6px 10px; 
+            background: rgba(255,255,255,0.08); 
+            padding: 8px 10px; 
             border-radius: 8px; 
             font-size: 0.9em; 
             color: #ddd; 
             word-wrap: break-word;
             border-bottom-left-radius: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .msg-tools { display: flex; gap: 8px; opacity: 0.6; min-width: 40px; justify-content: flex-end;}
+        .msg-tool-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 1em; padding: 0;}
+        .msg-tool-btn:hover { color: #E50914; transform: scale(1.2); }
 
         .review-box { display: flex; gap: 5px; margin-top: auto; }
         .review-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #444; color: #ddd; padding: 8px; border-radius: 20px; font-size: 0.9em; outline: none;}
@@ -103,20 +112,23 @@
     </div>
 
     <script>
-        // SUAS CHAVES (Já configuradas)
+        // ===============================================
+        // CHAVES
+        // ===============================================
         const SUPABASE_URL = 'https://surcxurqjaelqudeqzic.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmN4dXJxamFlbHF1ZGVxemljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4OTk2NTYsImV4cCI6MjA4MTQ3NTY1Nn0.Ab0BRqSbqoWyb7A5lQMDNW9iBjb0FBxv27MhnZ8L8tk'; 
         const TMDB_API_KEY = 'c96d86cf59c6c7fb0af651ec5059bcbf';
 
         const NOME_1 = "LÉO";
         const NOME_2 = "EMI";
+        // ===============================================
 
         window.addEventListener('load', async function() {
             if (typeof window.supabase === 'undefined') return alert("Erro: Supabase não carregou.");
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             let searchTimeout = null;
 
-            // ABAS
+            // --- FUNÇÕES BÁSICAS ---
             window.switchTab = function(tabName) {
                 document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
                 event.target.classList.add('active');
@@ -126,7 +138,6 @@
                 document.getElementById('searchBox').style.display = (tabName === 'todo') ? 'flex' : 'none';
             }
 
-            // BUSCA
             const input = document.getElementById('movieInput');
             const suggestionsBox = document.getElementById('suggestions');
             input.addEventListener('input', function() {
@@ -162,6 +173,7 @@
                 });
             }
 
+            // --- AÇÕES DO BANCO ---
             async function saveToSupabase(title, posterUrl) {
                 const { error } = await supabase.from('movies').insert([{ title: title, poster: posterUrl, watched: false }]);
                 if (error) alert("Erro ao salvar."); else fetchMovies();
@@ -186,32 +198,89 @@
                 }
             }
 
-            // CHAT E AVALIAÇÃO
+            // ===========================================
+            // SISTEMA AVANÇADO DE COMENTÁRIOS E NOTAS
+            // ===========================================
+            
+            // --- NOTAS (ESTRELAS) ---
             window.updateRating = async function(id, person, rating) {
-                renderStars(id, person, rating);
+                renderStars(id, person, rating); // Muda visual na hora
                 const updateData = {};
                 updateData[`rating_${person}`] = rating;
                 await supabase.from('movies').update(updateData).eq('id', id);
             }
 
-            window.saveReview = async function(id, person) {
+            // --- ENVIAR COMENTÁRIO (INSTANTÂNEO) ---
+            window.sendReview = async function(id, person) {
                 const input = document.getElementById(`review-input-${person}-${id}`);
                 const newComment = input.value.trim();
                 if (!newComment) return;
 
+                // 1. ATUALIZAÇÃO VISUAL IMEDIATA (Optimistic UI)
+                const chatArea = document.getElementById(`chat-${person}-${id}`);
+                // Cria o balão temporário
+                const tempBubble = document.createElement('div');
+                tempBubble.className = 'msg-bubble';
+                tempBubble.style.opacity = '0.5'; // Fica meio transparente até salvar
+                tempBubble.innerHTML = `<span>${newComment}</span> <span style="font-size:0.8em">⏳</span>`;
+                chatArea.appendChild(tempBubble);
+                chatArea.scrollTop = chatArea.scrollHeight; // Desce pro final
+                input.value = ''; // Limpa campo
+
+                // 2. RECUPERA O HISTÓRICO REAL PARA SALVAR NO BANCO
                 const btn = document.getElementById(`btn-save-${person}-${id}`);
-                const oldComments = btn.getAttribute('data-old-review') || ""; 
+                const oldComments = btn.getAttribute('data-full-history') || ""; 
                 const finalReview = oldComments ? oldComments + "|||" + newComment : newComment;
 
-                btn.innerText = "⏳";
+                // 3. SALVA NO BANCO
                 const updateData = {};
                 updateData[`review_${person}`] = finalReview;
                 
                 await supabase.from('movies').update(updateData).eq('id', id);
-                input.value = '';
-                btn.innerText = "💾";
+                
+                // 4. ATUALIZA A LISTA PRA CONFIRMAR TUDO
+                fetchMovies(); 
             }
 
+            // --- EDITAR COMENTÁRIO ---
+            window.editSingleComment = async function(id, person, index) {
+                const btn = document.getElementById(`btn-save-${person}-${id}`);
+                const history = (btn.getAttribute('data-full-history') || "").split('|||');
+                
+                const oldText = history[index];
+                const newText = prompt("Editar comentário:", oldText);
+                
+                if (newText !== null && newText.trim() !== "") {
+                    history[index] = newText.trim(); // Atualiza
+                    const finalReview = history.join('|||');
+                    
+                    // Salva
+                    const updateData = {};
+                    updateData[`review_${person}`] = finalReview;
+                    await supabase.from('movies').update(updateData).eq('id', id);
+                    fetchMovies();
+                }
+            }
+
+            // --- EXCLUIR COMENTÁRIO ---
+            window.deleteSingleComment = async function(id, person, index) {
+                if(!confirm("Apagar esse comentário?")) return;
+
+                const btn = document.getElementById(`btn-save-${person}-${id}`);
+                let history = (btn.getAttribute('data-full-history') || "").split('|||');
+                
+                history.splice(index, 1); // Remove o item da lista
+                const finalReview = history.join('|||');
+
+                // Salva
+                const updateData = {};
+                updateData[`review_${person}`] = finalReview;
+                await supabase.from('movies').update(updateData).eq('id', id);
+                fetchMovies();
+            }
+
+
+            // --- RENDERIZAÇÃO ---
             function renderStars(id, person, currentRating) {
                 let html = '';
                 for (let i = 1; i <= 5; i++) {
@@ -223,12 +292,20 @@
                 return html;
             }
 
-            function renderChatBubbles(rawText) {
+            function renderChatBubbles(rawText, id, person) {
                 if (!rawText) return '';
-                const messages = rawText.split(/\|\|\||\n/);
-                return messages.map(msg => {
-                    if(!msg.trim()) return '';
-                    return `<div class="msg-bubble">${msg}</div>`;
+                // Filtra mensagens vazias
+                const messages = rawText.split(/\|\|\||\n/).filter(m => m.trim() !== '');
+                
+                return messages.map((msg, index) => {
+                    return `
+                    <div class="msg-bubble">
+                        <span>${msg}</span>
+                        <div class="msg-tools">
+                            <button class="msg-tool-btn" onclick="editSingleComment('${id}', ${person}, ${index})">✏️</button>
+                            <button class="msg-tool-btn" onclick="deleteSingleComment('${id}', ${person}, ${index})">🗑️</button>
+                        </div>
+                    </div>`;
                 }).join('');
             }
 
@@ -238,30 +315,35 @@
 
                 const listTodo = document.getElementById('list-todo');
                 const listWatched = document.getElementById('list-watched');
+                
+                // Limpa visualmente apenas se for a primeira carga ou se mudou drasticamente
+                // Aqui vamos reconstruir para garantir que as edições apareçam
                 listTodo.innerHTML = '';
                 listWatched.innerHTML = '';
+                
                 let countTodo = 0; let countWatched = 0;
 
                 data.forEach(movie => {
-                    // OTIMIZAÇÃO: Força o uso da imagem leve w185 mesmo se salvou a pesada antes
+                    // Otimização de Imagem
                     let imgSrc = movie.poster || 'https://via.placeholder.com/185x278?text=Sem+Imagem';
-                    if (imgSrc.includes('w342')) imgSrc = imgSrc.replace('w342', 'w185'); // Troca automática para leve
-                    if (imgSrc.includes('w500')) imgSrc = imgSrc.replace('w500', 'w185'); // Troca automática para leve
+                    if (imgSrc.includes('w342') || imgSrc.includes('w500')) imgSrc = imgSrc.replace(/w\d+/, 'w185');
 
                     const li = document.createElement('li');
                     li.className = 'movie-card';
                     li.id = `movie-${movie.id}`;
 
-                    // IMPORTANTÍSSIMO: loading="lazy" faz a mágica da velocidade
-                    const imgTag = `<img src="${imgSrc}" class="poster-img" loading="lazy">`;
-
+                    // GERA CONTEÚDO
                     if (movie.watched === true) {
                         countWatched++;
                         
-                        const r1 = movie.rating_1 || 0; const c1 = movie.review_1 || '';
+                        // Pessoa 1
+                        const r1 = movie.rating_1 || 0; 
+                        const c1 = movie.review_1 || '';
                         let stars1 = ''; for (let i = 1; i <= 5; i++) stars1 += `<span class="star ${i<=r1?'gold':''}" onclick="updateRating('${movie.id}', 1, ${i})">★</span>`;
 
-                        const r2 = movie.rating_2 || 0; const c2 = movie.review_2 || '';
+                        // Pessoa 2
+                        const r2 = movie.rating_2 || 0; 
+                        const c2 = movie.review_2 || '';
                         let stars2 = ''; for (let i = 1; i <= 5; i++) stars2 += `<span class="star ${i<=r2?'gold':''}" onclick="updateRating('${movie.id}', 2, ${i})">★</span>`;
 
                         li.innerHTML = `
@@ -272,29 +354,38 @@
                             </div>
                             <div class="movie-info">
                                 <div class="title-box">✅ ${movie.title}</div>
+                                
                                 <div class="critic-section p1">
                                     <div class="person-header"><div class="person-name">${NOME_1}</div><div class="stars" id="stars-1-${movie.id}">${stars1}</div></div>
-                                    <div class="chat-area" id="chat-1-${movie.id}">${renderChatBubbles(c1)}</div>
+                                    <div class="chat-area" id="chat-1-${movie.id}">${renderChatBubbles(c1, movie.id, 1)}</div>
                                     <div class="review-box">
                                         <input type="text" class="review-input" id="review-input-1-${movie.id}" placeholder="Escrever...">
-                                        <button class="btn-save-review" id="btn-save-1-${movie.id}" data-old-review="${c1.replace(/"/g, '&quot;')}" onclick="saveReview('${movie.id}', 1)">➤</button>
+                                        <button class="btn-save-review" id="btn-save-1-${movie.id}" data-full-history="${c1.replace(/"/g, '&quot;')}" onclick="sendReview('${movie.id}', 1)">➤</button>
                                     </div>
                                 </div>
+
                                 <div class="critic-section p2">
                                     <div class="person-header"><div class="person-name">${NOME_2}</div><div class="stars" id="stars-2-${movie.id}">${stars2}</div></div>
-                                    <div class="chat-area" id="chat-2-${movie.id}">${renderChatBubbles(c2)}</div>
+                                    <div class="chat-area" id="chat-2-${movie.id}">${renderChatBubbles(c2, movie.id, 2)}</div>
                                     <div class="review-box">
                                         <input type="text" class="review-input" id="review-input-2-${movie.id}" placeholder="Escrever...">
-                                        <button class="btn-save-review" id="btn-save-2-${movie.id}" data-old-review="${c2.replace(/"/g, '&quot;')}" onclick="saveReview('${movie.id}', 2)">➤</button>
+                                        <button class="btn-save-review" id="btn-save-2-${movie.id}" data-full-history="${c2.replace(/"/g, '&quot;')}" onclick="sendReview('${movie.id}', 2)">➤</button>
                                     </div>
                                 </div>
                             </div>
                         `;
                         listWatched.appendChild(li);
+                        
+                        // Scrolla chats para baixo
+                        const chat1 = document.getElementById(`chat-1-${movie.id}`);
+                        if(chat1) chat1.scrollTop = chat1.scrollHeight;
+                        const chat2 = document.getElementById(`chat-2-${movie.id}`);
+                        if(chat2) chat2.scrollTop = chat2.scrollHeight;
+
                     } else {
                         countTodo++;
                         li.innerHTML = `
-                            ${imgTag}
+                            <img src="${imgSrc}" class="poster-img" loading="lazy">
                             <div class="actions">
                                 <button class="btn-icon btn-check" onclick="markWatched('${movie.id}')">✔</button>
                                 <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
