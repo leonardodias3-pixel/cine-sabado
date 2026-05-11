@@ -1,4 +1,3 @@
-<!-- Copie este código e substitua o seu index.html atual -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -16,155 +15,115 @@
             --accent-emi: #E91E63;
         }
 
-        body { 
-            font-family: -apple-system, system-ui, sans-serif; 
-            background-color: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-        
+        body { font-family: -apple-system, system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .container { width: 100%; max-width: 500px; }
 
         /* NAVEGAÇÃO PRINCIPAL */
-        .main-nav { 
-            display: flex; 
-            gap: 8px; 
-            margin-bottom: 25px; 
-            overflow-x: auto; 
-            padding: 5px;
-            width: 100%;
-            scrollbar-width: none;
-        }
-        .nav-btn { 
-            background: #2a2a2a; 
-            color: #888; 
-            border: none; 
-            padding: 10px 18px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.3s;
-            white-space: nowrap;
-        }
-        .nav-btn.active { 
-            background: var(--primary); 
-            color: white;
-            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3); 
-        }
+        .main-nav { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding: 5px; width: 100%; scrollbar-width: none; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+        .nav-btn { background: #2a2a2a; color: #888; border: none; padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; white-space: nowrap; }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3); }
 
         .section { display: none; animation: fadeIn 0.3s ease; }
         .section.active { display: block; }
 
-        /* ABA INÍCIO (MENSAGENS) */
-        .msg-input-card { 
-            background: var(--card); 
-            padding: 15px; 
-            border-radius: 15px; 
-            margin-bottom: 20px; 
-            border: 1px solid #333; 
-        }
-        .msg-input-card textarea { 
-            width: 100%; 
-            background: #000; 
-            border: 1px solid #444; 
-            color: white; 
-            padding: 12px; 
-            border-radius: 10px; 
-            resize: none; 
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        .btn-post {
-            flex: 1; 
-            padding: 12px; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .btn-post:active { transform: scale(0.95); }
-
+        /* ABA INÍCIO */
+        .msg-input-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; }
+        .msg-input-card textarea { width: 100%; background: #000; border: 1px solid #444; color: white; padding: 12px; border-radius: 10px; resize: none; box-sizing: border-box; font-size: 16px; outline: none; }
         .msg-list { display: flex; flex-direction: column; gap: 12px; }
-        .msg-card { 
-            background: var(--card); 
-            padding: 15px; 
-            border-radius: 12px; 
-            position: relative; 
-            border-left: 4px solid var(--primary);
-            animation: slideIn 0.3s ease;
-        }
-        .msg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
-        .msg-author { font-weight: 900; font-size: 0.8em; text-transform: uppercase; }
-        .msg-date { font-size: 0.7em; color: #666; margin-top: 8px; display: block; }
-        .msg-tools { display: flex; gap: 10px; }
-        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.1em; opacity: 0.5; padding: 0; }
-        .tool-btn:hover { opacity: 1; }
+        .msg-card { background: var(--card); padding: 15px; border-radius: 12px; position: relative; border-left: 4px solid var(--primary); }
+        .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .msg-author { font-weight: 900; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; }
+        .msg-date { font-size: 0.65em; color: #666; margin-top: 8px; display: block; }
+        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1em; opacity: 0.4; }
 
-        /* ESTILOS DE FILMES (RESUMIDOS) */
-        .movie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; list-style: none; padding: 0; }
-        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; position: relative; }
-        .poster-img { width: 100%; height: 230px; object-fit: cover; display: block; }
-        .movie-info { padding: 8px; font-size: 0.85em; text-align: center; font-weight: bold; }
+        /* ABA FILMES - ESTILO ORIGINAL RESTAURADO */
+        .sub-tabs { display: flex; background: #222; border-radius: 50px; padding: 4px; margin-bottom: 15px; }
+        .sub-btn { flex: 1; padding: 8px; border: none; background: transparent; color: #777; cursor: pointer; border-radius: 40px; font-size: 0.8em; font-weight: bold; }
+        .sub-btn.active { background: #444; color: white; }
+
+        .movie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; list-style: none; padding: 0; }
+        .movie-card { background: var(--card); border-radius: 12px; overflow: hidden; position: relative; display: flex; flex-direction: column; border: 1px solid #333; }
+        .poster-img { width: 100%; height: 240px; object-fit: cover; display: block; background: #000; }
+        
+        .critic-box { padding: 8px; font-size: 0.75em; border-top: 1px solid #333; text-align: left; }
+        .stars { color: #444; font-size: 1.1em; }
+        .star.gold { color: #FFD700; }
+        
+        .actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 4px; z-index: 10; }
+        .btn-small { width: 28px; height: 28px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8em; }
+
+        /* BUSCA TMDB */
+        .search-box { position: relative; margin-bottom: 15px; }
+        #movieInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; outline: none; }
+        #suggestions { position: absolute; top: 50px; left: 0; right: 0; background: #222; border-radius: 10px; z-index: 200; border: 1px solid #444; max-height: 250px; overflow-y: auto; display: none; }
+        .sugg-item { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9em; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1 style="text-align: center; color: var(--primary); font-size: 1.4em;">❤️ NOSSO CANTINHO</h1>
+        <h1 style="text-align: center; color: var(--primary); font-size: 1.5em; margin-bottom: 15px;">🎬 NOSSO LUGAR</h1>
 
-        <!-- Menu Principal -->
         <nav class="main-nav">
             <button class="nav-btn active" onclick="changeSection('inicio', this)">🏠 Início</button>
-            <button class="nav-btn" onclick="changeSection('filmes', this)">🎬 Filmes</button>
+            <button class="nav-btn" onclick="changeSection('filmes', this)">🍿 Filmes</button>
             <button class="nav-btn" onclick="changeSection('desenhos', this)">🎨 Desenhos</button>
             <button class="nav-btn" onclick="changeSection('vales', this)">🎟️ Vales</button>
         </nav>
 
-        <!-- SEÇÃO INÍCIO -->
+        <!-- SEÇÃO INÍCIO (MENSAGENS) -->
         <section id="sec-inicio" class="section active">
             <div class="msg-input-card">
-                <textarea id="msg-text" placeholder="Escreva um recadinho..." rows="2"></textarea>
+                <textarea id="msg-text" placeholder="Deixe um recadinho aqui..." rows="2"></textarea>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button onclick="saveMessage('LÉO')" class="btn-post" style="background: var(--accent-leo)">Léo</button>
-                    <button onclick="saveMessage('EMI')" class="btn-post" style="background: var(--accent-emi)">Emi</button>
+                    <button onclick="saveMessage('LÉO')" style="flex:1; background:var(--accent-leo); border:none; padding:12px; border-radius:10px; color:white; font-weight:bold; cursor:pointer;">Léo</button>
+                    <button onclick="saveMessage('EMI')" style="flex:1; background:var(--accent-emi); border:none; padding:12px; border-radius:10px; color:white; font-weight:bold; cursor:pointer;">Emi</button>
                 </div>
             </div>
-            <div id="msg-list" class="msg-list">
-                <!-- Mensagens carregadas aqui -->
-            </div>
+            <div id="msg-list" class="msg-list"></div>
         </section>
 
         <!-- SEÇÃO FILMES -->
         <section id="sec-filmes" class="section">
-            <p style="text-align: center; color: #666; font-size: 0.9em;">Seus filmes continuam aqui! 👇</p>
-            <ul id="list-todo" class="movie-grid"></ul>
-            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
-            <ul id="list-watched" class="movie-grid"></ul>
+            <div class="sub-tabs">
+                <button class="sub-btn active" onclick="showMovieTab('todo', this)">Para Assistir</button>
+                <button class="sub-btn" onclick="showMovieTab('watched', this)">Já Vimos</button>
+                <button class="sub-btn" onclick="showMovieTab('sorteio', this)">🎲 Sorteio</button>
+            </div>
+
+            <div id="movie-search-area" class="search-box">
+                <input type="text" id="movieInput" placeholder="Adicionar novo filme..." autocomplete="off">
+                <div id="suggestions"></div>
+            </div>
+
+            <div id="movies-content">
+                <ul id="list-todo" class="movie-grid active"></ul>
+                <ul id="list-watched" class="movie-grid" style="display:none"></ul>
+                
+                <div id="tab-sorteio" style="display:none; text-align:center; background:#1a1a1a; padding:20px; border-radius:15px; border:1px solid #333;">
+                    <h3 style="color:var(--primary)">O que vamos ver?</h3>
+                    <button onclick="drawMovie()" style="background:var(--primary); color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; width:100%; cursor:pointer;">GIRAR ROLETA 🎰</button>
+                    <div id="draw-result" style="margin-top:20px"></div>
+                </div>
+            </div>
         </section>
 
-        <!-- SEÇÕES VAZIAS POR ENQUANTO -->
-        <section id="sec-desenhos" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Em breve... 🎨</p></section>
-        <section id="sec-vales" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Em breve... 🎟️</p></section>
-
+        <!-- SEÇÕES EM BREVE -->
+        <section id="sec-desenhos" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Galeria de Desenhos vindo aí... 🎨</p></section>
+        <section id="sec-vales" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Sistema de Vales vindo aí... 🎟️</p></section>
     </div>
 
     <script>
-        // CONFIGURAÇÕES SUPABASE
         const SUPABASE_URL = 'https://surcxurqjaelqudeqzic.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmN4dXJxamFlbHF1ZGVxemljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4OTk2NTYsImV4cCI6MjA4MTQ3NTY1Nn0.Ab0BRqSbqoWyb7A5lQMDNW9iBjb0FBxv27MhnZ8L8tk'; 
+        const TMDB_API_KEY = 'c96d86cf59c6c7fb0af651ec5059bcbf';
         
         const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let cachedMovies = [];
 
-        // TROCA DE SEÇÕES
+        // NAVEGAÇÃO PRINCIPAL
         function changeSection(id, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -172,85 +131,130 @@
             btn.classList.add('active');
         }
 
-        // --- GERENCIAMENTO DE MENSAGENS ---
-        async function saveMessage(author) {
-            const textArea = document.getElementById('msg-text');
-            const text = textArea.value.trim();
-            if(!text) return;
+        // SUB-ABAS DE FILMES
+        function showMovieTab(tab, btn) {
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('list-todo').style.display = tab === 'todo' ? 'grid' : 'none';
+            document.getElementById('list-watched').style.display = tab === 'watched' ? 'grid' : 'none';
+            document.getElementById('tab-sorteio').style.display = tab === 'sorteio' ? 'block' : 'none';
+            document.getElementById('movie-search-area').style.display = tab === 'todo' ? 'block' : 'none';
+        }
 
-            const { error } = await _supabase.from('messages').insert([{ text, author }]);
-            if(!error) {
-                textArea.value = '';
-                loadMessages();
-            }
+        // --- MENSAGENS ---
+        async function saveMessage(author) {
+            const input = document.getElementById('msg-text');
+            const text = input.value.trim();
+            if(!text) return;
+            await _supabase.from('messages').insert([{ text, author }]);
+            input.value = '';
+            loadMessages();
         }
 
         async function loadMessages() {
-            const { data, error } = await _supabase.from('messages').select('*').order('created_at', { ascending: false });
-            if(error) return;
-
-            const list = document.getElementById('msg-list');
-            list.innerHTML = data.map(m => `
+            const { data } = await _supabase.from('messages').select('*').order('created_at', { ascending: false });
+            if(!data) return;
+            document.getElementById('msg-list').innerHTML = data.map(m => `
                 <div class="msg-card" style="border-color: ${m.author === 'LÉO' ? 'var(--accent-leo)' : 'var(--accent-emi)'}">
                     <div class="msg-header">
                         <span class="msg-author" style="color: ${m.author === 'LÉO' ? 'var(--accent-leo)' : 'var(--accent-emi)'}">${m.author}</span>
                         <div class="msg-tools">
-                            <button class="tool-btn" onclick="editMessage('${m.id}', \`${m.text}\`)">✏️</button>
-                            <button class="tool-btn" onclick="deleteMessage('${m.id}')">🗑️</button>
+                            <button class="tool-btn" onclick="editMsg('${m.id}', \`${m.text}\`)">✏️</button>
+                            <button class="tool-btn" onclick="deleteMsg('${m.id}')">🗑️</button>
                         </div>
                     </div>
-                    <div class="msg-body">${m.text}</div>
+                    <div>${m.text}</div>
                     <span class="msg-date">${new Date(m.created_at).toLocaleString('pt-BR')}</span>
                 </div>
             `).join('');
         }
 
-        async function deleteMessage(id) {
-            if(confirm("Deseja apagar este recado?")) {
-                await _supabase.from('messages').delete().eq('id', id);
-                loadMessages();
-            }
+        async function deleteMsg(id) { if(confirm("Apagar?")) { await _supabase.from('messages').delete().eq('id', id); loadMessages(); } }
+        async function editMsg(id, oldText) { 
+            const n = prompt("Editar:", oldText); 
+            if(n) { await _supabase.from('messages').update({ text: n }).eq('id', id); loadMessages(); } 
         }
 
-        async function editMessage(id, oldText) {
-            const newText = prompt("Edite seu recado:", oldText);
-            if(newText !== null && newText.trim() !== "") {
-                await _supabase.from('messages').update({ text: newText }).eq('id', id);
-                loadMessages();
-            }
-        }
-
-        // --- CARREGAR FILMES (Sua lista existente) ---
+        // --- FILMES ---
         async function loadMovies() {
             const { data } = await _supabase.from('movies').select('*').order('created_at', { ascending: false });
             if(!data) return;
-
-            const todo = document.getElementById('list-todo');
-            const watched = document.getElementById('list-watched');
-            todo.innerHTML = ''; watched.innerHTML = '';
+            cachedMovies = data;
+            const todoList = document.getElementById('list-todo');
+            const watchedList = document.getElementById('list-watched');
+            todoList.innerHTML = ''; watchedList.innerHTML = '';
 
             data.forEach(m => {
-                const html = `
-                    <li class="movie-card">
-                        <img src="${m.poster}" class="poster-img" style="${m.watched ? 'filter:grayscale(1); opacity:0.5' : ''}">
-                        <div class="movie-info">${m.title}</div>
-                    </li>
+                const li = document.createElement('li');
+                li.className = 'movie-card';
+                const stars1 = getStars(m.rating_1 || 0);
+                const stars2 = getStars(m.rating_2 || 0);
+                
+                li.innerHTML = `
+                    <img src="${m.poster}" class="poster-img" style="${m.watched ? 'filter:grayscale(1); opacity:0.5' : ''}">
+                    <div class="actions">
+                        <button class="btn-small" onclick="toggleWatched('${m.id}', ${!m.watched})" style="background:${m.watched ? '#fbc02d' : '#2e7d32'}">${m.watched ? '↩' : '✔'}</button>
+                        <button class="btn-small" onclick="deleteMovie('${m.id}')" style="background:#d32f2f; color:white">✕</button>
+                    </div>
+                    <div class="movie-info">${m.title}</div>
+                    ${m.watched ? `
+                        <div class="critic-box" style="background:rgba(33,150,243,0.1)"><b>LÉO:</b> <div class="stars">${stars1}</div></div>
+                        <div class="critic-box" style="background:rgba(233,30,99,0.1)"><b>EMI:</b> <div class="stars">${stars2}</div></div>
+                    ` : ''}
                 `;
-                if(m.watched) watched.innerHTML += html;
-                else todo.innerHTML += html;
+                if(m.watched) watchedList.appendChild(li);
+                else todoList.appendChild(li);
             });
         }
 
-        // INICIALIZAÇÃO
+        function getStars(n) {
+            let s = ''; for(let i=1; i<=5; i++) s += `<span class="star ${i<=n?'gold':''}">★</span>`; return s;
+        }
+
+        async function toggleWatched(id, status) { await _supabase.from('movies').update({ watched: status }).eq('id', id); loadMovies(); }
+        async function deleteMovie(id) { if(confirm("Excluir filme?")) { await _supabase.from('movies').delete().eq('id', id); loadMovies(); } }
+
+        // BUSCA TMDB
+        const movieInput = document.getElementById('movieInput');
+        movieInput.oninput = async () => {
+            if(movieInput.value.length < 3) return;
+            const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${movieInput.value}&language=pt-BR`);
+            const d = await r.json();
+            const sugg = document.getElementById('suggestions');
+            sugg.style.display = 'block';
+            sugg.innerHTML = d.results.slice(0,5).map(m => `
+                <div class="sugg-item" onclick="addMovie('${m.title.replace(/'/g, "")}', 'https://image.tmdb.org/t/p/w185${m.poster_path}')">
+                    <img src="https://image.tmdb.org/t/p/w92${m.poster_path}" width="30">
+                    ${m.title}
+                </div>
+            `).join('');
+        };
+
+        async function addMovie(t, p) {
+            await _supabase.from('movies').insert([{ title: t, poster: p, watched: false }]);
+            document.getElementById('suggestions').style.display = 'none';
+            movieInput.value = '';
+            loadMovies();
+        }
+
+        function drawMovie() {
+            const avail = cachedMovies.filter(m => !m.watched);
+            if(avail.length === 0) return alert("Lista vazia!");
+            const win = avail[Math.floor(Math.random() * avail.length)];
+            document.getElementById('draw-result').innerHTML = `
+                <div class="movie-card" style="max-width:200px; margin:0 auto;">
+                    <img src="${win.poster}" class="poster-img">
+                    <div class="movie-info">${win.title}</div>
+                </div>
+                <p>🎬 O escolhido foi esse!</p>
+            `;
+        }
+
         window.onload = () => {
             loadMessages();
             loadMovies();
-
-            // Ativa o Realtime para atualizar as mensagens sozinho se o outro postar
-            _supabase.channel('custom-all-channel')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, loadMessages)
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'movies' }, loadMovies)
-            .subscribe();
+            _supabase.channel('any').on('postgres_changes', {event:'*', schema:'public', table:'messages'}, loadMessages).subscribe();
+            _supabase.channel('any2').on('postgres_changes', {event:'*', schema:'public', table:'movies'}, loadMovies).subscribe();
         };
     </script>
 </body>
