@@ -8,124 +8,150 @@
     <style>
         :root {
             --primary: #E50914;
-            --bg: #141414;
-            --card: #1f1f1f;
-            --text: #ffffff;
-            --accent-leo: #2196F3;
-            --accent-emi: #E91E63;
+            --bg: #0f0f0f;
+            --sidebar: #161616;
+            --card: #1e1e1e;
+            --text: #f0f0f0;
+            --text-dim: #a0a0a0;
+            --leo: #2196F3;
+            --emi: #E91E63;
         }
 
-        body { font-family: -apple-system, system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 500px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        /* NAVEGAÇÃO PRINCIPAL */
-        .main-nav { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding: 5px; width: 100%; position: sticky; top: 0; background: var(--bg); z-index: 100; scrollbar-width: none; }
-        .nav-btn { background: #2a2a2a; color: #888; border: none; padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; white-space: nowrap; }
-        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3); }
+        /* NAVEGAÇÃO ESTILO DASHBOARD */
+        .sidebar {
+            width: 240px;
+            background: var(--sidebar);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            border-right: 1px solid #222;
+        }
 
-        .section { display: none; animation: fadeIn 0.3s ease; }
+        .logo { font-weight: 800; color: var(--primary); font-size: 1.2rem; margin-bottom: 40px; text-align: center; }
+
+        .nav-group { display: flex; flex-direction: column; gap: 10px; }
+        .nav-btn {
+            background: transparent;
+            color: var(--text-dim);
+            border: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-weight: 600;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-btn.active { background: #252525; color: white; border-left: 4px solid var(--primary); }
+        .nav-btn:hover:not(.active) { background: #1e1e1e; color: white; }
+
+        /* ÁREA PRINCIPAL */
+        main { flex: 1; overflow-y: auto; padding: 30px; position: relative; scrollbar-width: none; }
+        .section { display: none; max-width: 800px; margin: 0 auto; animation: fadeInUp 0.4s ease; }
         .section.active { display: block; }
 
-        /* ABA INÍCIO */
-        .msg-input-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; }
-        .msg-input-card textarea { width: 100%; background: #000; border: 1px solid #444; color: white; padding: 12px; border-radius: 10px; resize: none; box-sizing: border-box; font-size: 16px; outline: none; }
-        .msg-list { display: flex; flex-direction: column; gap: 12px; }
-        .msg-card { background: var(--card); padding: 15px; border-radius: 12px; position: relative; border-left: 4px solid var(--primary); }
-        .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .msg-author { font-weight: 900; font-size: 0.75em; text-transform: uppercase; }
-
-        /* ABA FILMES - RESTAURAÇÃO TOTAL */
-        .sub-tabs { display: flex; background: #222; border-radius: 50px; padding: 4px; margin-bottom: 15px; }
-        .sub-btn { flex: 1; padding: 8px; border: none; background: transparent; color: #777; cursor: pointer; border-radius: 40px; font-size: 0.8em; font-weight: bold; }
-        .sub-btn.active { background: #444; color: white; }
-
-        .movie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; list-style: none; padding: 0; }
-        .movie-card { background: var(--card); border-radius: 12px; overflow: hidden; position: relative; display: flex; flex-direction: column; border: 1px solid #333; }
-        .poster-img { width: 100%; height: 250px; object-fit: cover; display: block; }
+        /* CARDS */
+        .glass-card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #2a2a2a; margin-bottom: 20px; }
         
-        .movie-info-box { padding: 0; text-align: center; font-size: 0.85em; font-weight: bold; }
-        .title-tag { padding: 10px; background: #252525; border-bottom: 1px solid #333; }
-
-        /* CRÍTICAS E CHAT (Igual ao antigo) */
-        .critic-section { padding: 10px; border-bottom: 1px solid #333; text-align: left; display: flex; flex-direction: column; gap: 5px; }
-        .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid var(--accent-leo); } 
-        .critic-section.p2 { background: rgba(233, 30, 99, 0.05); border-left: 3px solid var(--accent-emi); } 
+        /* MENSAGENS INÍCIO */
+        .msg-input textarea { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 15px; border-radius: 12px; font-size: 1rem; outline: none; }
+        .msg-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 5px solid var(--primary); }
         
-        .person-header { display: flex; justify-content: space-between; align-items: center; }
-        .person-name { font-size: 0.7em; font-weight: 900; color: #aaa; }
-        .stars { font-size: 1.1em; cursor: pointer; }
-        .star { color: #444; }
+        /* FILMES GRID */
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; list-style: none; padding: 0; }
+        .movie-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #2a2a2a; transition: 0.3s; position: relative; }
+        .movie-card:hover { transform: translateY(-5px); border-color: #444; }
+        .poster-img { width: 100%; height: 260px; object-fit: cover; }
+        
+        /* CRÍTICAS ESTILO CHAT */
+        .critic-box { padding: 12px; font-size: 0.85rem; border-top: 1px solid #2a2a2a; }
+        .stars { margin-bottom: 5px; cursor: pointer; font-size: 1.1rem; }
+        .star { color: #333; }
         .star.gold { color: #FFD700; }
+        .chat-bubble { background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-tools { display: flex; gap: 8px; opacity: 0.4; }
+        .chat-tools button { background: none; border: none; color: white; cursor: pointer; font-size: 0.8rem; }
 
-        .chat-area { display: flex; flex-direction: column; gap: 5px; max-height: 120px; overflow-y: auto; margin: 5px 0; }
-        .msg-bubble { background: rgba(255,255,255,0.05); padding: 6px 8px; border-radius: 8px; font-size: 0.85em; color: #ccc; display: flex; justify-content: space-between; }
-        
-        .review-box { display: flex; gap: 5px; }
-        .review-input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid #444; color: #ddd; padding: 6px 10px; border-radius: 15px; font-size: 0.8em; outline: none; }
-        .btn-send { background: #333; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; }
+        /* RESPONSIVIDADE CELULAR */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: 70px; flex-direction: row; order: 2; padding: 0 10px; border-right: none; border-top: 1px solid #222; position: fixed; bottom: 0; }
+            .logo { display: none; }
+            .nav-group { flex-direction: row; width: 100%; justify-content: space-around; }
+            .nav-btn { flex-direction: column; font-size: 0.7rem; padding: 8px; gap: 4px; }
+            main { padding: 15px; padding-bottom: 90px; order: 1; }
+            .movie-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .poster-img { height: 220px; }
+        }
 
-        .actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; z-index: 10; }
-        .btn-icon { width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        /* BUSCA E SORTEIO */
-        .search-box { position: relative; margin-bottom: 15px; }
-        #movieInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
-        #suggestions { position: absolute; top: 50px; left:0; right:0; background:#222; border-radius:10px; z-index:200; border:1px solid #444; display:none; }
-        .sugg-item { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 style="text-align: center; color: var(--primary); font-size: 1.5em; margin-bottom: 15px;">🎬 NOSSO CANTINHO</h1>
-
-        <nav class="main-nav">
-            <button class="nav-btn active" onclick="changeSection('inicio', this)">🏠 Início</button>
-            <button class="nav-btn" onclick="changeSection('filmes', this)">🍿 Filmes</button>
-            <button class="nav-btn" onclick="changeSection('desenhos', this)">🎨 Desenhos</button>
-            <button class="nav-btn" onclick="changeSection('vales', this)">🎟️ Vales</button>
+    <aside class="sidebar">
+        <div class="logo">NOSSO DASH ❤️</div>
+        <nav class="nav-group">
+            <button class="nav-btn active" onclick="nav('inicio', this)"><span>🏠</span> Início</button>
+            <button class="nav-btn" onclick="nav('filmes', this)"><span>🍿</span> Filmes</button>
+            <button class="nav-btn" onclick="nav('desenhos', this)"><span>🎨</span> Desenhos</button>
+            <button class="nav-btn" onclick="nav('vales', this)"><span>🎟️</span> Vales</button>
         </nav>
+    </aside>
 
-        <!-- SEÇÃO INÍCIO (MENSAGENS) -->
+    <main>
+        <!-- SEÇÃO INÍCIO -->
         <section id="sec-inicio" class="section active">
-            <div class="msg-input-card">
-                <textarea id="msg-text" placeholder="Deixe um recadinho..." rows="2"></textarea>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button onclick="saveMessage('LÉO')" style="flex:1; background:var(--accent-leo); border:none; padding:12px; border-radius:10px; color:white; font-weight:bold; cursor:pointer;">Léo</button>
-                    <button onclick="saveMessage('EMI')" style="flex:1; background:var(--accent-emi); border:none; padding:12px; border-radius:10px; color:white; font-weight:bold; cursor:pointer;">Emi</button>
+            <h2 style="margin-top:0">Recadinhos Digitais</h2>
+            <div class="glass-card msg-input">
+                <textarea id="msg-text" placeholder="Escreva algo especial..." rows="2"></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button onclick="saveMessage('LÉO')" style="flex:1; background:var(--leo); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">LÉO</button>
+                    <button onclick="saveMessage('EMI')" style="flex:1; background:var(--emi); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">EMI</button>
                 </div>
             </div>
-            <div id="msg-list" class="msg-list"></div>
+            <div id="msg-list"></div>
         </section>
 
         <!-- SEÇÃO FILMES -->
         <section id="sec-filmes" class="section">
-            <div class="sub-tabs">
-                <button class="sub-btn active" onclick="showMovieTab('todo', this)">Para Assistir</button>
-                <button class="sub-btn" onclick="showMovieTab('watched', this)">Já Vimos</button>
-                <button class="sub-btn" onclick="showMovieTab('sorteio', this)">🎲 Sorteio</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0">Cine Casal</h2>
+                <button onclick="drawMovie()" style="background:#333; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">🎲 Sorteio</button>
             </div>
 
-            <div id="movie-search-area" class="search-box">
-                <input type="text" id="movieInput" placeholder="Adicionar filme..." autocomplete="off">
-                <div id="suggestions"></div>
+            <div class="glass-card">
+                <input type="text" id="movieInput" placeholder="🔍 Buscar filme para adicionar..." style="width:100%; background:transparent; border:none; color:white; font-size:1rem; outline:none;">
+                <div id="suggestions" style="margin-top:10px;"></div>
+            </div>
+
+            <div style="display:flex; gap:15px; margin-bottom:20px;">
+                <button onclick="filterMovie('todo')" id="btn-todo" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; cursor:pointer;">Para Ver</button>
+                <button onclick="filterMovie('watched')" id="btn-watched" style="background:#222; color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; cursor:pointer;">Já Vistos</button>
             </div>
 
             <ul id="list-todo" class="movie-grid active"></ul>
             <ul id="list-watched" class="movie-grid" style="display:none"></ul>
-            
-            <div id="tab-sorteio" style="display:none; text-align:center; background:#1a1a1a; padding:20px; border-radius:15px; border:1px solid #333;">
-                <button onclick="drawMovie()" style="background:var(--primary); color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; width:100%; cursor:pointer;">GIRAR ROLETA 🎰</button>
-                <div id="draw-result" style="margin-top:20px"></div>
-            </div>
+            <div id="draw-result"></div>
         </section>
 
-        <!-- OUTRAS SEÇÕES -->
-        <section id="sec-desenhos" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Em breve... 🎨</p></section>
-        <section id="sec-vales" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Em breve... 🎟️</p></section>
-    </div>
+        <!-- EM BREVE -->
+        <section id="sec-desenhos" class="section"><center><h2>Em breve: Galeria de Desenhos 🎨</h2></center></section>
+        <section id="sec-vales" class="section"><center><h2>Em breve: Seus Vales 🎟️</h2></center></section>
+    </main>
 
     <script>
         const SUPABASE_URL = 'https://surcxurqjaelqudeqzic.supabase.co'; 
@@ -134,161 +160,146 @@
         const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cachedMovies = [];
 
-        function changeSection(id, btn) {
+        function nav(id, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('sec-' + id).classList.add('active');
             btn.classList.add('active');
         }
 
-        function showMovieTab(tab, btn) {
-            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('list-todo').style.display = tab === 'todo' ? 'grid' : 'none';
-            document.getElementById('list-watched').style.display = tab === 'watched' ? 'grid' : 'none';
-            document.getElementById('tab-sorteio').style.display = tab === 'sorteio' ? 'block' : 'none';
-            document.getElementById('movie-search-area').style.display = tab === 'todo' ? 'block' : 'none';
+        function filterMovie(type) {
+            document.getElementById('list-todo').style.display = type === 'todo' ? 'grid' : 'none';
+            document.getElementById('list-watched').style.display = type === 'watched' ? 'grid' : 'none';
+            document.getElementById('btn-todo').style.background = type === 'todo' ? 'var(--primary)' : '#222';
+            document.getElementById('btn-watched').style.background = type === 'watched' ? 'var(--primary)' : '#222';
         }
 
-        // --- MENSAGENS INÍCIO ---
+        // --- MENSAGENS ---
         async function saveMessage(author) {
             const input = document.getElementById('msg-text');
-            const text = input.value.trim();
-            if(!text) return;
-            await _supabase.from('messages').insert([{ text, author }]);
+            if(!input.value.trim()) return;
+            await _supabase.from('messages').insert([{ text: input.value, author }]);
             input.value = '';
             loadMessages();
         }
+
         async function loadMessages() {
             const { data } = await _supabase.from('messages').select('*').order('created_at', { ascending: false });
-            if(!data) return;
             document.getElementById('msg-list').innerHTML = data.map(m => `
-                <div class="msg-card" style="border-color: ${m.author === 'LÉO' ? 'var(--accent-leo)' : 'var(--accent-emi)'}">
-                    <div class="msg-header">
-                        <span class="msg-author" style="color: ${m.author === 'LÉO' ? 'var(--accent-leo)' : 'var(--accent-emi)'}">${m.author}</span>
-                        <div>
-                            <button class="tool-btn" onclick="editMsg('${m.id}', \`${m.text}\`)">✏️</button>
-                            <button class="tool-btn" onclick="deleteMsg('${m.id}')">🗑️</button>
+                <div class="msg-card" style="border-color: ${m.author === 'LÉO' ? 'var(--leo)' : 'var(--emi)'}">
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; font-weight:bold; margin-bottom:5px; color:${m.author === 'LÉO' ? 'var(--leo)' : 'var(--emi)'}">
+                        <span>${m.author}</span>
+                        <div style="display:flex; gap:10px">
+                            <button onclick="editMsg('${m.id}', \`${m.text}\`)" style="background:none;border:none;color:#555;cursor:pointer">✏️</button>
+                            <button onclick="delMsg('${m.id}')" style="background:none;border:none;color:#555;cursor:pointer">🗑️</button>
                         </div>
                     </div>
                     <div>${m.text}</div>
-                    <span class="msg-date">${new Date(m.created_at).toLocaleString('pt-BR')}</span>
+                    <div style="font-size:0.6rem; color:#555; margin-top:8px">${new Date(m.created_at).toLocaleString('pt-BR')}</div>
                 </div>
             `).join('');
         }
-        async function deleteMsg(id) { if(confirm("Apagar?")) { await _supabase.from('messages').delete().eq('id', id); loadMessages(); } }
-        async function editMsg(id, old) { const n = prompt("Editar:", old); if(n) { await _supabase.from('messages').update({ text: n }).eq('id', id); loadMessages(); } }
+        async function delMsg(id) { if(confirm("Apagar?")) { await _supabase.from('messages').delete().eq('id', id); loadMessages(); } }
+        async function editMsg(id, old) { const n = prompt("Editar mensagem:", old); if(n) { await _supabase.from('messages').update({ text: n }).eq('id', id); loadMessages(); } }
 
-        // --- FILMES (SISTEMA COMPLETO) ---
+        // --- FILMES ---
         async function loadMovies() {
             const { data } = await _supabase.from('movies').select('*').order('created_at', { ascending: false });
             if(!data) return;
             cachedMovies = data;
-            const todoList = document.getElementById('list-todo');
-            const watchedList = document.getElementById('list-watched');
-            todoList.innerHTML = ''; watchedList.innerHTML = '';
+            const todo = document.getElementById('list-todo');
+            const watched = document.getElementById('list-watched');
+            todo.innerHTML = ''; watched.innerHTML = '';
 
             data.forEach(m => {
                 const li = document.createElement('li');
                 li.className = 'movie-card';
-                
-                if (m.watched) {
+                if(m.watched) {
                     li.innerHTML = `
-                        <img src="${m.poster}" class="poster-img" style="filter:grayscale(1); opacity:0.6">
-                        <div class="actions">
-                            <button class="btn-icon" onclick="toggleWatched('${m.id}', false)" style="background:#fbc02d">↩</button>
-                            <button class="btn-icon" onclick="deleteMovie('${m.id}')" style="background:#d32f2f; color:white">✕</button>
-                        </div>
-                        <div class="movie-info-box">
-                            <div class="title-tag">✅ ${m.title}</div>
-                            ${renderCritic(m, 1, 'LÉO')}
-                            ${renderCritic(m, 2, 'EMI')}
-                        </div>
+                        <img src="${m.poster}" class="poster-img" style="filter:grayscale(1); opacity:0.4">
+                        <div style="position:absolute; top:10px; left:10px; background:rgba(0,0,0,0.7); padding:4px 8px; border-radius:6px; font-size:0.6rem">VISTO</div>
+                        <div style="padding:10px; font-size:0.8rem; font-weight:bold">${m.title}</div>
+                        <div class="critic-box" style="background:rgba(33,150,243,0.05)">${renderCritic(m, 1, 'LÉO')}</div>
+                        <div class="critic-box" style="background:rgba(233,30,99,0.05)">${renderCritic(m, 2, 'EMI')}</div>
+                        <button onclick="toggleWatched('${m.id}', false)" style="width:100%; background:#222; border:none; color:white; padding:8px; font-size:0.7rem; cursor:pointer">Voltar para Ver</button>
                     `;
-                    watchedList.appendChild(li);
+                    watched.appendChild(li);
                 } else {
                     li.innerHTML = `
                         <img src="${m.poster}" class="poster-img">
-                        <div class="actions">
-                            <button class="btn-icon" onclick="toggleWatched('${m.id}', true)" style="background:#2e7d32; color:white">✔</button>
-                            <button class="btn-icon" onclick="deleteMovie('${m.id}')" style="background:#d32f2f; color:white">✕</button>
+                        <div style="padding:10px; font-size:0.8rem; font-weight:bold">${m.title}</div>
+                        <div style="display:flex; border-top:1px solid #2a2a2a">
+                            <button onclick="toggleWatched('${m.id}', true)" style="flex:1; background:transparent; color:white; border:none; padding:10px; border-right:1px solid #2a2a2a; cursor:pointer">✔️ Ver</button>
+                            <button onclick="delMov('${m.id}')" style="flex:1; background:transparent; color:white; border:none; padding:10px; cursor:pointer">🗑️</button>
                         </div>
-                        <div class="movie-info-box"><div class="title-tag">${m.title}</div></div>
                     `;
-                    todoList.appendChild(li);
+                    todo.appendChild(li);
                 }
             });
         }
 
         function renderCritic(movie, pNum, name) {
             const rating = movie[`rating_${pNum}`] || 0;
-            const reviews = (movie[`review_${pNum}`] || "").split('|||').filter(r => r);
-            let starsHtml = '';
-            for(let i=1; i<=5; i++) starsHtml += `<span class="star ${i<=rating?'gold':''}" onclick="updateRating('${movie.id}', ${pNum}, ${i})">★</span>`;
-
+            const revs = (movie[`review_${pNum}`] || "").split('|||').filter(r => r);
+            let s = ''; for(let i=1; i<=5; i++) s += `<span class="star ${i<=rating?'gold':''}" onclick="upRate('${movie.id}', ${pNum}, ${i})">★</span>`;
             return `
-                <div class="critic-section p${pNum}">
-                    <div class="person-header"><span class="person-name">${name}</span><div class="stars">${starsHtml}</div></div>
-                    <div class="chat-area">${reviews.map((r, i) => `<div class="msg-bubble"><span>${r}</span><button style="background:none;border:none;color:#555;font-size:0.7em" onclick="deleteReview('${movie.id}', ${pNum}, ${i})">✕</button></div>`).join('')}</div>
-                    <div class="review-box">
-                        <input type="text" class="review-input" id="in-${pNum}-${movie.id}" placeholder="...">
-                        <button class="btn-send" onclick="sendReview('${movie.id}', ${pNum})">➤</button>
-                    </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px">
+                    <span style="font-size:0.6rem; font-weight:900; opacity:0.5">${name}</span>
+                    <div class="stars">${s}</div>
+                </div>
+                <div>${revs.map((r, i) => `<div class="chat-bubble"><span>${r}</span><div class="chat-tools"><button onclick="editRev('${movie.id}', ${pNum}, ${i})">✏️</button><button onclick="delRev('${movie.id}', ${pNum}, ${i})">✕</button></div></div>`).join('')}</div>
+                <div style="display:flex; gap:5px; margin-top:5px">
+                    <input type="text" id="in-${pNum}-${movie.id}" placeholder="Nota..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:5px; border-radius:5px; font-size:0.7rem">
+                    <button onclick="addRev('${movie.id}', ${pNum})" style="background:var(--primary); color:white; border:none; padding:5px 10px; border-radius:5px; font-size:0.7rem">➤</button>
                 </div>
             `;
         }
 
-        async function updateRating(id, p, r) {
-            const up = {}; up[`rating_${p}`] = r;
-            await _supabase.from('movies').update(up).eq('id', id);
-            loadMovies();
+        async function upRate(id, p, r) { const up = {}; up[`rating_${p}`] = r; await _supabase.from('movies').update(up).eq('id', id); loadMovies(); }
+        async function addRev(id, p) {
+            const val = document.getElementById(`in-${p}-${id}`).value.trim(); if(!val) return;
+            const m = cachedMovies.find(x => x.id == id);
+            const up = {}; up[`review_${p}`] = m[`review_${p}`] ? m[`review_${p}`] + "|||" + val : val;
+            await _supabase.from('movies').update(up).eq('id', id); loadMovies();
         }
-
-        async function sendReview(id, p) {
-            const input = document.getElementById(`in-${p}-${id}`);
-            const val = input.value.trim();
-            if(!val) return;
-            const movie = cachedMovies.find(m => m.id == id);
-            const old = movie[`review_${p}`] || "";
-            const final = old ? old + "|||" + val : val;
-            const up = {}; up[`review_${p}`] = final;
-            await _supabase.from('movies').update(up).eq('id', id);
-            loadMovies();
+        async function delRev(id, p, i) {
+            const m = cachedMovies.find(x => x.id == id); let r = m[`review_${p}`].split('|||'); r.splice(i, 1);
+            const up = {}; up[`review_${p}`] = r.join('|||'); await _supabase.from('movies').update(up).eq('id', id); loadMovies();
         }
-
-        async function deleteReview(id, p, idx) {
-            const movie = cachedMovies.find(m => m.id == id);
-            let revs = (movie[`review_${p}`] || "").split('|||');
-            revs.splice(idx, 1);
-            const up = {}; up[`review_${p}`] = revs.join('|||');
-            await _supabase.from('movies').update(up).eq('id', id);
-            loadMovies();
+        async function editRev(id, p, i) {
+            const m = cachedMovies.find(x => x.id == id); let r = m[`review_${p}`].split('|||');
+            const n = prompt("Editar comentário:", r[i]);
+            if(n) { r[i] = n; const up = {}; up[`review_${p}`] = r.join('|||'); await _supabase.from('movies').update(up).eq('id', id); loadMovies(); }
         }
 
         async function toggleWatched(id, s) { await _supabase.from('movies').update({ watched: s }).eq('id', id); loadMovies(); }
-        async function deleteMovie(id) { if(confirm("Excluir filme?")) { await _supabase.from('movies').delete().eq('id', id); loadMovies(); } }
+        async function delMov(id) { if(confirm("Excluir filme?")) { await _supabase.from('movies').delete().eq('id', id); loadMovies(); } }
 
         // BUSCA TMDB
         document.getElementById('movieInput').oninput = async function() {
-            if(this.value.length < 3) return;
+            if(this.value.length < 3) { document.getElementById('suggestions').style.display = 'none'; return; }
             const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${this.value}&language=pt-BR`);
             const d = await r.json();
             const sugg = document.getElementById('suggestions');
             sugg.style.display = 'block';
-            sugg.innerHTML = d.results.slice(0,5).map(m => `<div class="sugg-item" onclick="addMovie('${m.title.replace(/'/g,"")}', 'https://image.tmdb.org/t/p/w185${m.poster_path}')"><img src="https://image.tmdb.org/t/p/w92${m.poster_path}" width="30">${m.title}</div>`).join('');
+            sugg.innerHTML = d.results.slice(0,4).map(m => `<div onclick="addMov('${m.title.replace(/'/g,"")}', 'https://image.tmdb.org/t/p/w185${m.poster_path}')" style="padding:10px; border-bottom:1px solid #333; cursor:pointer; font-size:0.8rem">${m.title}</div>`).join('');
         }
-        async function addMovie(t, p) {
+        async function addMov(t, p) {
             await _supabase.from('movies').insert([{ title: t, poster: p, watched: false }]);
-            document.getElementById('suggestions').style.display = 'none';
-            document.getElementById('movieInput').value = '';
-            loadMovies();
+            document.getElementById('suggestions').style.display = 'none'; document.getElementById('movieInput').value = ''; loadMovies();
         }
 
         function drawMovie() {
             const avail = cachedMovies.filter(m => !m.watched);
             if(avail.length === 0) return alert("Lista vazia!");
             const win = avail[Math.floor(Math.random() * avail.length)];
-            document.getElementById('draw-result').innerHTML = `<div class="movie-card" style="max-width:180px; margin:0 auto;"><img src="${win.poster}" class="poster-img"><div class="title-tag">${win.title}</div></div>`;
+            document.getElementById('draw-result').innerHTML = `
+                <div class="glass-card" style="text-align:center; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:1000; width:250px;">
+                    <img src="${win.poster}" style="width:100%; border-radius:10px">
+                    <p>${win.title}</p>
+                    <button onclick="document.getElementById('draw-result').innerHTML=''" style="background:var(--primary); color:white; border:none; padding:10px; width:100%; border-radius:8px">Fechar</button>
+                </div>
+            `;
         }
 
         window.onload = () => {
