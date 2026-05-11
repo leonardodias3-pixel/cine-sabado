@@ -1,503 +1,257 @@
+<!-- Copie este código e substitua o seu index.html atual -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cine Sábado 🍿</title>
+    <title>Nosso Cantinho 💖</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #141414; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        h1 { color: #E50914; text-transform: uppercase; margin-bottom: 20px; font-size: 1.5em; text-align: center; }
-        .container { width: 100%; max-width: 500px; position: relative; }
-        
-        /* ABAS */
-        .tabs { display: flex; width: 100%; margin-bottom: 20px; background: #222; border-radius: 50px; padding: 5px; overflow-x: auto; white-space: nowrap; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-weight: bold; cursor: pointer; border-radius: 40px; transition: all 0.3s; font-size: 0.9em; min-width: 80px;}
-        .tab-btn.active { background: #E50914; color: white; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4); }
+        :root {
+            --primary: #E50914;
+            --bg: #141414;
+            --card: #1f1f1f;
+            --text: #ffffff;
+            --accent-leo: #2196F3;
+            --accent-emi: #E91E63;
+        }
 
-        /* ABA SORTEIO */
-        #tab-sorteio { display: none; width: 100%; background: #1a1a1a; border-radius: 20px; padding: 20px; border: 1px solid #333; text-align: center; box-sizing: border-box; }
-        #tab-sorteio.active { display: block; }
-
-        .genre-select { width: 100%; padding: 15px; background: #333; color: white; border: 1px solid #555; border-radius: 10px; font-size: 1em; margin-bottom: 20px; outline: none;}
+        body { 
+            font-family: -apple-system, system-ui, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
         
-        .btn-draw { 
-            background: linear-gradient(45deg, #E50914, #ff6b6b); color: white; 
-            border: none; padding: 20px; width: 100%;
-            border-radius: 15px; font-size: 1.2em; font-weight: bold; 
-            cursor: pointer; box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4);
+        .container { width: 100%; max-width: 500px; }
+
+        /* NAVEGAÇÃO PRINCIPAL */
+        .main-nav { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 25px; 
+            overflow-x: auto; 
+            padding: 5px;
+            width: 100%;
+            scrollbar-width: none;
+        }
+        .nav-btn { 
+            background: #2a2a2a; 
+            color: #888; 
+            border: none; 
+            padding: 10px 18px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .nav-btn.active { 
+            background: var(--primary); 
+            color: white;
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3); 
+        }
+
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+
+        /* ABA INÍCIO (MENSAGENS) */
+        .msg-input-card { 
+            background: var(--card); 
+            padding: 15px; 
+            border-radius: 15px; 
+            margin-bottom: 20px; 
+            border: 1px solid #333; 
+        }
+        .msg-input-card textarea { 
+            width: 100%; 
+            background: #000; 
+            border: 1px solid #444; 
+            color: white; 
+            padding: 12px; 
+            border-radius: 10px; 
+            resize: none; 
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .btn-post {
+            flex: 1; 
+            padding: 12px; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold;
+            cursor: pointer;
             transition: transform 0.1s;
         }
-        .btn-draw:active { transform: scale(0.95); }
+        .btn-post:active { transform: scale(0.95); }
 
-        /* Resultado do Sorteio */
-        #draw-result { margin-top: 20px; display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .winner-card { background: #2F2F2F; border-radius: 15px; padding: 15px; border: 2px solid #E50914; }
-        .winner-img { width: 100%; height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
-        .winner-title { font-size: 1.5em; font-weight: bold; color: #fff; margin-bottom: 5px; }
-        .winner-genre { color: #aaa; font-size: 0.9em; margin-bottom: 15px; }
-
-        /* ABA CINEMA (KOSMI) */
-        #tab-call { display: none; width: 100%; background: #1a1a1a; border-radius: 20px; padding: 40px 20px; border: 1px solid #333; text-align: center; box-sizing: border-box; }
-        #tab-call.active { display: block; }
-        .cinema-card { background: linear-gradient(135deg, #2b2b2b 0%, #1f1f1f 100%); border-radius: 15px; padding: 30px 20px; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .cinema-icon { font-size: 3em; margin-bottom: 10px; display: block; }
-        .cinema-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; color: #fff; }
-        .cinema-desc { color: #aaa; font-size: 0.9em; margin-bottom: 25px; line-height: 1.5; }
-        .btn-enter-room { background: #5865F2; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.1em; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4); transition: transform 0.2s; width: 80%; }
-        .btn-enter-room:active { transform: scale(0.95); }
-
-        /* BUSCA */
-        .input-group { display: flex; gap: 10px; background: #2F2F2F; padding: 8px; border-radius: 50px; margin-bottom: 20px; position: relative; z-index: 20; }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 10px; font-size: 16px; outline: none; }
-        #suggestions { position: absolute; top: 55px; left: 10px; right: 10px; background: #222; border-radius: 10px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 20px rgba(0,0,0,0.8); z-index: 100; display: none; border: 1px solid #444; }
-        .suggestion-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; cursor: pointer; }
-        .suggestion-item:hover { background: #333; }
-        .thumb-tiny { width: 40px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 10px; background: #000; }
-        .suggestion-info { display: flex; flex-direction: column; text-align: left; }
-        .suggestion-title { font-weight: bold; font-size: 0.9em; color: white; }
-        .suggestion-year { font-size: 0.75em; color: #aaa; }
-
-        /* LISTAS */
-        ul { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-        .movie-list-container { display: none; animation: fadeIn 0.3s ease; }
-        .movie-list-container.active { display: grid; }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        li.movie-card { background-color: #1f1f1f; border-radius: 8px; overflow: hidden; position: relative; display: flex; flex-direction: column; transition: all 0.3s ease; }
-        .poster-img { width: 100%; height: 250px; object-fit: cover; background-color: #333; display: block; }
-        
-        /* CRÍTICAS */
-        .movie-info { padding: 0; text-align: center; font-size: 0.85em; font-weight: bold; display: flex; flex-direction: column;}
-        .title-box { padding: 10px; border-bottom: 1px solid #333; background: #252525; }
-        .genre-tag { font-size: 0.7em; color: #888; font-weight: normal; display: block; margin-top: 2px;}
-        
-        .critic-section { padding: 10px; border-bottom: 1px solid #333; text-align: left; display: flex; flex-direction: column; gap: 5px;}
-        .critic-section.p1 { background: rgba(33, 150, 243, 0.05); border-left: 3px solid #2196F3; } 
-        .critic-section.p2 { background: rgba(233, 30, 99, 0.05); border-left: 3px solid #E91E63; } 
-        
-        .person-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .person-name { font-size: 0.8em; text-transform: uppercase; color: #aaa; font-weight: 900; letter-spacing: 1px;}
-        .stars { font-size: 1.1em; cursor: pointer; letter-spacing: 1px; }
-        .star { color: #444; transition: color 0.2s; }
-        .star.gold { color: #FFD700; } 
-        
-        /* CHAT */
-        .chat-area { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; max-height: 150px; overflow-y: auto; padding-right: 5px;}
-        .msg-bubble { 
-            background: rgba(255,255,255,0.08); padding: 8px 10px; border-radius: 8px; font-size: 0.9em; color: #ddd; word-wrap: break-word; border-bottom-left-radius: 2px;
-            display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+        .msg-list { display: flex; flex-direction: column; gap: 12px; }
+        .msg-card { 
+            background: var(--card); 
+            padding: 15px; 
+            border-radius: 12px; 
+            position: relative; 
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s ease;
         }
-        .msg-tools { display: flex; gap: 8px; opacity: 0.6; min-width: 40px; justify-content: flex-end;}
-        .msg-tool-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 1em; padding: 0;}
+        .msg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+        .msg-author { font-weight: 900; font-size: 0.8em; text-transform: uppercase; }
+        .msg-date { font-size: 0.7em; color: #666; margin-top: 8px; display: block; }
+        .msg-tools { display: flex; gap: 10px; }
+        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.1em; opacity: 0.5; padding: 0; }
+        .tool-btn:hover { opacity: 1; }
 
-        .review-box { display: flex; gap: 5px; margin-top: auto; }
-        .review-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #444; color: #ddd; padding: 8px; border-radius: 20px; font-size: 0.9em; outline: none;}
-        .btn-save-review { background: #333; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1.1em; display: flex; align-items: center; justify-content: center;}
+        /* ESTILOS DE FILMES (RESUMIDOS) */
+        .movie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; list-style: none; padding: 0; }
+        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; position: relative; }
+        .poster-img { width: 100%; height: 230px; object-fit: cover; display: block; }
+        .movie-info { padding: 8px; font-size: 0.85em; text-align: center; font-weight: bold; }
 
-        /* BOTÕES DE AÇÃO */
-        .actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; z-index: 10;}
-        .btn-icon { border: none; padding: 0; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; opacity: 0.95; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .btn-check { background: #2e7d32; color: white; }
-        .btn-undo { background: #fbc02d; color: black; }
-        .btn-del { background: #d32f2f; color: white; }
-        
-        .loading { text-align: center; color: #aaa; margin-top: 20px; font-size: 0.9em; display: none;}
-        .empty-msg { grid-column: span 2; text-align: center; color: #555; padding: 20px; font-style: italic; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <h1>🎬 Cine Sábado</h1>
-    
     <div class="container">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('todo')">Filmes</button>
-            <button class="tab-btn" onclick="switchTab('sorteio')">🎲 Sorteio</button>
-            <button class="tab-btn" onclick="switchTab('watched')">Histórico</button>
-            <button class="tab-btn" onclick="switchTab('call')">🍿 Sala Cine</button>
-        </div>
+        <h1 style="text-align: center; color: var(--primary); font-size: 1.4em;">❤️ NOSSO CANTINHO</h1>
 
-        <div id="tab-sorteio">
-            <h2 style="margin-bottom: 20px; color: #E50914;">O que vamos ver?</h2>
-            
-            <p style="color:#aaa; font-size:0.9em; margin-bottom:10px;">Escolha uma categoria:</p>
-            <select id="genre-selector" class="genre-select">
-                <option value="all">🎲 Qualquer Coisa (Mistureba)</option>
-                <option value="Ação">💥 Ação</option>
-                <option value="Aventura">🗺️ Aventura</option>
-                <option value="Animação">🧸 Animação</option>
-                <option value="Comédia">😂 Comédia</option>
-                <option value="Crime">🚔 Crime</option>
-                <option value="Documentário">🎥 Documentário</option>
-                <option value="Drama">🎭 Drama</option>
-                <option value="Família">👨‍👩‍👧‍👦 Família</option>
-                <option value="Fantasia">🧙‍♂️ Fantasia</option>
-                <option value="Terror">👻 Terror</option>
-                <option value="Romance">💘 Romance</option>
-                <option value="Ficção">👽 Ficção Científica</option>
-            </select>
+        <!-- Menu Principal -->
+        <nav class="main-nav">
+            <button class="nav-btn active" onclick="changeSection('inicio', this)">🏠 Início</button>
+            <button class="nav-btn" onclick="changeSection('filmes', this)">🎬 Filmes</button>
+            <button class="nav-btn" onclick="changeSection('desenhos', this)">🎨 Desenhos</button>
+            <button class="nav-btn" onclick="changeSection('vales', this)">🎟️ Vales</button>
+        </nav>
 
-            <button class="btn-draw" onclick="drawMovie()">GIRAR A ROLETA! 🎰</button>
-
-            <div id="draw-result">
-                <div class="winner-card">
-                    <img src="" id="winner-img" class="winner-img">
-                    <div id="winner-title" class="winner-title"></div>
-                    <div id="winner-genre" class="winner-genre"></div>
-                    <div style="font-size:0.9em; color:#fff;">Este é o escolhido! Bora?</div>
+        <!-- SEÇÃO INÍCIO -->
+        <section id="sec-inicio" class="section active">
+            <div class="msg-input-card">
+                <textarea id="msg-text" placeholder="Escreva um recadinho..." rows="2"></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button onclick="saveMessage('LÉO')" class="btn-post" style="background: var(--accent-leo)">Léo</button>
+                    <button onclick="saveMessage('EMI')" class="btn-post" style="background: var(--accent-emi)">Emi</button>
                 </div>
             </div>
-        </div>
-
-        <div id="tab-call">
-            <div class="cinema-card">
-                <span class="cinema-icon">👽</span>
-                <div class="cinema-title">Cinema Virtual Kosmi</div>
-                <div class="cinema-desc">
-                    Sala pronta para Léo & Emi.<br>
-                    Vídeo sincronizado e bate-papo.
-                </div>
-                
-                <a href="https://app.kosmi.io/room/oypj2e" target="_blank" class="btn-enter-room">
-                    ENTRAR NA SESSÃO ➤
-                </a>
+            <div id="msg-list" class="msg-list">
+                <!-- Mensagens carregadas aqui -->
             </div>
-            
-            <p style="color:#555; font-size:0.8em; margin-top:20px; font-style:italic;">
-                A sala abrirá em uma nova janela.
-            </p>
-        </div>
+        </section>
 
-        <div class="input-group" id="searchBox">
-            <input type="text" id="movieInput" placeholder="Adicionar filme novo..." autocomplete="off">
-        </div>
-        
-        <div id="suggestions"></div>
-        <div id="status" class="loading"></div>
+        <!-- SEÇÃO FILMES -->
+        <section id="sec-filmes" class="section">
+            <p style="text-align: center; color: #666; font-size: 0.9em;">Seus filmes continuam aqui! 👇</p>
+            <ul id="list-todo" class="movie-grid"></ul>
+            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+            <ul id="list-watched" class="movie-grid"></ul>
+        </section>
 
-        <ul id="list-todo" class="movie-list-container active"></ul>
-        <ul id="list-watched" class="movie-list-container"></ul>
+        <!-- SEÇÕES VAZIAS POR ENQUANTO -->
+        <section id="sec-desenhos" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Em breve... 🎨</p></section>
+        <section id="sec-vales" class="section"><p style="text-align:center; color:#444; margin-top:50px;">Em breve... 🎟️</p></section>
+
     </div>
 
     <script>
+        // CONFIGURAÇÕES SUPABASE
         const SUPABASE_URL = 'https://surcxurqjaelqudeqzic.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmN4dXJxamFlbHF1ZGVxemljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4OTk2NTYsImV4cCI6MjA4MTQ3NTY1Nn0.Ab0BRqSbqoWyb7A5lQMDNW9iBjb0FBxv27MhnZ8L8tk'; 
-        const TMDB_API_KEY = 'c96d86cf59c6c7fb0af651ec5059bcbf';
+        
+        const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const NOME_1 = "LÉO";
-        const NOME_2 = "EMI";
+        // TROCA DE SEÇÕES
+        function changeSection(id, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+            btn.classList.add('active');
+        }
 
-        // MAPA DE GÊNEROS DO TMDB
-        const GENRES = {
-            28: "Ação", 12: "Aventura", 16: "Animação", 35: "Comédia", 80: "Crime",
-            99: "Documentário", 18: "Drama", 10751: "Família", 14: "Fantasia",
-            36: "História", 27: "Terror", 10402: "Música", 9648: "Mistério",
-            10749: "Romance", 878: "Ficção", 10770: "Cinema TV", 53: "Thriller",
-            10752: "Guerra", 37: "Faroeste"
-        };
+        // --- GERENCIAMENTO DE MENSAGENS ---
+        async function saveMessage(author) {
+            const textArea = document.getElementById('msg-text');
+            const text = textArea.value.trim();
+            if(!text) return;
 
-        // Cache dos filmes para o sorteio
-        let cachedMovies = [];
-
-        window.addEventListener('load', async function() {
-            if (typeof window.supabase === 'undefined') return alert("Erro: Supabase não carregou.");
-            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            let searchTimeout = null;
-
-            window.switchTab = function(tabName) {
-                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-                event.target.classList.add('active');
-                
-                document.getElementById('list-todo').classList.remove('active');
-                document.getElementById('list-watched').classList.remove('active');
-                document.getElementById('tab-call').classList.remove('active');
-                document.getElementById('tab-sorteio').classList.remove('active');
-                document.getElementById('searchBox').style.display = 'none';
-
-                if (tabName === 'call') document.getElementById('tab-call').classList.add('active');
-                else if (tabName === 'sorteio') document.getElementById('tab-sorteio').classList.add('active');
-                else {
-                    document.getElementById('list-' + tabName).classList.add('active');
-                    if (tabName === 'todo') document.getElementById('searchBox').style.display = 'flex';
-                }
+            const { error } = await _supabase.from('messages').insert([{ text, author }]);
+            if(!error) {
+                textArea.value = '';
+                loadMessages();
             }
+        }
 
-            // --- LÓGICA DO SORTEIO ---
-            window.drawMovie = function() {
-                const genreFilter = document.getElementById('genre-selector').value;
-                const resultDiv = document.getElementById('draw-result');
-                
-                // Filtra apenas os filmes NÃO ASSISTIDOS
-                let availableMovies = cachedMovies.filter(m => m.watched === false);
+        async function loadMessages() {
+            const { data, error } = await _supabase.from('messages').select('*').order('created_at', { ascending: false });
+            if(error) return;
 
-                // Aplica filtro de categoria se não for "all"
-                if (genreFilter !== 'all') {
-                    availableMovies = availableMovies.filter(m => m.genres && m.genres.includes(genreFilter));
-                }
-
-                if (availableMovies.length === 0) {
-                    alert("Nenhum filme encontrado nessa categoria na sua lista 'Para Assistir'!");
-                    resultDiv.style.display = 'none';
-                    return;
-                }
-
-                // Sorteia
-                const randomIndex = Math.floor(Math.random() * availableMovies.length);
-                const winner = availableMovies[randomIndex];
-
-                // Mostra resultado
-                resultDiv.style.display = 'none'; // Reseta animação
-                setTimeout(() => {
-                    document.getElementById('winner-img').src = winner.poster || 'https://via.placeholder.com/300x450';
-                    document.getElementById('winner-title').innerText = winner.title;
-                    document.getElementById('winner-genre').innerText = winner.genres || 'Sem categoria';
-                    resultDiv.style.display = 'block';
-                }, 100);
-            }
-
-            const input = document.getElementById('movieInput');
-            const suggestionsBox = document.getElementById('suggestions');
-            input.addEventListener('input', function() {
-                const query = input.value.trim();
-                clearTimeout(searchTimeout);
-                if (query.length < 2) { suggestionsBox.style.display = 'none'; return; }
-                searchTimeout = setTimeout(() => fetchSuggestions(query), 500);
-            });
-            document.addEventListener('click', (e) => {
-                if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) suggestionsBox.style.display = 'none';
-            });
-
-            async function fetchSuggestions(query) {
-                try {
-                    const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=pt-BR`);
-                    const data = await response.json();
-                    showSuggestionsList(data.results || []);
-                } catch (e) { console.error(e); }
-            }
-
-            function showSuggestionsList(movies) {
-                suggestionsBox.innerHTML = '';
-                if (movies.length === 0) { suggestionsBox.style.display = 'none'; return; }
-                suggestionsBox.style.display = 'block';
-                movies.slice(0, 5).forEach(movie => {
-                    const div = document.createElement('div');
-                    div.className = 'suggestion-item';
-                    const year = movie.release_date ? movie.release_date.split('-')[0] : '';
-                    const thumb = movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : 'https://via.placeholder.com/40x60';
-                    
-                    // CONVERTE IDs DE GÊNERO PARA TEXTO
-                    const genreNames = movie.genre_ids ? movie.genre_ids.map(id => GENRES[id]).filter(Boolean).join(', ') : '';
-
-                    div.innerHTML = `<img src="${thumb}" class="thumb-tiny"><div class="suggestion-info"><span class="suggestion-title">${movie.title}</span><span class="suggestion-year">${year} • ${genreNames}</span></div>`;
-                    
-                    div.onclick = () => { 
-                        suggestionsBox.style.display = 'none'; 
-                        input.value = ''; 
-                        const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w185${movie.poster_path}` : null; 
-                        saveToSupabase(movie.title, poster, genreNames); 
-                    };
-                    suggestionsBox.appendChild(div);
-                });
-            }
-
-            async function saveToSupabase(title, posterUrl, genreString) {
-                const { error } = await supabase.from('movies').insert([{ 
-                    title: title, 
-                    poster: posterUrl, 
-                    watched: false,
-                    genres: genreString
-                }]);
-                if (error) alert("Erro ao salvar."); else fetchMovies();
-            }
-
-            window.markWatched = async function(id) {
-                const el = document.getElementById(`movie-${id}`);
-                if(el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }
-                const { error } = await supabase.from('movies').update({ watched: true }).eq('id', id);
-                if(error) fetchMovies();
-            }
-            window.restoreMovie = async function(id) {
-                const el = document.getElementById(`movie-${id}`);
-                if(el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }
-                const { error } = await supabase.from('movies').update({ watched: false }).eq('id', id);
-                if(error) fetchMovies();
-            }
-            window.deleteMovie = async function(id) {
-                if(confirm("Excluir definitivamente?")) {
-                    const el = document.getElementById(`movie-${id}`);
-                    if(el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }
-                    await supabase.from('movies').delete().eq('id', id);
-                }
-            }
-
-            window.updateRating = async function(id, person, rating) {
-                renderStars(id, person, rating);
-                const updateData = {};
-                updateData[`rating_${person}`] = rating;
-                await supabase.from('movies').update(updateData).eq('id', id);
-            }
-
-            window.sendReview = async function(id, person) {
-                const input = document.getElementById(`review-input-${person}-${id}`);
-                const newComment = input.value.trim();
-                if (!newComment) return;
-
-                const chatArea = document.getElementById(`chat-${person}-${id}`);
-                const tempBubble = document.createElement('div');
-                tempBubble.className = 'msg-bubble';
-                tempBubble.style.opacity = '0.5';
-                tempBubble.innerHTML = `<span>${newComment}</span> <span style="font-size:0.8em">⏳</span>`;
-                chatArea.appendChild(tempBubble);
-                chatArea.scrollTop = chatArea.scrollHeight; 
-                input.value = '';
-
-                const btn = document.getElementById(`btn-save-${person}-${id}`);
-                const oldComments = btn.getAttribute('data-full-history') || ""; 
-                const finalReview = oldComments ? oldComments + "|||" + newComment : newComment;
-
-                const updateData = {};
-                updateData[`review_${person}`] = finalReview;
-                await supabase.from('movies').update(updateData).eq('id', id);
-                fetchMovies(); 
-            }
-
-            window.editSingleComment = async function(id, person, index) {
-                const btn = document.getElementById(`btn-save-${person}-${id}`);
-                const history = (btn.getAttribute('data-full-history') || "").split('|||');
-                const oldText = history[index];
-                const newText = prompt("Editar comentário:", oldText);
-                if (newText !== null && newText.trim() !== "") {
-                    history[index] = newText.trim();
-                    const finalReview = history.join('|||');
-                    const updateData = {};
-                    updateData[`review_${person}`] = finalReview;
-                    await supabase.from('movies').update(updateData).eq('id', id);
-                    fetchMovies();
-                }
-            }
-
-            window.deleteSingleComment = async function(id, person, index) {
-                if(!confirm("Apagar esse comentário?")) return;
-                const btn = document.getElementById(`btn-save-${person}-${id}`);
-                let history = (btn.getAttribute('data-full-history') || "").split('|||');
-                history.splice(index, 1);
-                const finalReview = history.join('|||');
-                const updateData = {};
-                updateData[`review_${person}`] = finalReview;
-                await supabase.from('movies').update(updateData).eq('id', id);
-                fetchMovies();
-            }
-
-            function renderStars(id, person, currentRating) {
-                let html = '';
-                for (let i = 1; i <= 5; i++) {
-                    const isGold = i <= currentRating ? 'gold' : '';
-                    html += `<span class="star ${isGold}" onclick="updateRating('${id}', ${person}, ${i})">★</span>`;
-                }
-                const container = document.getElementById(`stars-${person}-${id}`);
-                if(container) container.innerHTML = html;
-                return html;
-            }
-
-            function renderChatBubbles(rawText, id, person) {
-                if (!rawText) return '';
-                const messages = rawText.split(/\|\|\||\n/).filter(m => m.trim() !== '');
-                return messages.map((msg, index) => {
-                    return `
-                    <div class="msg-bubble">
-                        <span>${msg}</span>
+            const list = document.getElementById('msg-list');
+            list.innerHTML = data.map(m => `
+                <div class="msg-card" style="border-color: ${m.author === 'LÉO' ? 'var(--accent-leo)' : 'var(--accent-emi)'}">
+                    <div class="msg-header">
+                        <span class="msg-author" style="color: ${m.author === 'LÉO' ? 'var(--accent-leo)' : 'var(--accent-emi)'}">${m.author}</span>
                         <div class="msg-tools">
-                            <button class="msg-tool-btn" onclick="editSingleComment('${id}', ${person}, ${index})">✏️</button>
-                            <button class="msg-tool-btn" onclick="deleteSingleComment('${id}', ${person}, ${index})">🗑️</button>
+                            <button class="tool-btn" onclick="editMessage('${m.id}', \`${m.text}\`)">✏️</button>
+                            <button class="tool-btn" onclick="deleteMessage('${m.id}')">🗑️</button>
                         </div>
-                    </div>`;
-                }).join('');
+                    </div>
+                    <div class="msg-body">${m.text}</div>
+                    <span class="msg-date">${new Date(m.created_at).toLocaleString('pt-BR')}</span>
+                </div>
+            `).join('');
+        }
+
+        async function deleteMessage(id) {
+            if(confirm("Deseja apagar este recado?")) {
+                await _supabase.from('messages').delete().eq('id', id);
+                loadMessages();
             }
+        }
 
-            async function fetchMovies() {
-                const { data, error } = await supabase.from('movies').select('*').order('created_at', { ascending: false });
-                if (error) return;
-
-                cachedMovies = data;
-
-                const listTodo = document.getElementById('list-todo');
-                const listWatched = document.getElementById('list-watched');
-                listTodo.innerHTML = '';
-                listWatched.innerHTML = '';
-                let countTodo = 0; let countWatched = 0;
-
-                data.forEach(movie => {
-                    let imgSrc = movie.poster || 'https://via.placeholder.com/185x278?text=Sem+Imagem';
-                    if (imgSrc.includes('w342') || imgSrc.includes('w500')) imgSrc = imgSrc.replace(/w\d+/, 'w185');
-
-                    const li = document.createElement('li');
-                    li.className = 'movie-card';
-                    li.id = `movie-${movie.id}`;
-                    
-                    const genreDisplay = movie.genres ? `<span class="genre-tag">${movie.genres}</span>` : '';
-
-                    if (movie.watched === true) {
-                        countWatched++;
-                        const r1 = movie.rating_1 || 0; const c1 = movie.review_1 || '';
-                        let stars1 = ''; for (let i = 1; i <= 5; i++) stars1 += `<span class="star ${i<=r1?'gold':''}" onclick="updateRating('${movie.id}', 1, ${i})">★</span>`;
-                        const r2 = movie.rating_2 || 0; const c2 = movie.review_2 || '';
-                        let stars2 = ''; for (let i = 1; i <= 5; i++) stars2 += `<span class="star ${i<=r2?'gold':''}" onclick="updateRating('${movie.id}', 2, ${i})">★</span>`;
-
-                        li.innerHTML = `
-                            <img src="${imgSrc}" class="poster-img" style="filter: grayscale(100%); opacity: 0.7;" loading="lazy">
-                            <div class="actions">
-                                <button class="btn-icon btn-undo" onclick="restoreMovie('${movie.id}')">↩</button>
-                                <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
-                            </div>
-                            <div class="movie-info">
-                                <div class="title-box">✅ ${movie.title} ${genreDisplay}</div>
-                                <div class="critic-section p1">
-                                    <div class="person-header"><div class="person-name">${NOME_1}</div><div class="stars" id="stars-1-${movie.id}">${stars1}</div></div>
-                                    <div class="chat-area" id="chat-1-${movie.id}">${renderChatBubbles(c1, movie.id, 1)}</div>
-                                    <div class="review-box">
-                                        <input type="text" class="review-input" id="review-input-1-${movie.id}" placeholder="Escrever...">
-                                        <button class="btn-save-review" id="btn-save-1-${movie.id}" data-full-history="${c1.replace(/"/g, '&quot;')}" onclick="sendReview('${movie.id}', 1)">➤</button>
-                                    </div>
-                                </div>
-                                <div class="critic-section p2">
-                                    <div class="person-header"><div class="person-name">${NOME_2}</div><div class="stars" id="stars-2-${movie.id}">${stars2}</div></div>
-                                    <div class="chat-area" id="chat-2-${movie.id}">${renderChatBubbles(c2, movie.id, 2)}</div>
-                                    <div class="review-box">
-                                        <input type="text" class="review-input" id="review-input-2-${movie.id}" placeholder="Escrever...">
-                                        <button class="btn-save-review" id="btn-save-2-${movie.id}" data-full-history="${c2.replace(/"/g, '&quot;')}" onclick="sendReview('${movie.id}', 2)">➤</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        listWatched.appendChild(li);
-                        const chat1 = document.getElementById(`chat-1-${movie.id}`); if(chat1) chat1.scrollTop = chat1.scrollHeight;
-                        const chat2 = document.getElementById(`chat-2-${movie.id}`); if(chat2) chat2.scrollTop = chat2.scrollHeight;
-                    } else {
-                        countTodo++;
-                        li.innerHTML = `
-                            <img src="${imgSrc}" class="poster-img" loading="lazy">
-                            <div class="actions">
-                                <button class="btn-icon btn-check" onclick="markWatched('${movie.id}')">✔</button>
-                                <button class="btn-icon btn-del" onclick="deleteMovie('${movie.id}')">✕</button>
-                            </div>
-                            <div class="movie-info" style="padding:8px">
-                                ${movie.title}
-                                ${genreDisplay}
-                            </div>
-                        `;
-                        listTodo.appendChild(li);
-                    }
-                });
-
-                if(countTodo === 0) listTodo.innerHTML = '<div class="empty-msg">Nenhum filme na lista.</div>';
-                if(countWatched === 0) listWatched.innerHTML = '<div class="empty-msg">Nenhum filme assistido ainda.</div>';
+        async function editMessage(id, oldText) {
+            const newText = prompt("Edite seu recado:", oldText);
+            if(newText !== null && newText.trim() !== "") {
+                await _supabase.from('messages').update({ text: newText }).eq('id', id);
+                loadMessages();
             }
-            
-            fetchMovies();
-            supabase.channel('public:movies').on('postgres_changes', { event: '*', schema: 'public', table: 'movies' }, fetchMovies).subscribe();
-        });
+        }
+
+        // --- CARREGAR FILMES (Sua lista existente) ---
+        async function loadMovies() {
+            const { data } = await _supabase.from('movies').select('*').order('created_at', { ascending: false });
+            if(!data) return;
+
+            const todo = document.getElementById('list-todo');
+            const watched = document.getElementById('list-watched');
+            todo.innerHTML = ''; watched.innerHTML = '';
+
+            data.forEach(m => {
+                const html = `
+                    <li class="movie-card">
+                        <img src="${m.poster}" class="poster-img" style="${m.watched ? 'filter:grayscale(1); opacity:0.5' : ''}">
+                        <div class="movie-info">${m.title}</div>
+                    </li>
+                `;
+                if(m.watched) watched.innerHTML += html;
+                else todo.innerHTML += html;
+            });
+        }
+
+        // INICIALIZAÇÃO
+        window.onload = () => {
+            loadMessages();
+            loadMovies();
+
+            // Ativa o Realtime para atualizar as mensagens sozinho se o outro postar
+            _supabase.channel('custom-all-channel')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, loadMessages)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'movies' }, loadMovies)
+            .subscribe();
+        };
     </script>
 </body>
 </html>
