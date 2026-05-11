@@ -35,24 +35,29 @@
 
         /* CADERNO INÍCIO */
         .notebook-bg { background-color: var(--paper); background-image: linear-gradient(#e1e0d6 1px, transparent 1px); background-size: 100% 30px; border-radius: 20px; height: 400px; padding: 20px; position: relative; box-shadow: inset 0 0 40px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.3); border-left: 25px solid #dcdbb2; overflow: hidden; margin-bottom: 30px; }
-        .bilhete { background: #fffb8f; color: #333; padding: 12px; width: 170px; box-shadow: 4px 4px 8px rgba(0,0,0,0.15); font-family: 'Dancing Script', cursive; font-size: 1.1rem; position: absolute; border-radius: 2px; animation: aparecerSumir 12s ease-in-out forwards; display: flex; flex-direction: column; }
+        .bilhete { background: #fffb8f; color: #333; padding: 12px; width: 170px; box-shadow: 4px 4px 8px rgba(0,0,0,0.15); font-family: 'Dancing Script', cursive; font-size: 1.1rem; position: absolute; border-radius: 2px; animation: aparecerSumir 12s ease-in-out forwards; display: flex; flex-direction: column; pointer-events: none; }
         .bilhete-meta { font-family: 'Inter'; font-size: 0.6rem; font-weight: 800; margin-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 4px; display: flex; justify-content: space-between; }
 
         /* FILMES */
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; list-style: none; padding: 0; margin-top: 20px; }
         .movie-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
-        .poster-container { position: relative; width: 100%; height: 320px; }
-        .poster-img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+        .poster-container { position: relative; width: 100%; height: 320px; background: #000; }
+        .poster-img { width: 100%; height: 100%; object-fit: contain; display: block; }
         
-        /* CRÍTICAS (Restaurado) */
-        .critic-section { padding: 10px; font-size: 0.8rem; border-top: 1px solid #333; }
-        .stars { font-size: 1rem; cursor: pointer; color: #444; margin-bottom: 5px; }
+        /* CRÍTICAS OTIMIZADAS */
+        .critic-section { padding: 10px; font-size: 0.8rem; border-top: 1px solid #333; width: 100%; }
+        .stars { font-size: 1.1rem; cursor: pointer; color: #444; margin-bottom: 5px; }
         .star.gold { color: #FFD700; }
-        .chat-bubble { background: rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 8px; margin-bottom: 5px; display: flex; justify-content: space-between; font-size: 0.75rem; }
-        .review-input-group { display: flex; gap: 5px; margin-top: 5px; }
-        .review-input-group input { flex: 1; background: #000; border: 1px solid #444; color: white; border-radius: 5px; padding: 5px; font-size: 0.7rem; }
+        
+        .chat-bubble { background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 5px; word-wrap: break-word; overflow-wrap: break-word; }
+        .chat-text { line-height: 1.3; color: #ddd; font-size: 0.8rem; }
+        .chat-tools { display: flex; gap: 12px; justify-content: flex-end; opacity: 0.4; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4px; }
+        .chat-tools button { background: none; border: none; color: white; cursor: pointer; font-size: 0.75rem; padding: 2px; }
 
-        /* MOBILE */
+        .review-input-group { display: flex; gap: 5px; margin-top: 8px; }
+        .review-input-group input { flex: 1; background: #000; border: 1px solid #444; color: white; border-radius: 8px; padding: 6px 10px; font-size: 0.75rem; outline: none; }
+
+        /* MOBILE FIXES */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; height: 75px; flex-direction: row; position: fixed; bottom: 0; border-right: none; border-top: 1px solid #222; padding: 0; overflow-x: auto; }
@@ -63,10 +68,12 @@
             main { padding: 15px 15px 100px 15px; }
             .movie-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .poster-container { height: 230px; }
-            .poster-img { object-fit: cover; } /* No mobile pôster preenche melhor assim */
+            .poster-img { object-fit: cover; }
+            .notebook-bg { height: 350px; border-left: 15px solid #dcdbb2; }
+            .bilhete { width: 135px; font-size: 0.95rem; }
         }
 
-        @keyframes aparecerSumir { 0% { opacity: 0; transform: scale(0.5); } 8% { opacity: 1; transform: scale(1); } 92% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: translateY(-30px); } }
+        @keyframes aparecerSumir { 0% { opacity: 0; transform: scale(0.5); } 8% { opacity: 1; transform: scale(1) rotate(-2deg); } 92% { opacity: 1; transform: scale(1) rotate(-2deg); } 100% { opacity: 0; transform: translateY(-30px); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -83,26 +90,32 @@
     </aside>
 
     <main>
-        <!-- INÍCIO -->
+        <!-- SEÇÃO INÍCIO -->
         <section id="sec-inicio" class="section active">
             <div style="background: rgba(22,22,22,0.9); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333;">
-                <textarea id="msg-text" placeholder="Escreva algo fofo..." rows="2" style="width: 100%; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; resize: none;"></textarea>
+                <textarea id="msg-text" placeholder="Escreva um bilhete fofo..." rows="2" style="width: 100%; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; resize: none;"></textarea>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button onclick="saveMsg('LÉO')" style="flex:1; background:var(--leo); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">LÉO</button>
                     <button onclick="saveMsg('EME')" style="flex:1; background:var(--eme); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">EME</button>
                 </div>
             </div>
-            <div class="notebook-bg" id="notebook"></div>
-            <div style="font-family:'Dancing Script'; font-size:1.6rem; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333;">📜 Histórico</div>
-            <div id="msg-list-legacy" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+            <div class="notebook-bg" id="notebook">
+                <div style="color:#999; text-align:center; font-family:'Dancing Script'; font-size:1.1rem; margin-top:150px; opacity:0.5;">Os bilhetes flutuam aqui...</div>
+            </div>
+
+            <div style="font-family:'Dancing Script'; font-size:1.6rem; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:5px;">📜 Arquivo de Recados</div>
+            <div id="msg-list-legacy" style="display:flex; flex-direction:column; gap:10px; padding-bottom: 30px;"></div>
         </section>
 
-        <!-- FILMES -->
+        <!-- SEÇÃO FILMES -->
         <section id="sec-filmes" class="section">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nosso Cinema</h2>
+            
             <div style="display:flex; gap:5px; background:#161616; padding:5px; border-radius:50px; margin-bottom:15px;">
-                <button id="btn-mov-todo" class="nav-btn active" style="flex:1; text-align:center; justify-content:center;" onclick="movTab('todo')">Para Ver</button>
-                <button id="btn-mov-watched" class="nav-btn" style="flex:1; text-align:center; justify-content:center;" onclick="movTab('watched')">Vistos</button>
-                <button id="btn-mov-sorteio" class="nav-btn" style="flex:1; text-align:center; justify-content:center;" onclick="movTab('sorteio')">🎲 Sorteio</button>
+                <button id="btn-mov-todo" class="nav-btn active" style="flex:1; text-align:center; justify-content:center; padding:8px;" onclick="movTab('todo')">Para Ver</button>
+                <button id="btn-mov-watched" class="nav-btn" style="flex:1; text-align:center; justify-content:center; padding:8px;" onclick="movTab('watched')">Vistos</button>
+                <button id="btn-mov-sorteio" class="nav-btn" style="flex:1; text-align:center; justify-content:center; padding:8px;" onclick="movTab('sorteio')">🎲 Sorteio</button>
             </div>
 
             <div id="area-filmes-lista">
@@ -115,14 +128,15 @@
             </div>
 
             <div id="area-filmes-sorteio" style="display:none; text-align:center; background:#1a1a1a; padding:20px; border-radius:15px; border:1px solid #333;">
+                <h3>O que vamos ver hoje?</h3>
                 <button onclick="spinRoleta()" style="width:100%; padding:15px; background:var(--primary); border:none; border-radius:12px; color:white; font-weight:bold; cursor:pointer;">SORTEAR 🎰</button>
                 <div id="draw-result" style="margin-top:20px;"></div>
             </div>
         </section>
 
-        <!-- DESENHOS / VALES -->
-        <section id="sec-desenhos" class="section"><center><h2>Em breve... 🎨</h2></center></section>
-        <section id="sec-vales" class="section"><center><h2>Em breve... 🎟️</h2></center></section>
+        <!-- SEÇÕES EXTRAS -->
+        <section id="sec-desenhos" class="section"><center><h2 style="font-family:'Dancing Script'">Galeria de Desenhos vindo aí... 🎨</h2></center></section>
+        <section id="sec-vales" class="section"><center><h2 style="font-family:'Dancing Script'">Seus Vales vindo aí... 🎟️</h2></center></section>
     </main>
 
     <script>
@@ -161,9 +175,16 @@
             const { data } = await _supabase.from('messages').select('*').order('created_at', { ascending: false });
             const list = document.getElementById('msg-list-legacy');
             list.innerHTML = (data || []).map(m => `
-                <div style="background:var(--card); padding:10px; border-radius:12px; border-left:4px solid ${m.author==='LÉO'?'var(--leo)':'var(--eme)'}; display:flex; justify-content:space-between; align-items:center;">
-                    <div><small style="color:${m.author==='LÉO'?'var(--leo)':'var(--eme)'}">${m.author}</small><div style="font-size:0.85rem;">${m.text}</div></div>
-                    <div><button onclick="editMsg('${m.id}', \`${m.text}\`)" style="background:none; border:none; color:white; cursor:pointer;">✏️</button><button onclick="delMsg('${m.id}')" style="background:none; border:none; color:white; cursor:pointer;">🗑️</button></div>
+                <div style="background:var(--card); padding:12px; border-radius:12px; border-left:4px solid ${m.author==='LÉO'?'var(--leo)':'var(--eme)'}; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="flex:1">
+                        <small style="color:${m.author==='LÉO'?'var(--leo)':'var(--eme)'}; font-weight:800;">${m.author}</small>
+                        <div style="font-size:0.9rem; margin:3px 0;">${m.text}</div>
+                        <small style="opacity:0.3; font-size:0.6rem;">${new Date(m.created_at).toLocaleString('pt-BR')}</small>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="editMsg('${m.id}', \`${m.text}\`)" style="background:none; border:none; color:white; cursor:pointer;">✏️</button>
+                        <button onclick="delMsg('${m.id}')" style="background:none; border:none; color:white; cursor:pointer;">🗑️</button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -173,8 +194,10 @@
             const b = document.createElement('div'); b.className = 'bilhete';
             const x = Math.random() * (notebook.offsetWidth - 160);
             const y = Math.random() * (notebook.offsetHeight - 110);
+            const time = new Date(m.created_at).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+            const date = new Date(m.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
             b.style.left = x+'px'; b.style.top = y+'px';
-            b.innerHTML = `<div style="flex:1">${m.text}</div><div class="bilhete-meta"><span>${m.author}</span></div>`;
+            b.innerHTML = `<div style="flex:1">${m.text}</div><div class="bilhete-meta"><span>${m.author}</span><span>${date} ${time}</span></div>`;
             notebook.appendChild(b); setTimeout(() => b.remove(), 12000);
         }
 
@@ -195,17 +218,17 @@
                     li.innerHTML = `
                         <div class="poster-container"><img src="${m.poster}" class="poster-img" style="filter:grayscale(1); opacity:0.4"></div>
                         <div style="padding:10px; flex:1">
-                            <div style="font-size:0.8rem; font-weight:800; margin-bottom:10px; text-align:center">${m.title}</div>
+                            <div style="font-size:0.85rem; font-weight:800; margin-bottom:10px; text-align:center">${m.title}</div>
                             ${renderCritic(m, 1, 'LÉO')}
                             ${renderCritic(m, 2, 'EME')}
                         </div>
-                        <button onclick="toggleW('${m.id}', false)" style="width:100%; background:#222; border:none; color:white; padding:10px; cursor:pointer; font-size:0.7rem">↩</button>
+                        <button onclick="toggleW('${m.id}', false)" style="width:100%; background:#333; color:white; border:none; padding:10px; cursor:pointer; font-size:0.7rem">↩ Ver de Novo</button>
                     `;
                     watched.appendChild(li);
                 } else {
                     li.innerHTML = `
                         <div class="poster-container"><img src="${m.poster}" class="poster-img"></div>
-                        <div style="padding:10px; font-size:0.8rem; font-weight:800; text-align:center">${m.title}</div>
+                        <div style="padding:10px; font-size:0.85rem; font-weight:800; text-align:center">${m.title}</div>
                         <div style="display:flex; border-top:1px solid #333">
                             <button onclick="toggleW('${m.id}', true)" style="flex:1; padding:12px; background:transparent; color:white; border:none; border-right:1px solid #333; cursor:pointer">✔️</button>
                             <button onclick="delMov('${m.id}')" style="flex:1; padding:12px; background:transparent; color:white; border:none; cursor:pointer">🗑️</button>
@@ -224,22 +247,22 @@
             
             return `
                 <div class="critic-section" style="border-left: 3px solid ${p===1?'var(--leo)':'var(--eme)'}">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <b style="font-size:0.6rem; opacity:0.6">${name}</b>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                        <b style="font-size:0.65rem; text-transform: uppercase; opacity: 0.7; color:${p===1?'var(--leo)':'var(--eme)'}">${name}</b>
                         <div class="stars">${stars}</div>
                     </div>
                     <div>${revs.map((txt, i) => `
                         <div class="chat-bubble">
-                            <span>${txt}</span>
-                            <div style="display:flex; gap:5px">
-                                <button onclick="editRev('${movie.id}', ${p}, ${i})" style="background:none;border:none;color:#555;font-size:0.6rem">✏️</button>
-                                <button onclick="delRev('${movie.id}', ${p}, ${i})" style="background:none;border:none;color:#555;font-size:0.6rem">✕</button>
+                            <span class="chat-text">${txt}</span>
+                            <div class="chat-tools">
+                                <button onclick="editRev('${movie.id}', ${p}, ${i})">✏️ Editar</button>
+                                <button onclick="delRev('${movie.id}', ${p}, ${i})">🗑️ Apagar</button>
                             </div>
                         </div>
                     `).join('')}</div>
                     <div class="review-input-group">
-                        <input type="text" id="in-${p}-${movie.id}" placeholder="...">
-                        <button onclick="addRev('${movie.id}', ${p})" style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:5px; font-size:0.7rem">➤</button>
+                        <input type="text" id="in-${p}-${movie.id}" placeholder="Nota...">
+                        <button onclick="addRev('${movie.id}', ${p})" style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:5px; font-size:0.7rem; cursor:pointer;">➤</button>
                     </div>
                 </div>
             `;
@@ -262,9 +285,9 @@
         }
 
         async function toggleW(id, s) { await _supabase.from('movies').update({ watched: s }).eq('id', id); loadMovies(); }
-        async function delMov(id) { if(confirm("Excluir?")) { await _supabase.from('movies').delete().eq('id', id); loadMovies(); } }
+        async function delMov(id) { if(confirm("Excluir filme?")) { await _supabase.from('movies').delete().eq('id', id); loadMovies(); } }
 
-        // BUSCA
+        // BUSCA TMDB
         document.getElementById('movieInput').oninput = async function() {
             if(this.value.length < 3) return;
             const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${this.value}&language=pt-BR`);
@@ -279,14 +302,17 @@
 
         function spinRoleta() {
             const avail = cachedMovies.filter(m => !m.watched);
-            if(avail.length === 0) return alert("Lista vazia!");
+            if(avail.length === 0) return alert("Sua lista está vazia!");
             const win = avail[Math.floor(Math.random() * avail.length)];
             document.getElementById('draw-result').innerHTML = `<div style="background:#000; padding:15px; border-radius:15px; border:2px solid var(--primary);"><img src="${win.poster}" style="width:120px; border-radius:10px;"><h4 style="margin:10px 0;">${win.title}</h4></div>`;
         }
 
         window.onload = () => {
             loadLegacyList(); loadMovies();
-            _supabase.channel('global').on('postgres_changes', {event:'INSERT', schema:'public', table:'messages'}, p => {
+            _supabase.from('messages').select('*').order('created_at', { ascending: false }).limit(5).then(({data}) => {
+                data.reverse().forEach((m, i) => setTimeout(() => createBilhete(m), i * 2500));
+            });
+            _supabase.channel('main').on('postgres_changes', {event:'INSERT', schema:'public', table:'messages'}, p => {
                 createBilhete(p.new); loadLegacyList();
             }).on('postgres_changes', {event:'*', schema:'public', table:'messages'}, loadLegacyList)
             .on('postgres_changes', {event:'*', schema:'public', table:'movies'}, loadMovies).subscribe();
