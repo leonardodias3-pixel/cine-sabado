@@ -172,7 +172,7 @@
             </div>
         </section>
 
-        <!-- SEÇÃO DESENHOS (NOVA!) -->
+        <!-- SEÇÃO DESENHOS -->
         <section id="sec-desenhos" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nossa Galeria de Arte 🎨</h2>
             
@@ -294,7 +294,7 @@
         async function editGoal(id, oldTitle) { const newTitle = prompt("Editar meta:", oldTitle); if(newTitle && newTitle.trim() !== "") { await _supabase.from('goals').update({ title: newTitle.trim() }).eq('id', id); loadGoals(); } }
         async function delGoal(id) { if(confirm("Deseja apagar essa meta?")) { await _supabase.from('goals').delete().eq('id', id); loadGoals(); } }
 
-        // --- DESENHOS LÓGICA DE UPLOAD ---
+        // --- DESENHOS (MÉTODO BASE64 - CONTORNA ERRO DE STORAGE) ---
         function updateFileLabel() {
             const fileInput = document.getElementById('art-file-input');
             const btn = document.getElementById('upload-label-btn');
@@ -313,36 +313,35 @@
             if(fileInput.files.length === 0) return alert("Selecione uma imagem!");
 
             const file = fileInput.files[0];
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            // 1. Faz upload do arquivo de imagem para o Storage Bucket 'galeria'
-            const { data: uploadData, error: uploadError } = await _supabase.storage
-                .from('galeria')
-                .upload(filePath, file);
-
-            if(uploadError) {
-                console.error(uploadError);
-                return alert("Erro ao subir a imagem no Storage.");
-            }
-
-            // 2. Pega a URL pública gerada
-            const { data: urlData } = _supabase.storage.from('galeria').getPublicUrl(filePath);
-            const image_url = urlData.publicUrl;
-
-            // 3. Salva os dados na tabela do banco
-            const { error: dbError } = await _supabase.from('drawings').insert([{ title, artist, image_url }]);
             
-            if(!dbError) {
-                titleInput.value = '';
-                fileInput.value = '';
-                document.getElementById('upload-label-btn').innerText = "📁 Escolher Foto";
-                document.getElementById('upload-label-btn').style.borderColor = "#555";
-                loadDrawings();
-            } else {
-                alert("Erro ao salvar dados do desenho no banco.");
-            }
+            // Ativa um feedback visual simples de carregamento
+            const originalBtnText = document.getElementById('upload-label-btn').innerText;
+            document.getElementById('upload-label-btn').innerText = "⏳ Convertendo...";
+
+            // Converte o arquivo físico para string Base64 de forma local e assíncrona
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async function () {
+                const base64Url = reader.result;
+
+                // Salva a string diretamente na tabela do banco (contornando as travas de Storage)
+                const { error: dbError } = await _supabase.from('drawings').insert([{ title, artist, image_url: base64Url }]);
+                
+                if(!dbError) {
+                    titleInput.value = '';
+                    fileInput.value = '';
+                    document.getElementById('upload-label-btn').innerText = "📁 Escolher Foto";
+                    document.getElementById('upload-label-btn').style.borderColor = "#555";
+                    loadDrawings();
+                } else {
+                    alert("Erro ao salvar os dados na tabela. Verifique as policies de drawings.");
+                    document.getElementById('upload-label-btn').innerText = originalBtnText;
+                }
+            };
+            reader.onerror = function (error) {
+                alert("Erro ao ler o arquivo de imagem no dispositivo.");
+                document.getElementById('upload-label-btn').innerText = originalBtnText;
+            };
         }
 
         async function loadDrawings() {
@@ -364,17 +363,14 @@
                         <h3 class="art-title">${d.title}</h3>
                         <span class="art-author" style="color: ${d.artist === 'LÉO' ? 'var(--leo)' : 'var(--eme)'}">${d.artist}</span>
                     </div>
-                    <button onclick="delDrawing('${d.id}', '${d.image_url.split('/').pop()}')" style="position:absolute; bottom:12px; right:12px; background:transparent; border:none; color:#555; cursor:pointer; font-size:0.9rem;">🗑️</button>
+                    <button onclick="delDrawing('${d.id}')" style="position:absolute; bottom:12px; right:12px; background:transparent; border:none; color:#555; cursor:pointer; font-size:0.9rem;">🗑️</button>
                 </li>
             `).join('');
         }
 
-        async function delDrawing(id, storageFileName) {
+        async function delDrawing(id) {
             if(confirm("Deseja deletar este desenho permanentemente?")) {
-                // Remove da tabela
                 await _supabase.from('drawings').delete().eq('id', id);
-                // Remove do arquivo físico no Storage
-                await _supabase.storage.from('galeria').remove([storageFileName]);
                 loadDrawings();
             }
         }
