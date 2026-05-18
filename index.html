@@ -16,6 +16,8 @@
             --leo: #2196F3;
             --eme: #ff758f;
             --paper: #fdfcf0;
+            --notebook-blue: #a2c2e8;
+            --notebook-pink: #ffb3c1;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -33,28 +35,51 @@
         .section { display: none; max-width: 900px; margin: 0 auto; animation: slideUp 0.4s ease-out; }
         .section.active { display: block; }
 
-        /* CADERNO GERAL (USADO EM INÍCIO E METAS) */
+        /* CADERNO INÍCIO */
         .notebook-bg { background-color: var(--paper); background-image: linear-gradient(#e1e0d6 1px, transparent 1px); background-size: 100% 30px; border-radius: 20px; height: 400px; padding: 20px; position: relative; box-shadow: inset 0 0 40px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.3); border-left: 25px solid #dcdbb2; overflow: hidden; margin-bottom: 30px; }
-        
-        /* BILHETES FLUTUANTES (INÍCIO) */
         .bilhete { background: #fffb8f; color: #333; padding: 12px; width: 170px; box-shadow: 4px 4px 8px rgba(0,0,0,0.15); font-family: 'Dancing Script', cursive; font-size: 1.1rem; position: absolute; border-radius: 2px; animation: aparecerSumir 12s ease-in-out forwards; display: flex; flex-direction: column; pointer-events: none; }
         .bilhete-meta { font-family: 'Inter'; font-size: 0.6rem; font-weight: 800; margin-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 4px; display: flex; justify-content: space-between; }
 
-        /* CADERNO DE METAS LINHAS */
-        .notebook-scroll { height: 100%; overflow-y: auto; scrollbar-width: none; padding-right: 5px; }
-        .goal-line { display: flex; align-items: center; justify-content: space-between; height: 30px; line-height: 30px; font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: #333; padding: 0 10px; border-bottom: 1px dashed transparent; }
-        .goal-left { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
+        /* NOVO VISUAL: CADERNO DE METAS (BULLET JOURNAL) */
+        .goals-notebook {
+            background-color: #fbfbf9;
+            background-image: linear-gradient(var(--notebook-blue) 1px, transparent 1px);
+            background-size: 100% 35px;
+            border-radius: 16px;
+            min-height: 490px;
+            padding: 10px 20px 20px 60px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.05);
+            border: 1px solid #d0cfc4;
+        }
+        /* Margem Rosa do Caderno */
+        .goals-notebook::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 45px;
+            width: 2px;
+            background: var(--notebook-pink);
+        }
+        .notebook-scroll { height: 440px; overflow-y: auto; scrollbar-width: none; }
         
-        /* CHECKBOX PERSONALIZADO FOFO */
-        .goal-cb { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 2px solid #888; border-radius: 4px; cursor: pointer; position: relative; flex-shrink: 0; outline: none; transition: 0.2s; background: #fff; }
+        .goal-line { 
+            display: flex; align-items: center; justify-content: space-between; 
+            height: 35px; line-height: 35px; 
+            font-family: 'Dancing Script', cursive; font-size: 1.45rem; color: #2c2c2c; 
+            padding-right: 10px;
+        }
+        .goal-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding-top: 2px; }
+        
+        /* CHECKBOX FOFO METAS */
+        .goal-cb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border: 2px solid #666; border-radius: 4px; cursor: pointer; position: relative; flex-shrink: 0; outline: none; background: #fff; }
         .goal-cb:checked { background: var(--primary); border-color: var(--primary); }
-        .goal-cb:checked::after { content: '✓'; position: absolute; color: white; font-size: 14px; font-weight: bold; top: -3px; left: 2px; font-family: 'Inter'; }
+        .goal-cb:checked::after { content: '✓'; position: absolute; color: white; font-size: 13px; font-weight: bold; top: -5px; left: 1px; font-family: 'Inter'; }
         
         .goal-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
-        .goal-text.completed { text-decoration: line-through; opacity: 0.5; color: #666; }
+        .goal-text.completed { text-decoration: line-through; opacity: 0.4; color: #777; }
         .goal-actions { display: flex; gap: 8px; opacity: 0; transition: 0.2s; }
         .goal-line:hover .goal-actions { opacity: 1; }
-        .btn-goal-tool { background: none; border: none; cursor: pointer; font-size: 0.9rem; padding: 0; color: #666; }
+        .btn-goal-tool { background: none; border: none; cursor: pointer; font-size: 0.9rem; padding: 0; color: #777; }
         .btn-goal-tool:hover { color: #000; }
 
         /* FILMES */
@@ -63,7 +88,7 @@
         .poster-container { position: relative; width: 100%; height: 320px; background: #000; }
         .poster-img { width: 100%; height: 100%; object-fit: contain; display: block; }
         
-        /* CRÍTICAS OTIMIZADAS */
+        /* CRÍTICAS */
         .critic-section { padding: 10px; font-size: 0.8rem; border-top: 1px solid #333; width: 100%; }
         .stars { font-size: 1.1rem; cursor: pointer; color: #444; margin-bottom: 5px; }
         .star.gold { color: #FFD700; }
@@ -88,9 +113,12 @@
             .movie-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .poster-container { height: 230px; }
             .poster-img { object-fit: cover; }
-            .notebook-bg { height: 350px; border-left: 15px solid #dcdbb2; background-size: 100% 30px; padding: 10px 10px 10px 5px; }
+            .notebook-bg { height: 350px; border-left: 15px solid #dcdbb2; }
             .bilhete { width: 135px; font-size: 0.95rem; }
-            .goal-line { font-size: 1.2rem; padding: 0 5px; }
+            .goals-notebook { padding: 8px 10px 10px 45px; background-size: 100% 35px; min-height: 400px; }
+            .goals-notebook::before { left: 32px; }
+            .notebook-scroll { height: 360px; }
+            .goal-line { font-size: 1.25rem; }
             .goal-actions { opacity: 1; }
         }
 
@@ -165,7 +193,7 @@
                 <button onclick="saveGoal()" style="background:var(--primary); color:white; border:none; padding:0 20px; border-radius:10px; font-weight:bold; cursor:pointer;">Adicionar</button>
             </div>
 
-            <div class="notebook-bg" style="height: 480px; padding-top: 5px;">
+            <div class="goals-notebook">
                 <div class="notebook-scroll" id="goal-list">
                     <!-- Linhas do caderno de metas entram aqui -->
                 </div>
@@ -189,6 +217,7 @@
             document.querySelectorAll('.sidebar .nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('sec-' + id).classList.add('active');
             btn.classList.add('active');
+            if(id === 'metas') loadGoals();
         }
 
         function movTab(t) {
@@ -243,14 +272,19 @@
         async function delMsg(id) { if(confirm("Apagar?")) { await _supabase.from('messages').delete().eq('id', id); loadLegacyList(); } }
         async function editMsg(id, old) { const n = prompt("Editar:", old); if(n) { await _supabase.from('messages').update({ text: n }).eq('id', id); loadLegacyList(); } }
 
-        // --- METAS ---
+        // --- METAS (CORRIGIDO) ---
         async function saveGoal() {
             const input = document.getElementById('goal-input');
             const title = input.value.trim();
             if(!title) return;
-            await _supabase.from('goals').insert([{ title }]);
-            input.value = '';
-            loadGoals();
+            
+            const { error } = await _supabase.from('goals').insert([{ title, completed: false }]);
+            if(!error) {
+                input.value = '';
+                loadGoals();
+            } else {
+                alert("Erro ao salvar no banco. Verifique se criou a tabela!");
+            }
         }
 
         async function loadGoals() {
@@ -259,7 +293,7 @@
             if(!list) return;
 
             if(!data || data.length === 0) {
-                list.innerHTML = `<div class="goal-line" style="justify-content:center; opacity:0.5;">Nenhuma meta definida ainda... ✨</div>`;
+                list.innerHTML = `<div class="goal-line" style="justify-content:center; opacity:0.5;">Nossa lista de metas está em branco... ✨</div>`;
                 return;
             }
 
@@ -291,7 +325,7 @@
         }
 
         async function delGoal(id) {
-            if(confirm("Tem certeza que quer excluir essa meta?")) {
+            if(confirm("Deseja apagar essa meta?")) {
                 await _supabase.from('goals').delete().eq('id', id);
                 loadGoals();
             }
