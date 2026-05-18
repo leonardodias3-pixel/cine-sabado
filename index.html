@@ -40,47 +40,30 @@
         .bilhete { background: #fffb8f; color: #333; padding: 12px; width: 170px; box-shadow: 4px 4px 8px rgba(0,0,0,0.15); font-family: 'Dancing Script', cursive; font-size: 1.1rem; position: absolute; border-radius: 2px; animation: aparecerSumir 12s ease-in-out forwards; display: flex; flex-direction: column; pointer-events: none; }
         .bilhete-meta { font-family: 'Inter'; font-size: 0.6rem; font-weight: 800; margin-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 4px; display: flex; justify-content: space-between; }
 
-        /* NOVO VISUAL: CADERNO DE METAS (BULLET JOURNAL) */
-        .goals-notebook {
-            background-color: #fbfbf9;
-            background-image: linear-gradient(var(--notebook-blue) 1px, transparent 1px);
-            background-size: 100% 35px;
-            border-radius: 16px;
-            min-height: 490px;
-            padding: 10px 20px 20px 60px;
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.05);
-            border: 1px solid #d0cfc4;
-        }
-        /* Margem Rosa do Caderno */
-        .goals-notebook::before {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0; left: 45px;
-            width: 2px;
-            background: var(--notebook-pink);
-        }
+        /* CADERNO DE METAS */
+        .goals-notebook { background-color: #fbfbf9; background-image: linear-gradient(var(--notebook-blue) 1px, transparent 1px); background-size: 100% 35px; border-radius: 16px; min-height: 490px; padding: 10px 20px 20px 60px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.05); border: 1px solid #d0cfc4; }
+        .goals-notebook::before { content: ''; position: absolute; top: 0; bottom: 0; left: 45px; width: 2px; background: var(--notebook-pink); }
         .notebook-scroll { height: 440px; overflow-y: auto; scrollbar-width: none; }
-        
-        .goal-line { 
-            display: flex; align-items: center; justify-content: space-between; 
-            height: 35px; line-height: 35px; 
-            font-family: 'Dancing Script', cursive; font-size: 1.45rem; color: #2c2c2c; 
-            padding-right: 10px;
-        }
+        .goal-line { display: flex; align-items: center; justify-content: space-between; height: 35px; line-height: 35px; font-family: 'Dancing Script', cursive; font-size: 1.45rem; color: #2c2c2c; padding-right: 10px; }
         .goal-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding-top: 2px; }
-        
-        /* CHECKBOX FOFO METAS */
         .goal-cb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border: 2px solid #666; border-radius: 4px; cursor: pointer; position: relative; flex-shrink: 0; outline: none; background: #fff; }
         .goal-cb:checked { background: var(--primary); border-color: var(--primary); }
         .goal-cb:checked::after { content: '✓'; position: absolute; color: white; font-size: 13px; font-weight: bold; top: -5px; left: 1px; font-family: 'Inter'; }
-        
         .goal-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
         .goal-text.completed { text-decoration: line-through; opacity: 0.4; color: #777; }
         .goal-actions { display: flex; gap: 8px; opacity: 0; transition: 0.2s; }
         .goal-line:hover .goal-actions { opacity: 1; }
         .btn-goal-tool { background: none; border: none; cursor: pointer; font-size: 0.9rem; padding: 0; color: #777; }
         .btn-goal-tool:hover { color: #000; }
+
+        /* GALERIA DE DESENHOS */
+        .art-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; list-style: none; padding: 0; margin-top: 20px; }
+        .art-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; position: relative; }
+        .art-img-container { width: 100%; height: 260px; background: #050505; }
+        .art-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .art-info { padding: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .art-title { font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: #fff; margin: 0; }
+        .art-author { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
         /* FILMES */
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; list-style: none; padding: 0; margin-top: 20px; }
@@ -92,12 +75,10 @@
         .critic-section { padding: 10px; font-size: 0.8rem; border-top: 1px solid #333; width: 100%; }
         .stars { font-size: 1.1rem; cursor: pointer; color: #444; margin-bottom: 5px; }
         .star.gold { color: #FFD700; }
-        
         .chat-bubble { background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 5px; word-wrap: break-word; overflow-wrap: break-word; }
         .chat-text { line-height: 1.3; color: #ddd; font-size: 0.8rem; }
         .chat-tools { display: flex; gap: 12px; justify-content: flex-end; opacity: 0.4; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4px; }
         .chat-tools button { background: none; border: none; color: white; cursor: pointer; font-size: 0.75rem; padding: 2px; }
-
         .review-input-group { display: flex; gap: 5px; margin-top: 8px; }
         .review-input-group input { flex: 1; background: #000; border: 1px solid #444; color: white; border-radius: 8px; padding: 6px 10px; font-size: 0.75rem; outline: none; }
 
@@ -110,9 +91,9 @@
             .nav-btn { flex: 1; min-width: 75px; flex-direction: column; font-size: 0.65rem; padding: 10px 5px; text-align: center; justify-content: center; align-items: center; gap: 4px; }
             .nav-btn.active { border-left: none; border-top: 3px solid var(--primary); background: transparent; }
             main { padding: 15px 15px 100px 15px; }
-            .movie-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .poster-container { height: 230px; }
-            .poster-img { object-fit: cover; }
+            .movie-grid, .art-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .poster-container, .art-img-container { height: 210px; }
+            .poster-img, .art-img { object-fit: cover; }
             .notebook-bg { height: 350px; border-left: 15px solid #dcdbb2; }
             .bilhete { width: 135px; font-size: 0.95rem; }
             .goals-notebook { padding: 8px 10px 10px 45px; background-size: 100% 35px; min-height: 400px; }
@@ -149,11 +130,9 @@
                     <button onclick="saveMsg('EME')" style="flex:1; background:var(--eme); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">EME</button>
                 </div>
             </div>
-
             <div class="notebook-bg" id="notebook">
                 <div style="color:#999; text-align:center; font-family:'Dancing Script'; font-size:1.1rem; margin-top:150px; opacity:0.5;">Os bilhetes flutuam aqui...</div>
             </div>
-
             <div style="font-family:'Dancing Script'; font-size:1.6rem; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:5px;">📜 Arquivo de Recados</div>
             <div id="msg-list-legacy" style="display:flex; flex-direction:column; gap:10px; padding-bottom: 30px;"></div>
         </section>
@@ -161,13 +140,11 @@
         <!-- SEÇÃO FILMES -->
         <section id="sec-filmes" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nosso Cinema</h2>
-            
             <div style="display:flex; gap:5px; background:#161616; padding:5px; border-radius:50px; margin-bottom:15px;">
                 <button id="btn-mov-todo" class="nav-btn active" style="flex:1; text-align:center; justify-content:center; padding:8px;" onclick="movTab('todo')">Para Ver</button>
                 <button id="btn-mov-watched" class="nav-btn" style="flex:1; text-align:center; justify-content:center; padding:8px;" onclick="movTab('watched')">Vistos</button>
                 <button id="btn-mov-sorteio" class="nav-btn" style="flex:1; text-align:center; justify-content:center; padding:8px;" onclick="movTab('sorteio')">🎲 Sorteio</button>
             </div>
-
             <div id="area-filmes-lista">
                 <div id="search-container">
                     <input type="text" id="movieInput" placeholder="🔍 Adicionar novo filme..." style="width:100%; background:#1e1e1e; border:1px solid #333; color:white; padding:12px; border-radius:12px; margin-bottom:10px;">
@@ -176,7 +153,6 @@
                 <ul id="list-todo" class="movie-grid"></ul>
                 <ul id="list-watched" class="movie-grid" style="display:none"></ul>
             </div>
-
             <div id="area-filmes-sorteio" style="display:none; text-align:center; background:#1a1a1a; padding:20px; border-radius:15px; border:1px solid #333;">
                 <h3>O que vamos ver hoje?</h3>
                 <button onclick="spinRoleta()" style="width:100%; padding:15px; background:var(--primary); border:none; border-radius:12px; color:white; font-weight:bold; cursor:pointer;">SORTEAR 🎰</button>
@@ -187,21 +163,35 @@
         <!-- SEÇÃO METAS -->
         <section id="sec-metas" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nossos Planos & Metas 📌</h2>
-            
             <div style="background: rgba(22,22,22,0.9); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; display: flex; gap: 10px;">
                 <input type="text" id="goal-input" placeholder="Nova meta ex: Viajar para Veneza... ✈️" style="flex:1; background:#000; border:1px solid #444; color:white; padding:12px; border-radius:10px; outline:none; font-size:0.9rem;">
                 <button onclick="saveGoal()" style="background:var(--primary); color:white; border:none; padding:0 20px; border-radius:10px; font-weight:bold; cursor:pointer;">Adicionar</button>
             </div>
-
             <div class="goals-notebook">
-                <div class="notebook-scroll" id="goal-list">
-                    <!-- Linhas do caderno de metas entram aqui -->
-                </div>
+                <div class="notebook-scroll" id="goal-list"></div>
             </div>
         </section>
 
-        <!-- SEÇÕES EXTRAS -->
-        <section id="sec-desenhos" class="section"><center><h2 style="font-family:'Dancing Script'">Galeria de Desenhos vindo aí... 🎨</h2></center></section>
+        <!-- SEÇÃO DESENHOS (NOVA!) -->
+        <section id="sec-desenhos" class="section">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nossa Galeria de Arte 🎨</h2>
+            
+            <div style="background: rgba(22,22,22,0.9); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="art-title-input" placeholder="Título da obra de arte..." style="flex:1; background:#000; border:1px solid #444; color:white; padding:12px; border-radius:10px; outline:none;">
+                    <input type="file" id="art-file-input" accept="image/*" style="display:none;" onchange="updateFileLabel()">
+                    <button onclick="document.getElementById('art-file-input').click()" id="upload-label-btn" style="background:#333; color:white; border:1px dashed #555; padding:0 15px; border-radius:10px; cursor:pointer; font-size:0.85rem;">📁 Escolher Foto</button>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="saveDrawing('LÉO')" id="btn-draw-leo" style="flex:1; background:var(--leo); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">Postar como LÉO</button>
+                    <button onclick="saveDrawing('EME')" id="btn-draw-eme" style="flex:1; background:var(--eme); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">Postar como EME</button>
+                </div>
+            </div>
+
+            <ul id="art-list" class="art-grid"></ul>
+        </section>
+
+        <!-- SEÇÃO VALES -->
         <section id="sec-vales" class="section"><center><h2 style="font-family:'Dancing Script'">Seus Vales vindo aí... 🎟️</h2></center></section>
     </main>
 
@@ -218,6 +208,7 @@
             document.getElementById('sec-' + id).classList.add('active');
             btn.classList.add('active');
             if(id === 'metas') loadGoals();
+            if(id === 'desenhos') loadDrawings();
         }
 
         function movTab(t) {
@@ -272,31 +263,20 @@
         async function delMsg(id) { if(confirm("Apagar?")) { await _supabase.from('messages').delete().eq('id', id); loadLegacyList(); } }
         async function editMsg(id, old) { const n = prompt("Editar:", old); if(n) { await _supabase.from('messages').update({ text: n }).eq('id', id); loadLegacyList(); } }
 
-        // --- METAS (CORRIGIDO) ---
+        // --- METAS ---
         async function saveGoal() {
             const input = document.getElementById('goal-input');
             const title = input.value.trim();
             if(!title) return;
-            
             const { error } = await _supabase.from('goals').insert([{ title, completed: false }]);
-            if(!error) {
-                input.value = '';
-                loadGoals();
-            } else {
-                alert("Erro ao salvar no banco. Verifique se criou a tabela!");
-            }
+            if(!error) { input.value = ''; loadGoals(); }
         }
 
         async function loadGoals() {
             const { data } = await _supabase.from('goals').select('*').order('created_at', { ascending: true });
             const list = document.getElementById('goal-list');
             if(!list) return;
-
-            if(!data || data.length === 0) {
-                list.innerHTML = `<div class="goal-line" style="justify-content:center; opacity:0.5;">Nossa lista de metas está em branco... ✨</div>`;
-                return;
-            }
-
+            if(!data || data.length === 0) { list.innerHTML = `<div class="goal-line" style="justify-content:center; opacity:0.5;">Nossa lista de metas está em branco... ✨</div>`; return; }
             list.innerHTML = data.map(g => `
                 <div class="goal-line">
                     <div class="goal-left">
@@ -310,24 +290,92 @@
                 </div>
             `).join('');
         }
+        async function toggleGoal(id, completed) { await _supabase.from('goals').update({ completed }).eq('id', id); loadGoals(); }
+        async function editGoal(id, oldTitle) { const newTitle = prompt("Editar meta:", oldTitle); if(newTitle && newTitle.trim() !== "") { await _supabase.from('goals').update({ title: newTitle.trim() }).eq('id', id); loadGoals(); } }
+        async function delGoal(id) { if(confirm("Deseja apagar essa meta?")) { await _supabase.from('goals').delete().eq('id', id); loadGoals(); } }
 
-        async function toggleGoal(id, completed) {
-            await _supabase.from('goals').update({ completed }).eq('id', id);
-            loadGoals();
-        }
-
-        async function editGoal(id, oldTitle) {
-            const newTitle = prompt("Editar meta:", oldTitle);
-            if(newTitle && newTitle.trim() !== "") {
-                await _supabase.from('goals').update({ title: newTitle.trim() }).eq('id', id);
-                loadGoals();
+        // --- DESENHOS LÓGICA DE UPLOAD ---
+        function updateFileLabel() {
+            const fileInput = document.getElementById('art-file-input');
+            const btn = document.getElementById('upload-label-btn');
+            if(fileInput.files.length > 0) {
+                btn.innerText = "📸 " + fileInput.files[0].name.substring(0, 12) + "...";
+                btn.style.borderColor = "var(--primary)";
             }
         }
 
-        async function delGoal(id) {
-            if(confirm("Deseja apagar essa meta?")) {
-                await _supabase.from('goals').delete().eq('id', id);
-                loadGoals();
+        async function saveDrawing(artist) {
+            const titleInput = document.getElementById('art-title-input');
+            const fileInput = document.getElementById('art-file-input');
+            const title = titleInput.value.trim();
+
+            if(!title) return alert("Dê um título ao desenho!");
+            if(fileInput.files.length === 0) return alert("Selecione uma imagem!");
+
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            // 1. Faz upload do arquivo de imagem para o Storage Bucket 'galeria'
+            const { data: uploadData, error: uploadError } = await _supabase.storage
+                .from('galeria')
+                .upload(filePath, file);
+
+            if(uploadError) {
+                console.error(uploadError);
+                return alert("Erro ao subir a imagem no Storage.");
+            }
+
+            // 2. Pega a URL pública gerada
+            const { data: urlData } = _supabase.storage.from('galeria').getPublicUrl(filePath);
+            const image_url = urlData.publicUrl;
+
+            // 3. Salva os dados na tabela do banco
+            const { error: dbError } = await _supabase.from('drawings').insert([{ title, artist, image_url }]);
+            
+            if(!dbError) {
+                titleInput.value = '';
+                fileInput.value = '';
+                document.getElementById('upload-label-btn').innerText = "📁 Escolher Foto";
+                document.getElementById('upload-label-btn').style.borderColor = "#555";
+                loadDrawings();
+            } else {
+                alert("Erro ao salvar dados do desenho no banco.");
+            }
+        }
+
+        async function loadDrawings() {
+            const { data } = await _supabase.from('drawings').select('*').order('created_at', { ascending: false });
+            const list = document.getElementById('art-list');
+            if(!list) return;
+
+            if(!data || data.length === 0) {
+                list.innerHTML = `<div style="grid-column: span 2; text-align:center; color:#555; padding:40px; font-style:italic;">Nenhum desenho publicado ainda. Que tal ser o primeiro? 🎨</div>`;
+                return;
+            }
+
+            list.innerHTML = data.map(d => `
+                <li class="art-card">
+                    <div class="art-img-container">
+                        <img src="${d.image_url}" class="art-img" loading="lazy">
+                    </div>
+                    <div class="art-info">
+                        <h3 class="art-title">${d.title}</h3>
+                        <span class="art-author" style="color: ${d.artist === 'LÉO' ? 'var(--leo)' : 'var(--eme)'}">${d.artist}</span>
+                    </div>
+                    <button onclick="delDrawing('${d.id}', '${d.image_url.split('/').pop()}')" style="position:absolute; bottom:12px; right:12px; background:transparent; border:none; color:#555; cursor:pointer; font-size:0.9rem;">🗑️</button>
+                </li>
+            `).join('');
+        }
+
+        async function delDrawing(id, storageFileName) {
+            if(confirm("Deseja deletar este desenho permanentemente?")) {
+                // Remove da tabela
+                await _supabase.from('drawings').delete().eq('id', id);
+                // Remove do arquivo físico no Storage
+                await _supabase.storage.from('galeria').remove([storageFileName]);
+                loadDrawings();
             }
         }
 
@@ -435,7 +483,7 @@
         }
 
         window.onload = () => {
-            loadLegacyList(); loadMovies(); loadGoals();
+            loadLegacyList(); loadMovies(); loadGoals(); loadDrawings();
             _supabase.from('messages').select('*').order('created_at', { ascending: false }).limit(5).then(({data}) => {
                 if(data) data.reverse().forEach((m, i) => setTimeout(() => createBilhete(m), i * 2500));
             });
@@ -443,7 +491,8 @@
                 createBilhete(p.new); loadLegacyList();
             }).on('postgres_changes', {event:'*', schema:'public', table:'messages'}, loadLegacyList)
             .on('postgres_changes', {event:'*', schema:'public', table:'movies'}, loadMovies)
-            .on('postgres_changes', {event:'*', schema:'public', table:'goals'}, loadGoals).subscribe();
+            .on('postgres_changes', {event:'*', schema:'public', table:'goals'}, loadGoals)
+            .on('postgres_changes', {event:'*', schema:'public', table:'drawings'}, loadDrawings).subscribe();
         };
     </script>
 </body>
