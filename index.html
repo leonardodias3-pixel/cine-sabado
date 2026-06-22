@@ -161,7 +161,7 @@
         <section id="sec-metas" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nossos Planos & Metas 📌</h2>
             <div style="background: rgba(22,22,22,0.9); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; display: flex; gap: 10px;">
-                <input type="text" id="goal-input" placeholder="Nova meta ex: Viajar para Veneza... ✈️" style="flex:1; background:#000; border:1px solid #444; color:white; padding:12px; border-radius:10px; outline:none; font-size:0.9rem;">
+                <input type="text" id="goal-input" placeholder="Nova meta ex: Viajar para Veneza... ✈️" style="flex:1; background:#000; border:1px solid #444; color:white; padding:12px; border-radius:10px; outline:none; font-size:0.9rem;" onkeypress="if(event.key === 'Enter') saveGoal()">
                 <button onclick="saveGoal()" style="background:var(--primary); color:white; border:none; padding:0 20px; border-radius:10px; font-weight:bold; cursor:pointer;">Adicionar</button>
             </div>
             <div class="goals-notebook">
@@ -197,7 +197,6 @@
         const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cachedMovies = [];
 
-        // FUNÇÃO DE SEGURANÇA PARA EVITAR QUEBRA DE LAYOUT (HTML INJECTION)
         function escapeHTML(str) {
             if (!str) return "";
             return String(str).replace(/&/g, "&amp;")
@@ -299,7 +298,7 @@
         async function editGoal(id, oldTitle) { const newTitle = prompt("Editar meta:", oldTitle); if(newTitle && newTitle.trim() !== "") { await _supabase.from('goals').update({ title: newTitle.trim() }).eq('id', id); loadGoals(); } }
         async function delGoal(id) { if(confirm("Deseja apagar essa meta?")) { await _supabase.from('goals').delete().eq('id', id); loadGoals(); } }
 
-        // --- DESENHOS (MÉTODO BASE64) ---
+        // --- DESENHOS ---
         function updateFileLabel() {
             const fileInput = document.getElementById('art-file-input');
             const btn = document.getElementById('upload-label-btn');
@@ -433,31 +432,96 @@
                         </div>
                     `).join('')}</div>
                     <div class="review-input-group">
-                        <input type="text" id="in-${p}-${movie.id}" placeholder="Nota...">
-                        <button onclick="addRev('${movie.id}', ${p})" style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:5px; font-size:0.7rem; cursor:pointer;">➤</button>
+                        <input type="text" id="in-${p}-${movie.id}" placeholder="Nota..." onkeypress="if(event.key === 'Enter') addRev('${movie.id}', ${p}, document.getElementById('btn-${p}-${movie.id}'))">
+                        <button id="btn-${p}-${movie.id}" onclick="addRev('${movie.id}', ${p}, this)" style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:5px; font-size:0.7rem; cursor:pointer;">➤</button>
                     </div>
                 </div>
             `;
         }
 
-        async function upRate(id, p, r) { const up = {}; up[`rating_${p}`] = r; await _supabase.from('movies').update(up).eq('id', id); loadMovies(); }
-        async function addRev(id, p) {
-            const val = document.getElementById(`in-${p}-${id}`).value.trim(); if(!val) return;
-            const m = cachedMovies.find(x => x.id == id);
-            const up = {}; up[`review_${p}`] = m[`review_${p}`] ? m[`review_${p}`] + "|||" + val : val;
-            await _supabase.from('movies').update(up).eq('id', id); loadMovies();
-        }
-        async function delRev(id, p, i) {
-            const m = cachedMovies.find(x => x.id == id); let r = m[`review_${p}`].split('|||'); r.splice(i, 1);
-            const up = {}; up[`review_${p}`] = r.join('|||'); await _supabase.from('movies').update(up).eq('id', id); loadMovies();
-        }
-        async function editRev(id, p, i) {
-            const m = cachedMovies.find(x => x.id == id); let r = m[`review_${p}`].split('|||');
-            const n = prompt("Editar comentário:", r[i]); if(n) { r[i] = n; const up = {}; up[`review_${p}`] = r.join('|||'); await _supabase.from('movies').update(up).eq('id', id); loadMovies(); }
+        async function upRate(id, p, r) { 
+            const up = {}; up[`rating_${p}`] = r; 
+            const { error } = await _supabase.from('movies').update(up).eq('id', id); 
+            if(error) alert("Erro ao salvar nota: " + error.message);
+            else loadMovies(); 
         }
 
-        async function toggleW(id, s) { await _supabase.from('movies').update({ watched: s }).eq('id', id); loadMovies(); }
-        async function delMov(id) { if(confirm("Excluir filme?")) { await _supabase.from('movies').delete().eq('id', id); loadMovies(); } }
+        async function addRev(id, p, btn) {
+            try {
+                const input = document.getElementById(`in-${p}-${id}`);
+                if (!input) return;
+                const val = input.value.trim(); 
+                if(!val) return;
+
+                if(btn) btn.innerText = "⏳"; // Feedback visual
+
+                // Força a comparação transformando ambos em String (proteção extra)
+                const m = cachedMovies.find(x => String(x.id) === String(id));
+                if (!m) { 
+                    alert("Ops! Filme não encontrado na memória."); 
+                    if(btn) btn.innerText = "➤";
+                    return; 
+                }
+
+                const up = {}; 
+                up[`review_${p}`] = m[`review_${p}`] ? m[`review_${p}`] + "|||" + val : val;
+                
+                const { error } = await _supabase.from('movies').update(up).eq('id', m.id); 
+                
+                if (error) {
+                    console.error("Erro Supabase:", error);
+                    alert("O banco recusou salvar: " + error.message);
+                    if(btn) btn.innerText = "➤";
+                } else {
+                    input.value = ''; 
+                    await loadMovies();
+                }
+            } catch (err) {
+                console.error("Erro JS:", err);
+                alert("Erro inesperado no código: " + err.message);
+                if(btn) btn.innerText = "➤";
+            }
+        }
+
+        async function delRev(id, p, i) {
+            if(!confirm("Apagar comentário?")) return;
+            const m = cachedMovies.find(x => String(x.id) === String(id)); 
+            if(!m) return;
+            let r = (m[`review_${p}`] || "").split('|||'); 
+            r.splice(i, 1);
+            const up = {}; up[`review_${p}`] = r.join('|||'); 
+            const { error } = await _supabase.from('movies').update(up).eq('id', m.id); 
+            if(error) alert("Erro ao apagar: " + error.message);
+            else loadMovies();
+        }
+
+        async function editRev(id, p, i) {
+            const m = cachedMovies.find(x => String(x.id) === String(id)); 
+            if(!m) return;
+            let r = (m[`review_${p}`] || "").split('|||');
+            const n = prompt("Editar comentário:", r[i]); 
+            if(n !== null && n.trim() !== "") { 
+                r[i] = n.trim(); 
+                const up = {}; up[`review_${p}`] = r.join('|||'); 
+                const { error } = await _supabase.from('movies').update(up).eq('id', m.id); 
+                if(error) alert("Erro ao editar: " + error.message);
+                else loadMovies(); 
+            }
+        }
+
+        async function toggleW(id, s) { 
+            const { error } = await _supabase.from('movies').update({ watched: s }).eq('id', id); 
+            if(error) alert("Erro ao mover filme: " + error.message);
+            else loadMovies(); 
+        }
+
+        async function delMov(id) { 
+            if(confirm("Excluir filme?")) { 
+                const { error } = await _supabase.from('movies').delete().eq('id', id); 
+                if(error) alert("Erro ao excluir: " + error.message);
+                else loadMovies(); 
+            } 
+        }
 
         // BUSCA TMDB
         document.getElementById('movieInput').oninput = async function() {
@@ -465,11 +529,18 @@
             const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${this.value}&language=pt-BR`);
             const d = await r.json();
             const sugg = document.getElementById('suggestions'); sugg.style.display = 'block';
-            sugg.innerHTML = d.results.slice(0,4).map(m => `<div onclick="addMov('${m.title.replace(/'/g,"")}', 'https://image.tmdb.org/t/p/w185${m.poster_path}')" style="padding:10px; cursor:pointer; font-size:0.8rem; border-bottom:1px solid #333">${escapeHTML(m.title)}</div>`).join('');
+            sugg.innerHTML = d.results.slice(0,4).map(m => `<div onclick="addMov('${m.title.replace(/'/g,"").replace(/"/g,"").replace(/\\/g,"")}', 'https://image.tmdb.org/t/p/w185${m.poster_path}')" style="padding:10px; cursor:pointer; font-size:0.8rem; border-bottom:1px solid #333">${escapeHTML(m.title)}</div>`).join('');
         }
+        
         async function addMov(t, p) {
-            await _supabase.from('movies').insert([{ title: t, poster: p, watched: false }]);
-            document.getElementById('suggestions').style.display = 'none'; document.getElementById('movieInput').value = ''; loadMovies();
+            const { error } = await _supabase.from('movies').insert([{ title: t, poster: p, watched: false }]);
+            if (error) {
+                alert("Erro ao adicionar filme: " + error.message);
+            } else {
+                document.getElementById('suggestions').style.display = 'none'; 
+                document.getElementById('movieInput').value = ''; 
+                loadMovies();
+            }
         }
 
         function spinRoleta() {
