@@ -82,6 +82,26 @@
         .review-input-group { display: flex; gap: 5px; margin-top: 8px; }
         .review-input-group input { flex: 1; background: #000; border: 1px solid #444; color: white; border-radius: 8px; padding: 6px 10px; font-size: 0.75rem; outline: none; }
 
+        /* SUDOKU STYLES */
+        .sudoku-container { display: flex; flex-direction: column; gap: 15px; align-items: center; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; margin-top: 15px; }
+        .sudoku-scoreboard { display: flex; justify-content: space-around; width: 100%; max-width: 420px; background: #111; padding: 12px; border-radius: 12px; border: 1px solid #333; font-weight: bold; font-size: 0.95rem; }
+        .sudoku-controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%; max-width: 420px; }
+        .sudoku-btn-mode { flex: 1; min-width: 80px; padding: 10px; font-size: 0.8rem; background: #222; color: #aaa; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-weight: bold; text-align: center; }
+        .sudoku-btn-mode.active-tool { background: var(--primary); color: white; border-color: var(--primary); }
+        .sudoku-board { display: grid; grid-template-columns: repeat(9, 1fr); width: 100%; max-width: 420px; aspect-ratio: 1; border: 3px solid var(--text); background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
+        .sudoku-cell { display: flex; align-items: center; justify-content: center; border: 1px solid #222; font-size: 1.35rem; font-weight: 800; cursor: pointer; user-select: none; position: relative; aspect-ratio: 1; color: #fff; }
+        .sudoku-cell.border-top { border-top: 2.5px solid var(--text); }
+        .sudoku-cell.border-left { border-left: 2.5px solid var(--text); }
+        .sudoku-cell.clue { background: #1a1a1a; color: #777; cursor: not-allowed; }
+        .sudoku-cell.selected { background: rgba(255, 77, 109, 0.25); }
+        .sudoku-cell.player-leo { color: var(--leo); text-shadow: 0 0 8px rgba(33, 150, 243, 0.5); }
+        .sudoku-cell.player-eme { color: var(--eme); text-shadow: 0 0 8px rgba(255, 117, 143, 0.5); }
+        .sudoku-notes-grid { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; height: 100%; font-size: 0.55rem; color: #777; padding: 2px; line-height: 1; pointer-events: none; }
+        .sudoku-note-cell { display: flex; align-items: center; justify-content: center; }
+        .sudoku-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; max-width: 420px; margin-top: 5px; }
+        .sudoku-key { background: #222; color: white; border: 1px solid #444; padding: 12px 5px; border-radius: 10px; font-weight: bold; cursor: pointer; text-align: center; font-size: 1.1rem; transition: 0.1s; }
+        .sudoku-key:active { background: #333; transform: scale(0.95); }
+
         /* MOBILE FIXES */
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -101,6 +121,7 @@
             .notebook-scroll { height: 360px; }
             .goal-line { font-size: 1.25rem; }
             .goal-actions { opacity: 1; }
+            .sudoku-cell { font-size: 1.1rem; }
         }
 
         @keyframes aparecerSumir { 0% { opacity: 0; transform: scale(0.5); } 8% { opacity: 1; transform: scale(1) rotate(-2deg); } 92% { opacity: 1; transform: scale(1) rotate(-2deg); } 100% { opacity: 0; transform: translateY(-30px); } }
@@ -116,6 +137,7 @@
             <button class="nav-btn" onclick="changeSection('filmes', this)"><span>🍿</span> Filmes</button>
             <button class="nav-btn" onclick="changeSection('metas', this)"><span>📌</span> Metas</button>
             <button class="nav-btn" onclick="changeSection('desenhos', this)"><span>🎨</span> Desenhos</button>
+            <button class="nav-btn" onclick="changeSection('sudoku', this)"><span>🧩</span> Sudoku</button>
             <button class="nav-btn" onclick="changeSection('vales', this)"><span>🎟️</span> Vales</button>
         </nav>
     </aside>
@@ -187,6 +209,44 @@
             <ul id="art-list" class="art-grid"></ul>
         </section>
 
+        <section id="sec-sudoku" class="section">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Desafio Sudoku 🧩</h2>
+            
+            <div class="sudoku-container">
+                <div class="sudoku-scoreboard">
+                    <span style="color: var(--leo);">🏆 LÉO: <span id="score-leo">0</span> pts</span>
+                    <span style="color: var(--eme);">🏆 EME: <span id="score-eme">0</span> pts</span>
+                </div>
+
+                <div class="sudoku-controls">
+                    <button id="sudoku-player-toggle" class="sudoku-btn-mode" onclick="changeSudokuPlayer()" style="border-color: var(--leo); color: #fff; background: rgba(33, 150, 243, 0.1);">Vez de: LÉO</button>
+                    <button id="btn-sudoku-notes" class="sudoku-btn-mode" onclick="toggleSudokuNotes()">📝 Anotações: OFF</button>
+                    <button class="sudoku-btn-mode" onclick="useSudokuHint()" style="background:#2b2b1a;">💡 Dica (-5 pts)</button>
+                </div>
+
+                <div class="sudoku-controls">
+                    <button id="btn-diff-facil" class="sudoku-btn-mode active-tool" onclick="generateSudoku('facil')">Fácil</button>
+                    <button id="btn-diff-medio" class="sudoku-btn-mode" onclick="generateSudoku('medio')">Médio</button>
+                    <button id="btn-diff-dificil" class="sudoku-btn-mode" onclick="generateSudoku('dificil')">Difícil</button>
+                </div>
+
+                <div id="sudoku-grid-wrapper" class="sudoku-board"></div>
+
+                <div class="sudoku-keypad">
+                    <button class="sudoku-key" onclick="sudokuInput(1)">1</button>
+                    <button class="sudoku-key" onclick="sudokuInput(2)">2</button>
+                    <button class="sudoku-key" onclick="sudokuInput(3)">3</button>
+                    <button class="sudoku-key" onclick="sudokuInput(4)">4</button>
+                    <button class="sudoku-key" onclick="sudokuInput(5)">5</button>
+                    <button class="sudoku-key" onclick="sudokuInput(6)">6</button>
+                    <button class="sudoku-key" onclick="sudokuInput(7)">7</button>
+                    <button class="sudoku-key" onclick="sudokuInput(8)">8</button>
+                    <button class="sudoku-key" onclick="sudokuInput(9)">9</button>
+                    <button class="sudoku-key" onclick="sudokuInput(0)" style="background: #331a1a; color: #ff6666; font-size: 0.9rem;">❌ Apagar</button>
+                </div>
+            </div>
+        </section>
+
         <section id="sec-vales" class="section"><center><h2 style="font-family:'Dancing Script'">Seus Vales vindo aí... 🎟️</h2></center></section>
     </main>
 
@@ -196,6 +256,17 @@
         const TMDB_API_KEY = 'c96d86cf59c6c7fb0af651ec5059bcbf';
         const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cachedMovies = [];
+
+        // Variaveis Globais Sudoku
+        let sudokuSelectedCell = null;
+        let sudokuNotesMode = false;
+        let sudokuActivePlayer = 'LÉO'; 
+        let sudokuScores = { LÉO: 0, EME: 0 };
+        let sudokuSolution = [];
+        let sudokuInitial = [];
+        let sudokuCurrent = [];
+        let sudokuPlayerMap = []; 
+        let sudokuNotesMap = []; 
 
         function escapeHTML(str) {
             if (!str) return "";
@@ -213,6 +284,10 @@
             btn.classList.add('active');
             if(id === 'metas') loadGoals();
             if(id === 'desenhos') loadDrawings();
+            if(id === 'sudoku') {
+                loadSudokuScores();
+                if(!sudokuSolution.length) generateSudoku('facil');
+            }
         }
 
         function movTab(t) {
@@ -453,9 +528,8 @@
                 const val = input.value.trim(); 
                 if(!val) return;
 
-                if(btn) btn.innerText = "⏳"; // Feedback visual
+                if(btn) btn.innerText = "⏳"; 
 
-                // Força a comparação transformando ambos em String (proteção extra)
                 const m = cachedMovies.find(x => String(x.id) === String(id));
                 if (!m) { 
                     alert("Ops! Filme não encontrado na memória."); 
@@ -469,7 +543,6 @@
                 const { error } = await _supabase.from('movies').update(up).eq('id', m.id); 
                 
                 if (error) {
-                    console.error("Erro Supabase:", error);
                     alert("O banco recusou salvar: " + error.message);
                     if(btn) btn.innerText = "➤";
                 } else {
@@ -477,7 +550,6 @@
                     await loadMovies();
                 }
             } catch (err) {
-                console.error("Erro JS:", err);
                 alert("Erro inesperado no código: " + err.message);
                 if(btn) btn.innerText = "➤";
             }
@@ -548,6 +620,211 @@
             if(avail.length === 0) return alert("Sua lista está vazia!");
             const win = avail[Math.floor(Math.random() * avail.length)];
             document.getElementById('draw-result').innerHTML = `<div style="background:#000; padding:15px; border-radius:15px; border:2px solid var(--primary);"><img src="${win.poster}" style="width:120px; border-radius:10px;"><h4 style="margin:10px 0;">${escapeHTML(win.title)}</h4></div>`;
+        }
+
+        // --- LÓGICA DO JOGO SUDOKU ---
+        function changeSudokuPlayer() {
+            const btn = document.getElementById('sudoku-player-toggle');
+            if(sudokuActivePlayer === 'LÉO') {
+                sudokuActivePlayer = 'EME';
+                btn.innerText = "Vez de: EME";
+                btn.style.borderColor = "var(--eme)";
+                btn.style.background = "rgba(255, 117, 143, 0.1)";
+            } else {
+                sudokuActivePlayer = 'LÉO';
+                btn.innerText = "Vez de: LÉO";
+                btn.style.borderColor = "var(--leo)";
+                btn.style.background = "rgba(33, 150, 243, 0.1)";
+            }
+        }
+
+        function toggleSudokuNotes() {
+            sudokuNotesMode = !sudokuNotesMode;
+            const btn = document.getElementById('btn-sudoku-notes');
+            btn.innerText = sudokuNotesMode ? "📝 Anotações: ON" : "📝 Anotações: OFF";
+            btn.classList.toggle('active-tool', sudokuNotesMode);
+        }
+
+        function generateSudoku(diff) {
+            document.querySelectorAll('#sec-sudoku .sudoku-controls .sudoku-btn-mode').forEach(b => {
+                if(b.id.startsWith('btn-diff-')) b.classList.remove('active-tool');
+            });
+            document.getElementById('btn-diff-' + diff).classList.add('active-tool');
+
+            // Grade estrutural base para embaralhar
+            const baseBoard = [
+                [1,2,3, 4,5,6, 7,8,9], [4,5,6, 7,8,9, 1,2,3], [7,8,9, 1,2,3, 4,5,6],
+                [2,3,1, 5,6,4, 8,9,7], [5,6,4, 8,9,7, 2,3,1], [8,9,7, 2,3,1, 5,6,4],
+                [3,1,2, 6,4,5, 9,7,8], [6,4,5, 9,7,8, 3,1,2], [9,7,8, 3,1,2, 6,4,5]
+            ];
+
+            // Permuta números aleatoriamente (Mapeamento 1-9 dinâmico)
+            let map = [1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+            let board = baseBoard.map(row => row.map(val => map[val - 1]));
+
+            // Permuta linhas internas de blocos 3x3
+            for(let i=0; i<9; i+=3) {
+                let rows = [i, i+1, i+2].sort(() => Math.random() - 0.5);
+                let copy = [board[i], board[i+1], board[i+2]];
+                board[i] = copy[rows[0] - i];
+                board[i+1] = copy[rows[1] - i];
+                board[i+2] = copy[rows[2] - i];
+            }
+
+            sudokuSolution = board.map(row => [...row]);
+
+            // Define quantidade de ocultações com base no nível
+            let missing = 35; // Fácil
+            if(diff === 'medio') missing = 45;
+            if(diff === 'dificil') missing = 54;
+
+            sudokuInitial = board.map(row => [...row]);
+            let spots = [];
+            for(let r=0; r<9; r++) {
+                for(let c=0; c<9; c++) spots.push({r, c});
+            }
+            spots.sort(() => Math.random() - 0.5);
+
+            for(let i=0; i<missing; i++) {
+                sudokuInitial[spots[i].r][spots[i].c] = 0;
+            }
+
+            sudokuCurrent = sudokuInitial.map(row => [...row]);
+            sudokuPlayerMap = Array(9).fill(0).map(() => Array(9).fill(''));
+            sudokuNotesMap = Array(9).fill(0).map(() => Array(9).fill(0).map(() => Array(10).fill(false)));
+            sudokuSelectedCell = null;
+
+            renderSudokuBoard();
+        }
+
+        function renderSudokuBoard() {
+            const wrapper = document.getElementById('sudoku-grid-wrapper');
+            if(!wrapper) return;
+            wrapper.innerHTML = '';
+
+            for(let r=0; r<9; r++) {
+                for(let c=0; c<9; c++) {
+                    const val = sudokuCurrent[r][c];
+                    const isClue = sudokuInitial[r][c] !== 0;
+
+                    const cell = document.createElement('div');
+                    cell.className = 'sudoku-cell';
+
+                    if(r === 3 || r === 6) cell.classList.add('border-top');
+                    if(c === 3 || c === 6) cell.classList.add('border-left');
+
+                    if(isClue) {
+                        cell.classList.add('clue');
+                        cell.innerText = val;
+                    } else {
+                        if(sudokuSelectedCell && sudokuSelectedCell.r === r && sudokuSelectedCell.c === c) {
+                            cell.classList.add('selected');
+                        }
+
+                        if(val !== 0) {
+                            cell.innerText = val;
+                            if(sudokuPlayerMap[r][c] === 'LÉO') cell.classList.add('player-leo');
+                            if(sudokuPlayerMap[r][c] === 'EME') cell.classList.add('player-eme');
+                        } else {
+                            let cellHasNotes = false;
+                            for(let n=1; n<=9; n++) { if(sudokuNotesMap[r][c][n]) cellHasNotes = true; }
+
+                            if(cellHasNotes) {
+                                const nGrid = document.createElement('div');
+                                nGrid.className = 'sudoku-notes-grid';
+                                for(let n=1; n<=9; n++) {
+                                    const nCell = document.createElement('div');
+                                    nCell.className = 'sudoku-note-cell';
+                                    if(sudokuNotesMap[r][c][n]) nCell.innerText = n;
+                                    nGrid.appendChild(nCell);
+                                }
+                                cell.appendChild(nGrid);
+                            }
+                        }
+
+                        cell.onclick = () => {
+                            sudokuSelectedCell = {r, c};
+                            renderSudokuBoard();
+                        };
+                    }
+                    wrapper.appendChild(cell);
+                }
+            }
+        }
+
+        function sudokuInput(num) {
+            if(!sudokuSelectedCell) return;
+            const {r, c} = sudokuSelectedCell;
+            if(sudokuInitial[r][c] !== 0) return;
+
+            if(num === 0) { // Apagar
+                sudokuCurrent[r][c] = 0;
+                sudokuPlayerMap[r][c] = '';
+                sudokuNotesMap[r][c] = Array(10).fill(false);
+                renderSudokuBoard();
+                return;
+            }
+
+            if(sudokuNotesMode) {
+                sudokuCurrent[r][c] = 0;
+                sudokuPlayerMap[r][c] = '';
+                sudokuNotesMap[r][c][num] = !sudokuNotesMap[r][c][num];
+            } else {
+                sudokuCurrent[r][c] = num;
+                sudokuPlayerMap[r][c] = sudokuActivePlayer;
+                sudokuNotesMap[r][c] = Array(10).fill(false);
+
+                if(num === sudokuSolution[r][c]) {
+                    sudokuScores[sudokuActivePlayer] += 10;
+                    updateSudokuScoreboard();
+                    checkSudokuWin();
+                } else {
+                    sudokuScores[sudokuActivePlayer] = Math.max(0, sudokuScores[sudokuActivePlayer] - 15);
+                    updateSudokuScoreboard();
+                    alert(`Opa! O número ${num} está incorreto nesta célula. Erros custam -15 pontos.`);
+                }
+            }
+            renderSudokuBoard();
+        }
+
+        function useSudokuHint() {
+            if(!sudokuSelectedCell) return alert("Selecione uma célula vazia para preencher com a dica!");
+            const {r, c} = sudokuSelectedCell;
+            if(sudokuInitial[r][c] !== 0) return;
+
+            const correct = sudokuSolution[r][c];
+            sudokuCurrent[r][c] = correct;
+            sudokuPlayerMap[r][c] = sudokuActivePlayer;
+            sudokuNotesMap[r][c] = Array(10).fill(false);
+
+            sudokuScores[sudokuActivePlayer] = Math.max(0, sudokuScores[sudokuActivePlayer] - 5);
+            updateSudokuScoreboard();
+
+            renderSudokuBoard();
+            checkSudokuWin();
+        }
+
+        function checkSudokuWin() {
+            for(let r=0; r<9; r++) {
+                for(let c=0; c<9; c++) {
+                    if(sudokuCurrent[r][c] !== sudokuSolution[r][c]) return;
+                }
+            }
+            sudokuScores[sudokuActivePlayer] += 100;
+            updateSudokuScoreboard();
+            alert(`🎉 INCRÍVEL! Vocês desvendaram o tabuleiro juntos! Bônus de 100 pontos para ${sudokuActivePlayer}! 🏆`);
+        }
+
+        function updateSudokuScoreboard() {
+            document.getElementById('score-leo').innerText = sudokuScores.LÉO;
+            document.getElementById('score-eme').innerText = sudokuScores.EME;
+            localStorage.setItem('sudoku_scores_v1', JSON.stringify(sudokuScores));
+        }
+
+        function loadSudokuScores() {
+            const saved = localStorage.getItem('sudoku_scores_v1');
+            if(saved) sudokuScores = JSON.parse(saved);
+            updateSudokuScoreboard();
         }
 
         window.onload = () => {
