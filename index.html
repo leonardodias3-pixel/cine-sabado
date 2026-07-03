@@ -23,24 +23,20 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* SIDEBAR (PC) / NAVBAR (CELULAR) */
         .sidebar { width: 240px; background: var(--sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid #222; z-index: 1000; flex-shrink: 0; }
         .logo { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 1.8rem; margin-bottom: 40px; text-align: center; }
         .nav-group { display: flex; flex-direction: column; gap: 10px; }
         .nav-btn { background: transparent; color: #888; border: none; padding: 12px 15px; border-radius: 12px; cursor: pointer; text-align: left; font-weight: 600; transition: 0.2s; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
         .nav-btn.active { background: #252525; color: white; border-left: 4px solid var(--primary); }
 
-        /* ÁREA DE CONTEÚDO */
         main { flex: 1; overflow-y: auto; padding: 30px; position: relative; scrollbar-width: none; scroll-behavior: smooth; }
         .section { display: none; max-width: 900px; margin: 0 auto; animation: slideUp 0.4s ease-out; }
         .section.active { display: block; }
 
-        /* CADERNO INÍCIO */
         .notebook-bg { background-color: var(--paper); background-image: linear-gradient(#e1e0d6 1px, transparent 1px); background-size: 100% 30px; border-radius: 20px; height: 400px; padding: 20px; position: relative; box-shadow: inset 0 0 40px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.3); border-left: 25px solid #dcdbb2; overflow: hidden; margin-bottom: 30px; }
         .bilhete { background: #fffb8f; color: #333; padding: 12px; width: 170px; box-shadow: 4px 4px 8px rgba(0,0,0,0.15); font-family: 'Dancing Script', cursive; font-size: 1.1rem; position: absolute; border-radius: 2px; animation: aparecerSumir 12s ease-in-out forwards; display: flex; flex-direction: column; pointer-events: none; }
         .bilhete-meta { font-family: 'Inter'; font-size: 0.6rem; font-weight: 800; margin-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 4px; display: flex; justify-content: space-between; }
 
-        /* CADERNO DE METAS */
         .goals-notebook { background-color: #fbfbf9; background-image: linear-gradient(var(--notebook-blue) 1px, transparent 1px); background-size: 100% 35px; border-radius: 16px; min-height: 490px; padding: 10px 20px 20px 60px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.05); border: 1px solid #d0cfc4; }
         .goals-notebook::before { content: ''; position: absolute; top: 0; bottom: 0; left: 45px; width: 2px; background: var(--notebook-pink); }
         .notebook-scroll { height: 440px; overflow-y: auto; scrollbar-width: none; }
@@ -56,7 +52,6 @@
         .btn-goal-tool { background: none; border: none; cursor: pointer; font-size: 0.9rem; padding: 0; color: #777; }
         .btn-goal-tool:hover { color: #000; }
 
-        /* GALERIA DE DESENHOS */
         .art-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; list-style: none; padding: 0; margin-top: 20px; }
         .art-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; position: relative; }
         .art-img-container { width: 100%; height: 260px; background: #050505; }
@@ -65,7 +60,6 @@
         .art-title { font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: #fff; margin: 0; }
         .art-author { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* FILMES */
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; list-style: none; padding: 0; margin-top: 20px; }
         .movie-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
         .poster-container { position: relative; width: 100%; height: 320px; background: #000; }
@@ -107,7 +101,6 @@
         .sudoku-cell.border-left { border-left: 2.5px solid var(--text); }
         .sudoku-cell.clue { background: #1a1a1a; color: #777; }
         
-        /* Destaques (Inteligência Visual) */
         .sudoku-cell.selected { background: rgba(255, 77, 109, 0.4); }
         .sudoku-cell.highlight-axis { background: rgba(255, 255, 255, 0.1); }
         .sudoku-cell.highlight-number { background: rgba(255, 215, 0, 0.25); color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); border-color: rgba(255, 215, 0, 0.5); }
@@ -120,16 +113,14 @@
         .sudoku-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; max-width: 420px; margin-top: 5px; }
         .sudoku-key { background: #222; color: white; border: 1px solid #444; padding: 12px 5px; border-radius: 10px; font-weight: bold; cursor: pointer; text-align: center; font-size: 1.1rem; transition: 0.2s; }
         .sudoku-key:active { background: #333; transform: scale(0.95); }
-        .sudoku-key.hidden-key { opacity: 0.15; pointer-events: none; } /* Oculta tecla completa */
+        .sudoku-key.hidden-key { opacity: 0.15; pointer-events: none; }
 
-        /* Toasts (Avisos Flutuantes) */
         .toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 20px); padding: 12px 24px; border-radius: 30px; font-weight: bold; color: white; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 10000; pointer-events: none; box-shadow: 0 5px 15px rgba(0,0,0,0.5); font-size: 0.9rem; text-align: center; white-space: nowrap; }
         .toast.show { opacity: 1; transform: translate(-50%, 0); }
         .toast.error { background: #e63946; }
         .toast.success { background: #2a9d8f; }
         .toast.info { background: #2196F3; }
 
-        /* MOBILE FIXES */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; height: 75px; flex-direction: row; position: fixed; bottom: 0; border-right: none; border-top: 1px solid #222; padding: 0; overflow-x: auto; }
@@ -158,7 +149,6 @@
 </head>
 <body>
 
-    <!-- Aviso Flutuante (Toast) -->
     <div id="game-toast" class="toast"></div>
 
     <aside class="sidebar">
@@ -174,7 +164,6 @@
     </aside>
 
     <main>
-        <!-- SEÇÃO INÍCIO, FILMES, METAS, DESENHOS OMITIDOS DA VISUALIZAÇÃO (MAS ESTÃO NO CÓDIGO) -->
         <section id="sec-inicio" class="section active">
             <div style="background: rgba(22,22,22,0.9); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333;">
                 <textarea id="msg-text" placeholder="Escreva um bilhete fofo..." rows="2" style="width: 100%; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; resize: none;"></textarea>
@@ -183,14 +172,11 @@
                     <button onclick="saveMsg('EME')" style="flex:1; background:var(--eme); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">EME</button>
                 </div>
             </div>
-            <div class="notebook-bg" id="notebook">
-                <div style="color:#999; text-align:center; font-family:'Dancing Script'; font-size:1.1rem; margin-top:150px; opacity:0.5;">Os bilhetes flutuam aqui...</div>
-            </div>
+            <div class="notebook-bg" id="notebook"><div style="color:#999; text-align:center; font-family:'Dancing Script'; font-size:1.1rem; margin-top:150px; opacity:0.5;">Os bilhetes flutuam aqui...</div></div>
             <div style="font-family:'Dancing Script'; font-size:1.6rem; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:5px;">📜 Arquivo de Recados</div>
             <div id="msg-list-legacy" style="display:flex; flex-direction:column; gap:10px; padding-bottom: 30px;"></div>
         </section>
 
-        <!-- SEÇÃO FILMES -->
         <section id="sec-filmes" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nosso Cinema</h2>
             <div style="display:flex; gap:5px; background:#161616; padding:5px; border-radius:50px; margin-bottom:15px;">
@@ -203,8 +189,7 @@
                     <input type="text" id="movieInput" placeholder="🔍 Adicionar novo filme..." style="width:100%; background:#1e1e1e; border:1px solid #333; color:white; padding:12px; border-radius:12px; margin-bottom:10px;">
                     <div id="suggestions" style="display:none; background:#222; border-radius:10px; padding:5px; border:1px solid #444; margin-bottom:15px;"></div>
                 </div>
-                <ul id="list-todo" class="movie-grid"></ul>
-                <ul id="list-watched" class="movie-grid" style="display:none"></ul>
+                <ul id="list-todo" class="movie-grid"></ul><ul id="list-watched" class="movie-grid" style="display:none"></ul>
             </div>
             <div id="area-filmes-sorteio" style="display:none; text-align:center; background:#1a1a1a; padding:20px; border-radius:15px; border:1px solid #333;">
                 <h3>O que vamos ver hoje?</h3>
@@ -213,19 +198,15 @@
             </div>
         </section>
 
-        <!-- SEÇÃO METAS -->
         <section id="sec-metas" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nossos Planos & Metas 📌</h2>
             <div style="background: rgba(22,22,22,0.9); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; display: flex; gap: 10px;">
                 <input type="text" id="goal-input" placeholder="Nova meta ex: Viajar para Veneza... ✈️" style="flex:1; background:#000; border:1px solid #444; color:white; padding:12px; border-radius:10px; outline:none; font-size:0.9rem;" onkeypress="if(event.key === 'Enter') saveGoal()">
                 <button onclick="saveGoal()" style="background:var(--primary); color:white; border:none; padding:0 20px; border-radius:10px; font-weight:bold; cursor:pointer;">Adicionar</button>
             </div>
-            <div class="goals-notebook">
-                <div class="notebook-scroll" id="goal-list"></div>
-            </div>
+            <div class="goals-notebook"><div class="notebook-scroll" id="goal-list"></div></div>
         </section>
 
-        <!-- SEÇÃO DESENHOS -->
         <section id="sec-desenhos" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Nossa Galeria de Arte 🎨</h2>
             <div style="background: rgba(22,22,22,0.9); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; display: flex; flex-direction: column; gap: 12px;">
@@ -246,7 +227,6 @@
         <section id="sec-sudoku" class="section">
             <h2 style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--primary);">Desafio Sudoku 🧩</h2>
             
-            <!-- TELA: MENU DO SUDOKU -->
             <div id="sudoku-menu" class="sudoku-menu-container">
                 <div class="sudoku-top3-box">
                     <h3 class="sudoku-top3-title">TOP 3 Partidas 🏆</h3>
@@ -254,54 +234,51 @@
                 </div>
 
                 <div>
-                    <div class="sudoku-opt-title">Quem vai jogar?</div>
-                    <div class="sudoku-opt-group">
+                    <div class="sudoku-opt-title">Modo Solo / Treino</div>
+                    <div class="sudoku-opt-group" style="margin-bottom: 5px;">
                         <button id="btn-mode-leo" class="sudoku-btn-opt" onclick="setSudokuMode('LÉO')">LÉO 👦🏻</button>
                         <button id="btn-mode-eme" class="sudoku-btn-opt" onclick="setSudokuMode('EME')">EME 👩🏻</button>
-                        <button id="btn-mode-duo" class="sudoku-btn-opt active-duo" onclick="setSudokuMode('DUO')">OS DOIS 👩🏻‍❤️‍👨🏻</button>
                     </div>
-                </div>
-
-                <div>
-                    <div class="sudoku-opt-title">Dificuldade</div>
                     <div class="sudoku-opt-group">
                         <button id="btn-setup-facil" class="sudoku-btn-opt active-diff" onclick="setSudokuDiff('facil')">Fácil</button>
                         <button id="btn-setup-medio" class="sudoku-btn-opt" onclick="setSudokuDiff('medio')">Médio</button>
                         <button id="btn-setup-dificil" class="sudoku-btn-opt" onclick="setSudokuDiff('dificil')">Difícil</button>
                     </div>
+                    <button onclick="startSudokuGame(false)" style="width:100%; background:#4caf50; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:10px;">Jogar Localmente</button>
                 </div>
 
-                <button onclick="startSudokuGame()" style="background:var(--primary); color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer; margin-top: 10px;">
-                    ▶️ Iniciar Jogo
-                </button>
+                <div style="margin-top: 10px; padding-top: 20px; border-top: 1px solid #333;">
+                    <div class="sudoku-opt-title" style="color: var(--primary);">🌐 Modo Multiplayer (Em Dupla)</div>
+                    <p style="font-size:0.8rem; color:#777; margin-top:0;">Joguem juntos em tempo real cada um no seu celular!</p>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" id="room-code-input" placeholder="Cód. da Sala" maxlength="4" style="flex: 1; background: #000; color: white; border: 1px solid #444; border-radius: 8px; padding: 10px; text-align: center; font-weight: bold; font-size: 1.2rem; letter-spacing: 2px;">
+                        <button onclick="joinSudokuRoom()" style="background: #2a9d8f; color: white; border: none; border-radius: 8px; padding: 0 20px; font-weight: bold; cursor: pointer;">Entrar</button>
+                    </div>
+                    <button onclick="createSudokuRoom()" style="width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Gerar Código & Criar Sala</button>
+                </div>
             </div>
 
-            <!-- TELA: O JOGO EM SI -->
             <div id="sudoku-game" class="sudoku-container" style="display: none;">
-                
                 <div style="width: 100%; max-width: 420px; display: flex; justify-content: space-between; align-items: center;">
                     <button onclick="exitSudokuGame()" style="background: transparent; color: #aaa; border: 1px solid #444; padding: 5px 15px; border-radius: 8px; cursor: pointer;">⬅ Voltar</button>
-                    <span id="game-diff-label" style="color: #888; font-size: 0.8rem; text-transform: uppercase;"></span>
+                    <span id="game-diff-label" style="color: #888; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;"></span>
                 </div>
 
-                <!-- Placar da Partida -->
                 <div class="sudoku-scoreboard">
                     <span id="score-display-leo" style="color: var(--leo); display:none;">🏆 LÉO: <span id="score-leo">0</span> pts</span>
                     <span id="score-display-eme" style="color: var(--eme); display:none;">🏆 EME: <span id="score-eme">0</span> pts</span>
                     <span id="score-display-duo" style="color: var(--primary); display:none;">🏆 EQUIPE: <span id="score-duo">0</span> pts</span>
                 </div>
 
-                <!-- Controles Principais -->
                 <div class="sudoku-controls">
                     <button id="sudoku-player-toggle" class="sudoku-btn-mode" onclick="changeSudokuTurn()" style="border-color: var(--leo); color: #fff; background: rgba(33, 150, 243, 0.1);">Vez de: LÉO</button>
                     <button id="btn-sudoku-notes" class="sudoku-btn-mode" onclick="toggleSudokuNotes()">📝 Anot.: OFF</button>
                     <button class="sudoku-btn-mode" onclick="useSudokuHint()" style="background:#2b2b1a;">💡 Dica (-5)</button>
                 </div>
 
-                <!-- Tabuleiro -->
                 <div id="sudoku-grid-wrapper" class="sudoku-board"></div>
 
-                <!-- Teclado Virtual (Agora Oculta os Completos) -->
                 <div class="sudoku-keypad">
                     <button id="btn-keypad-1" class="sudoku-key" onclick="sudokuInput(1)">1</button>
                     <button id="btn-keypad-2" class="sudoku-key" onclick="sudokuInput(2)">2</button>
@@ -317,7 +294,6 @@
             </div>
         </section>
 
-        <!-- SEÇÃO VALES -->
         <section id="sec-vales" class="section"><center><h2 style="font-family:'Dancing Script'">Seus Vales vindo aí... 🎟️</h2></center></section>
     </main>
 
@@ -328,11 +304,41 @@
         const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cachedMovies = [];
 
-        // Variáveis de Configuração do Sudoku
-        let sudokuMenuMode = 'DUO'; 
+        /* --- OMITIDO CODIGO BÁSICO DAS OUTRAS SEÇÕES (ELES SÃO OS MESMOS DO ARQUIVO ANTERIOR) --- */
+        async function saveMsg(a){const i=document.getElementById('msg-text');if(!i.value.trim())return;await _supabase.from('messages').insert([{text:i.value,author:a}]);i.value='';}
+        async function loadLegacyList(){const{data}=await _supabase.from('messages').select('*').order('created_at',{ascending:false});const l=document.getElementById('msg-list-legacy');l.innerHTML=(data||[]).map(m=>`<div style="background:var(--card);padding:12px;border-radius:12px;border-left:4px solid ${m.author==='LÉO'?'var(--leo)':'var(--eme)'};display:flex;justify-content:space-between;align-items:center;"><div style="flex:1"><small style="color:${m.author==='LÉO'?'var(--leo)':'var(--eme)'};font-weight:800;">${m.author}</small><div style="font-size:0.9rem;margin:3px 0;">${escapeHTML(m.text)}</div><small style="opacity:0.3;font-size:0.6rem;">${new Date(m.created_at).toLocaleString('pt-BR')}</small></div><div style="display:flex;gap:10px;"><button onclick="editMsg('${m.id}',\`${escapeHTML(m.text)}\`)" style="background:none;border:none;color:white;cursor:pointer;">✏️</button><button onclick="delMsg('${m.id}')" style="background:none;border:none;color:white;cursor:pointer;">🗑️</button></div></div>`).join('');}
+        function createBilhete(m){const n=document.getElementById('notebook');if(!n)return;const b=document.createElement('div');b.className='bilhete';const x=Math.random()*(n.offsetWidth-160);const y=Math.random()*(n.offsetHeight-110);const t=new Date(m.created_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});const d=new Date(m.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});b.style.left=x+'px';b.style.top=y+'px';b.innerHTML=`<div style="flex:1">${escapeHTML(m.text)}</div><div class="bilhete-meta"><span>${m.author}</span><span>${d} ${t}</span></div>`;n.appendChild(b);setTimeout(()=>b.remove(),12000);}
+        async function delMsg(id){if(confirm("Apagar?")){await _supabase.from('messages').delete().eq('id',id);loadLegacyList();}}
+        async function editMsg(id,old){const n=prompt("Editar:",old);if(n){await _supabase.from('messages').update({text:n}).eq('id',id);loadLegacyList();}}
+        async function saveGoal(){const i=document.getElementById('goal-input');const t=i.value.trim();if(!t)return;const{error}=await _supabase.from('goals').insert([{title:t,completed:false}]);if(!error){i.value='';loadGoals();}}
+        async function loadGoals(){const{data}=await _supabase.from('goals').select('*').order('created_at',{ascending:true});const l=document.getElementById('goal-list');if(!l)return;if(!data||data.length===0){l.innerHTML=`<div class="goal-line" style="justify-content:center;opacity:0.5;">Em branco... ✨</div>`;return;}l.innerHTML=data.map(g=>`<div class="goal-line"><div class="goal-left"><input type="checkbox" class="goal-cb" ${g.completed?'checked':''} onchange="toggleGoal('${g.id}',this.checked)"><span class="goal-text ${g.completed?'completed':''}">${escapeHTML(g.title)}</span></div><div class="goal-actions"><button class="btn-goal-tool" onclick="editGoal('${g.id}',\`${escapeHTML(g.title)}\`)">✏️</button><button class="btn-goal-tool" onclick="delGoal('${g.id}')">🗑️</button></div></div>`).join('');}
+        async function toggleGoal(id,c){await _supabase.from('goals').update({completed:c}).eq('id',id);loadGoals();}
+        async function editGoal(id,o){const n=prompt("Editar:",o);if(n&&n.trim()!==""){await _supabase.from('goals').update({title:n.trim()}).eq('id',id);loadGoals();}}
+        async function delGoal(id){if(confirm("Apagar meta?")){await _supabase.from('goals').delete().eq('id',id);loadGoals();}}
+        function updateFileLabel(){const f=document.getElementById('art-file-input');const b=document.getElementById('upload-label-btn');if(f.files.length>0){b.innerText="📸 "+f.files[0].name.substring(0,12)+"...";b.style.borderColor="var(--primary)";}}
+        async function saveDrawing(a){const tI=document.getElementById('art-title-input');const fI=document.getElementById('art-file-input');const t=tI.value.trim();if(!t)return alert("Título!");if(fI.files.length===0)return alert("Imagem!");const f=fI.files[0];const oB=document.getElementById('upload-label-btn').innerText;document.getElementById('upload-label-btn').innerText="⏳ Convertendo...";const r=new FileReader();r.readAsDataURL(f);r.onload=async function(){const b64=r.result;const{error:e}=await _supabase.from('drawings').insert([{title:t,artist:a,image_url:b64}]);if(!e){tI.value='';fI.value='';document.getElementById('upload-label-btn').innerText="📁 Escolher Foto";document.getElementById('upload-label-btn').style.borderColor="#555";loadDrawings();}else{alert("Erro");document.getElementById('upload-label-btn').innerText=oB;}};}
+        async function loadDrawings(){const{data}=await _supabase.from('drawings').select('*').order('created_at',{ascending:false});const l=document.getElementById('art-list');if(!l)return;if(!data||data.length===0){l.innerHTML=`<div style="grid-column: span 2;text-align:center;color:#555;padding:40px;font-style:italic;">Vazio 🎨</div>`;return;}l.innerHTML=data.map(d=>`<li class="art-card"><div class="art-img-container"><img src="${d.image_url}" class="art-img" loading="lazy"></div><div class="art-info"><h3 class="art-title">${escapeHTML(d.title)}</h3><span class="art-author" style="color: ${d.artist==='LÉO'?'var(--leo)':'var(--eme)'}">${d.artist}</span></div><button onclick="delDrawing('${d.id}')" style="position:absolute;bottom:12px;right:12px;background:transparent;border:none;color:#555;cursor:pointer;font-size:0.9rem;">🗑️</button></li>`).join('');}
+        async function delDrawing(id){if(confirm("Deletar?")){await _supabase.from('drawings').delete().eq('id',id);loadDrawings();}}
+        async function loadMovies(){const{data}=await _supabase.from('movies').select('*').order('created_at',{ascending:false});cachedMovies=data||[];const td=document.getElementById('list-todo');const wt=document.getElementById('list-watched');td.innerHTML='';wt.innerHTML='';cachedMovies.forEach(m=>{const li=document.createElement('li');li.className='movie-card';if(m.watched){li.innerHTML=`<div class="poster-container"><img src="${m.poster}" class="poster-img" style="filter:grayscale(1);opacity:0.4"></div><div style="padding:10px;flex:1"><div style="font-size:0.85rem;font-weight:800;margin-bottom:10px;text-align:center">${escapeHTML(m.title)}</div>${renderCritic(m,1,'LÉO')}${renderCritic(m,2,'EME')}</div><button onclick="toggleW('${m.id}',false)" style="width:100%;background:#333;color:white;border:none;padding:10px;cursor:pointer;font-size:0.7rem">↩ Ver de Novo</button>`;wt.appendChild(li);}else{li.innerHTML=`<div class="poster-container"><img src="${m.poster}" class="poster-img"></div><div style="padding:10px;font-size:0.85rem;font-weight:800;text-align:center">${escapeHTML(m.title)}</div><div style="display:flex;border-top:1px solid #333"><button onclick="toggleW('${m.id}',true)" style="flex:1;padding:12px;background:transparent;color:white;border:none;border-right:1px solid #333;cursor:pointer">✔️</button><button onclick="delMov('${m.id}')" style="flex:1;padding:12px;background:transparent;color:white;border:none;cursor:pointer">🗑️</button></div>`;td.appendChild(li);}});}
+        function renderCritic(m,p,n){const r=m[`rating_${p}`]||0;const v=(m[`review_${p}`]||"").split('|||').filter(x=>x);let s='';for(let i=1;i<=5;i++)s+=`<span onclick="upRate('${m.id}',${p},${i})" class="star ${i<=r?'gold':''}">★</span>`;return `<div class="critic-section" style="border-left: 3px solid ${p===1?'var(--leo)':'var(--eme)'}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><b style="font-size:0.65rem;text-transform:uppercase;opacity:0.7;color:${p===1?'var(--leo)':'var(--eme)'}">${n}</b><div class="stars">${s}</div></div><div>${v.map((txt,i)=>`<div class="chat-bubble"><span class="chat-text">${escapeHTML(txt)}</span><div class="chat-tools"><button onclick="editRev('${m.id}',${p},${i})">✏️</button><button onclick="delRev('${m.id}',${p},${i})">🗑️</button></div></div>`).join('')}</div><div class="review-input-group"><input type="text" id="in-${p}-${m.id}" placeholder="Nota..." onkeypress="if(event.key==='Enter')addRev('${m.id}',${p},this.nextElementSibling)"><button onclick="addRev('${m.id}',${p},this)" style="background:var(--primary);color:white;border:none;padding:4px 8px;border-radius:5px;font-size:0.7rem;cursor:pointer;">➤</button></div></div>`;}
+        async function upRate(id,p,r){const u={};u[`rating_${p}`]=r;await _supabase.from('movies').update(u).eq('id',id);loadMovies();}
+        async function addRev(id,p,b){try{const i=document.getElementById(`in-${p}-${id}`);if(!i||!i.value.trim())return;const v=i.value.trim();if(b)b.innerText="⏳";const m=cachedMovies.find(x=>String(x.id)===String(id));const u={};u[`review_${p}`]=m[`review_${p}`]?m[`review_${p}`]+"|||"+v:v;await _supabase.from('movies').update(u).eq('id',m.id);i.value='';await loadMovies();}catch(e){if(b)b.innerText="➤";}}
+        async function delRev(id,p,i){if(!confirm("Apagar?"))return;const m=cachedMovies.find(x=>String(x.id)===String(id));let r=(m[`review_${p}`]||"").split('|||');r.splice(i,1);const u={};u[`review_${p}`]=r.join('|||');await _supabase.from('movies').update(u).eq('id',m.id);loadMovies();}
+        async function editRev(id,p,i){const m=cachedMovies.find(x=>String(x.id)===String(id));let r=(m[`review_${p}`]||"").split('|||');const n=prompt("Editar:",r[i]);if(n!==null&&n.trim()!==""){r[i]=n.trim();const u={};u[`review_${p}`]=r.join('|||');await _supabase.from('movies').update(u).eq('id',m.id);loadMovies();}}
+        async function toggleW(id,s){await _supabase.from('movies').update({watched:s}).eq('id',id);loadMovies();}
+        async function delMov(id){if(confirm("Excluir?")){await _supabase.from('movies').delete().eq('id',id);loadMovies();}}
+        document.getElementById('movieInput').oninput=async function(){if(this.value.length<3)return;const r=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${this.value}&language=pt-BR`);const d=await r.json();const s=document.getElementById('suggestions');s.style.display='block';s.innerHTML=d.results.slice(0,4).map(m=>`<div onclick="addMov('${m.title.replace(/'/g,"").replace(/"/g,"").replace(/\\/g,"")}','https://image.tmdb.org/t/p/w185${m.poster_path}')" style="padding:10px;cursor:pointer;font-size:0.8rem;border-bottom:1px solid #333">${escapeHTML(m.title)}</div>`).join('');}
+        async function addMov(t,p){await _supabase.from('movies').insert([{title:t,poster:p,watched:false}]);document.getElementById('suggestions').style.display='none';document.getElementById('movieInput').value='';loadMovies();}
+        function spinRoleta(){const a=cachedMovies.filter(m=>!m.watched);if(a.length===0)return alert("Vazia!");const w=a[Math.floor(Math.random()*a.length)];document.getElementById('draw-result').innerHTML=`<div style="background:#000;padding:15px;border-radius:15px;border:2px solid var(--primary);"><img src="${w.poster}" style="width:120px;border-radius:10px;"><h4 style="margin:10px 0;">${escapeHTML(w.title)}</h4></div>`;}
+
+
+        // ==========================================
+        //  LÓGICA DO SUDOKU E MULTIPLAYER REALTIME
+        // ==========================================
+        
+        let sudokuMenuMode = 'LÉO'; 
         let sudokuMenuDiff = 'facil';
         
-        // Variaveis Globais do Jogo
         let sudokuSelectedCell = null;
         let sudokuNotesMode = false;
         let sudokuActivePlayer = 'LÉO'; 
@@ -343,6 +349,10 @@
         let sudokuPlayerMap = []; 
         let sudokuNotesMap = []; 
 
+        // Controle Online
+        let isOnlineGame = false;
+        let currentRoomId = null;
+        let realtimeChannel = null;
         let toastTimeout;
 
         function showToast(msg, type = 'info') {
@@ -353,11 +363,7 @@
             toastTimeout = setTimeout(() => { t.classList.remove('show'); }, 3000);
         }
 
-        function escapeHTML(str) {
-            if (!str) return "";
-            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
+        function escapeHTML(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
         function changeSection(id, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.sidebar .nav-btn').forEach(b => b.classList.remove('active'));
@@ -371,7 +377,6 @@
                 document.getElementById('sudoku-game').style.display = 'none';
             }
         }
-
         function movTab(t) {
             document.querySelectorAll('#sec-filmes .nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-mov-' + t).classList.add('active');
@@ -382,41 +387,11 @@
             document.getElementById('search-container').style.display = t === 'todo' ? 'block' : 'none';
         }
 
-        /* --- OMITIDO CODIGO DAS OUTRAS SECOES PARA BREVIDADE --- */
-        async function saveMsg(author) { const input = document.getElementById('msg-text'); if(!input.value.trim()) return; await _supabase.from('messages').insert([{ text: input.value, author }]); input.value = ''; }
-        async function loadLegacyList() { const { data } = await _supabase.from('messages').select('*').order('created_at', { ascending: false }); const list = document.getElementById('msg-list-legacy'); list.innerHTML = (data || []).map(m => `<div style="background:var(--card); padding:12px; border-radius:12px; border-left:4px solid ${m.author==='LÉO'?'var(--leo)':'var(--eme)'}; display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><small style="color:${m.author==='LÉO'?'var(--leo)':'var(--eme)'}; font-weight:800;">${m.author}</small><div style="font-size:0.9rem; margin:3px 0;">${escapeHTML(m.text)}</div><small style="opacity:0.3; font-size:0.6rem;">${new Date(m.created_at).toLocaleString('pt-BR')}</small></div><div style="display:flex; gap:10px;"><button onclick="editMsg('${m.id}', \`${escapeHTML(m.text)}\`)" style="background:none; border:none; color:white; cursor:pointer;">✏️</button><button onclick="delMsg('${m.id}')" style="background:none; border:none; color:white; cursor:pointer;">🗑️</button></div></div>`).join(''); }
-        function createBilhete(m) { const notebook = document.getElementById('notebook'); if (!notebook) return; const b = document.createElement('div'); b.className = 'bilhete'; const x = Math.random() * (notebook.offsetWidth - 160); const y = Math.random() * (notebook.offsetHeight - 110); const time = new Date(m.created_at).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}); const date = new Date(m.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'}); b.style.left = x+'px'; b.style.top = y+'px'; b.innerHTML = `<div style="flex:1">${escapeHTML(m.text)}</div><div class="bilhete-meta"><span>${m.author}</span><span>${date} ${time}</span></div>`; notebook.appendChild(b); setTimeout(() => b.remove(), 12000); }
-        async function delMsg(id) { if(confirm("Apagar?")) { await _supabase.from('messages').delete().eq('id', id); loadLegacyList(); } }
-        async function editMsg(id, old) { const n = prompt("Editar:", old); if(n) { await _supabase.from('messages').update({ text: n }).eq('id', id); loadLegacyList(); } }
-        async function saveGoal() { const input = document.getElementById('goal-input'); const title = input.value.trim(); if(!title) return; const { error } = await _supabase.from('goals').insert([{ title, completed: false }]); if(!error) { input.value = ''; loadGoals(); } }
-        async function loadGoals() { const { data } = await _supabase.from('goals').select('*').order('created_at', { ascending: true }); const list = document.getElementById('goal-list'); if(!list) return; if(!data || data.length === 0) { list.innerHTML = `<div class="goal-line" style="justify-content:center; opacity:0.5;">Nossa lista de metas está em branco... ✨</div>`; return; } list.innerHTML = data.map(g => `<div class="goal-line"><div class="goal-left"><input type="checkbox" class="goal-cb" ${g.completed ? 'checked' : ''} onchange="toggleGoal('${g.id}', this.checked)"><span class="goal-text ${g.completed ? 'completed' : ''}">${escapeHTML(g.title)}</span></div><div class="goal-actions"><button class="btn-goal-tool" onclick="editGoal('${g.id}', \`${escapeHTML(g.title)}\`)">✏️</button><button class="btn-goal-tool" onclick="delGoal('${g.id}')">🗑️</button></div></div>`).join(''); }
-        async function toggleGoal(id, completed) { await _supabase.from('goals').update({ completed }).eq('id', id); loadGoals(); }
-        async function editGoal(id, oldTitle) { const newTitle = prompt("Editar meta:", oldTitle); if(newTitle && newTitle.trim() !== "") { await _supabase.from('goals').update({ title: newTitle.trim() }).eq('id', id); loadGoals(); } }
-        async function delGoal(id) { if(confirm("Deseja apagar essa meta?")) { await _supabase.from('goals').delete().eq('id', id); loadGoals(); } }
-        function updateFileLabel() { const fileInput = document.getElementById('art-file-input'); const btn = document.getElementById('upload-label-btn'); if(fileInput.files.length > 0) { btn.innerText = "📸 " + fileInput.files[0].name.substring(0, 12) + "..."; btn.style.borderColor = "var(--primary)"; } }
-        async function saveDrawing(artist) { const titleInput = document.getElementById('art-title-input'); const fileInput = document.getElementById('art-file-input'); const title = titleInput.value.trim(); if(!title) return alert("Dê um título ao desenho!"); if(fileInput.files.length === 0) return alert("Selecione uma imagem!"); const file = fileInput.files[0]; const originalBtnText = document.getElementById('upload-label-btn').innerText; document.getElementById('upload-label-btn').innerText = "⏳ Convertendo..."; const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = async function () { const base64Url = reader.result; const { error: dbError } = await _supabase.from('drawings').insert([{ title, artist, image_url: base64Url }]); if(!dbError) { titleInput.value = ''; fileInput.value = ''; document.getElementById('upload-label-btn').innerText = "📁 Escolher Foto"; document.getElementById('upload-label-btn').style.borderColor = "#555"; loadDrawings(); } else { alert("Erro: " + dbError.message); document.getElementById('upload-label-btn').innerText = originalBtnText; } }; }
-        async function loadDrawings() { const { data } = await _supabase.from('drawings').select('*').order('created_at', { ascending: false }); const list = document.getElementById('art-list'); if(!list) return; if(!data || data.length === 0) { list.innerHTML = `<div style="grid-column: span 2; text-align:center; color:#555; padding:40px; font-style:italic;">Nenhum desenho publicado ainda. 🎨</div>`; return; } list.innerHTML = data.map(d => `<li class="art-card"><div class="art-img-container"><img src="${d.image_url}" class="art-img" loading="lazy"></div><div class="art-info"><h3 class="art-title">${escapeHTML(d.title)}</h3><span class="art-author" style="color: ${d.artist === 'LÉO' ? 'var(--leo)' : 'var(--eme)'}">${d.artist}</span></div><button onclick="delDrawing('${d.id}')" style="position:absolute; bottom:12px; right:12px; background:transparent; border:none; color:#555; cursor:pointer; font-size:0.9rem;">🗑️</button></li>`).join(''); }
-        async function delDrawing(id) { if(confirm("Deseja deletar este desenho?")) { await _supabase.from('drawings').delete().eq('id', id); loadDrawings(); } }
-        async function loadMovies() { const { data } = await _supabase.from('movies').select('*').order('created_at', { ascending: false }); cachedMovies = data || []; const todo = document.getElementById('list-todo'); const watched = document.getElementById('list-watched'); todo.innerHTML = ''; watched.innerHTML = ''; cachedMovies.forEach(m => { const li = document.createElement('li'); li.className = 'movie-card'; if(m.watched) { li.innerHTML = `<div class="poster-container"><img src="${m.poster}" class="poster-img" style="filter:grayscale(1); opacity:0.4"></div><div style="padding:10px; flex:1"><div style="font-size:0.85rem; font-weight:800; margin-bottom:10px; text-align:center">${escapeHTML(m.title)}</div>${renderCritic(m, 1, 'LÉO')}${renderCritic(m, 2, 'EME')}</div><button onclick="toggleW('${m.id}', false)" style="width:100%; background:#333; color:white; border:none; padding:10px; cursor:pointer; font-size:0.7rem">↩ Ver de Novo</button>`; watched.appendChild(li); } else { li.innerHTML = `<div class="poster-container"><img src="${m.poster}" class="poster-img"></div><div style="padding:10px; font-size:0.85rem; font-weight:800; text-align:center">${escapeHTML(m.title)}</div><div style="display:flex; border-top:1px solid #333"><button onclick="toggleW('${m.id}', true)" style="flex:1; padding:12px; background:transparent; color:white; border:none; border-right:1px solid #333; cursor:pointer">✔️</button><button onclick="delMov('${m.id}')" style="flex:1; padding:12px; background:transparent; color:white; border:none; cursor:pointer">🗑️</button></div>`; todo.appendChild(li); } }); }
-        function renderCritic(movie, p, name) { const r = movie[`rating_${p}`] || 0; const revs = (movie[`review_${p}`] || "").split('|||').filter(x => x); let stars = ''; for(let i=1; i<=5; i++) stars += `<span onclick="upRate('${movie.id}', ${p}, ${i})" class="star ${i<=r?'gold':''}">★</span>`; return `<div class="critic-section" style="border-left: 3px solid ${p===1?'var(--leo)':'var(--eme)'}"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;"><b style="font-size:0.65rem; text-transform: uppercase; opacity: 0.7; color:${p===1?'var(--leo)':'var(--eme)'}">${name}</b><div class="stars">${stars}</div></div><div>${revs.map((txt, i) => `<div class="chat-bubble"><span class="chat-text">${escapeHTML(txt)}</span><div class="chat-tools"><button onclick="editRev('${movie.id}', ${p}, ${i})">✏️</button><button onclick="delRev('${movie.id}', ${p}, ${i})">🗑️</button></div></div>`).join('')}</div><div class="review-input-group"><input type="text" id="in-${p}-${movie.id}" placeholder="Nota..." onkeypress="if(event.key === 'Enter') addRev('${movie.id}', ${p}, document.getElementById('btn-${p}-${movie.id}'))"><button id="btn-${p}-${movie.id}" onclick="addRev('${movie.id}', ${p}, this)" style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:5px; font-size:0.7rem; cursor:pointer;">➤</button></div></div>`; }
-        async function upRate(id, p, r) { const up = {}; up[`rating_${p}`] = r; await _supabase.from('movies').update(up).eq('id', id); loadMovies(); }
-        async function addRev(id, p, btn) { try { const input = document.getElementById(`in-${p}-${id}`); if (!input || !input.value.trim()) return; const val = input.value.trim(); if(btn) btn.innerText = "⏳"; const m = cachedMovies.find(x => String(x.id) === String(id)); const up = {}; up[`review_${p}`] = m[`review_${p}`] ? m[`review_${p}`] + "|||" + val : val; await _supabase.from('movies').update(up).eq('id', m.id); input.value = ''; await loadMovies(); } catch (err) { if(btn) btn.innerText = "➤"; } }
-        async function delRev(id, p, i) { if(!confirm("Apagar?")) return; const m = cachedMovies.find(x => String(x.id) === String(id)); let r = (m[`review_${p}`] || "").split('|||'); r.splice(i, 1); const up = {}; up[`review_${p}`] = r.join('|||'); await _supabase.from('movies').update(up).eq('id', m.id); loadMovies(); }
-        async function editRev(id, p, i) { const m = cachedMovies.find(x => String(x.id) === String(id)); let r = (m[`review_${p}`] || "").split('|||'); const n = prompt("Editar:", r[i]); if(n !== null && n.trim() !== "") { r[i] = n.trim(); const up = {}; up[`review_${p}`] = r.join('|||'); await _supabase.from('movies').update(up).eq('id', m.id); loadMovies(); } }
-        async function toggleW(id, s) { await _supabase.from('movies').update({ watched: s }).eq('id', id); loadMovies(); }
-        async function delMov(id) { if(confirm("Excluir?")) { await _supabase.from('movies').delete().eq('id', id); loadMovies(); } }
-        document.getElementById('movieInput').oninput = async function() { if(this.value.length < 3) return; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${this.value}&language=pt-BR`); const d = await r.json(); const sugg = document.getElementById('suggestions'); sugg.style.display = 'block'; sugg.innerHTML = d.results.slice(0,4).map(m => `<div onclick="addMov('${m.title.replace(/'/g,"").replace(/"/g,"").replace(/\\/g,"")}', 'https://image.tmdb.org/t/p/w185${m.poster_path}')" style="padding:10px; cursor:pointer; font-size:0.8rem; border-bottom:1px solid #333">${escapeHTML(m.title)}</div>`).join(''); }
-        async function addMov(t, p) { await _supabase.from('movies').insert([{ title: t, poster: p, watched: false }]); document.getElementById('suggestions').style.display = 'none'; document.getElementById('movieInput').value = ''; loadMovies(); }
-        function spinRoleta() { const avail = cachedMovies.filter(m => !m.watched); if(avail.length === 0) return alert("Vazia!"); const win = avail[Math.floor(Math.random() * avail.length)]; document.getElementById('draw-result').innerHTML = `<div style="background:#000; padding:15px; border-radius:15px; border:2px solid var(--primary);"><img src="${win.poster}" style="width:120px; border-radius:10px;"><h4 style="margin:10px 0;">${escapeHTML(win.title)}</h4></div>`; }
-
-
-        // --- LÓGICA DO MENU DO SUDOKU ---
         function setSudokuMode(mode) {
             sudokuMenuMode = mode;
             document.querySelectorAll('#sudoku-menu .sudoku-btn-opt').forEach(b => b.classList.remove('active-leo', 'active-eme', 'active-duo'));
             if(mode === 'LÉO') document.getElementById('btn-mode-leo').classList.add('active-leo');
             if(mode === 'EME') document.getElementById('btn-mode-eme').classList.add('active-eme');
-            if(mode === 'DUO') document.getElementById('btn-mode-duo').classList.add('active-duo');
         }
 
         function setSudokuDiff(diff) {
@@ -430,81 +405,173 @@
         function renderSudokuTop3() {
             let history = JSON.parse(localStorage.getItem('sudoku_history_v1') || '[]');
             const list = document.getElementById('sudoku-top3-list');
-            if (history.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:#777; font-size:0.85rem;">Nenhuma partida jogada ainda!</div>`;
-                return;
-            }
+            if (history.length === 0) { list.innerHTML = `<div style="text-align:center; color:#777; font-size:0.85rem;">Nenhuma partida jogada!</div>`; return; }
             history.sort((a,b) => b.score - a.score);
-            const top3 = history.slice(0, 3);
-            list.innerHTML = top3.map((match, i) => {
+            list.innerHTML = history.slice(0, 3).map((match, i) => {
                 let medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : '🥉');
-                return `
-                    <div class="sudoku-top3-item">
-                        <span>${medal} <b>${match.player}</b></span>
-                        <span style="color:#FFD700">${match.score} pts <small style="color:#777">(${match.diff})</small></span>
-                    </div>
-                `;
+                return `<div class="sudoku-top3-item"><span>${medal} <b>${match.player}</b></span><span style="color:#FFD700">${match.score} pts <small style="color:#777">(${match.diff})</small></span></div>`;
             }).join('');
         }
 
+        // ---- INÍCIO DO JOGO LOCAL ----
         function startSudokuGame() {
+            isOnlineGame = false;
+            if(realtimeChannel) _supabase.removeChannel(realtimeChannel); // desliga a rede se existir
+
             document.getElementById('sudoku-menu').style.display = 'none';
             document.getElementById('sudoku-game').style.display = 'flex';
             
             sudokuScores = { LÉO: 0, EME: 0 };
+            sudokuActivePlayer = sudokuMenuMode; 
             
-            const displayLeo = document.getElementById('score-display-leo');
-            const displayEme = document.getElementById('score-display-eme');
-            const displayDuo = document.getElementById('score-display-duo');
-            const toggleBtn = document.getElementById('sudoku-player-toggle');
+            document.getElementById('score-display-leo').style.display = 'none';
+            document.getElementById('score-display-eme').style.display = 'none';
+            document.getElementById('score-display-duo').style.display = 'none';
+            document.getElementById('sudoku-player-toggle').style.display = 'none';
 
-            displayLeo.style.display = 'none';
-            displayEme.style.display = 'none';
-            displayDuo.style.display = 'none';
+            if(sudokuActivePlayer === 'LÉO') document.getElementById('score-display-leo').style.display = 'inline';
+            if(sudokuActivePlayer === 'EME') document.getElementById('score-display-eme').style.display = 'inline';
 
-            if (sudokuMenuMode === 'LÉO') {
-                displayLeo.style.display = 'inline';
-                toggleBtn.style.display = 'none';
-                sudokuActivePlayer = 'LÉO';
-            } else if (sudokuMenuMode === 'EME') {
-                displayEme.style.display = 'inline';
-                toggleBtn.style.display = 'none';
-                sudokuActivePlayer = 'EME';
-            } else {
-                displayLeo.style.display = 'inline';
-                displayEme.style.display = 'inline';
-                toggleBtn.style.display = 'block';
-                sudokuActivePlayer = 'LÉO'; 
-                toggleBtn.innerText = "Vez de: LÉO";
-                toggleBtn.style.borderColor = "var(--leo)";
-                toggleBtn.style.background = "rgba(33, 150, 243, 0.1)";
+            document.getElementById('game-diff-label').innerText = "Solo: " + sudokuMenuDiff;
+            generateSudokuArray(sudokuMenuDiff);
+            updateSudokuScoreboard();
+        }
+
+        // ---- INÍCIO DO JOGO ONLINE (SALA COMPARTILHADA) ----
+        async function createSudokuRoom() {
+            const btn = document.querySelector('button[onclick="createSudokuRoom()"]');
+            btn.innerText = "⏳ Criando...";
+            
+            isOnlineGame = true;
+            sudokuScores = { LÉO: 0, EME: 0 };
+            
+            // Gera a grade localmente
+            generateSudokuArray(sudokuMenuDiff);
+            
+            const roomCode = Math.floor(1000 + Math.random() * 9000).toString(); // Gera "1234"
+            
+            const { data, error } = await _supabase.from('sudoku_rooms').insert([{
+                room_code: roomCode,
+                board_initial: sudokuInitial,
+                board_current: sudokuCurrent,
+                board_solution: sudokuSolution,
+                player_map: sudokuPlayerMap
+            }]).select();
+
+            if (error) {
+                alert("Erro ao criar sala (Verifique o RLS da tabela!): " + error.message);
+                btn.innerText = "Gerar Código & Criar Sala";
+                return;
             }
 
-            document.getElementById('game-diff-label').innerText = "Modo: " + sudokuMenuDiff;
+            currentRoomId = data[0].id;
+            setupOnlineUI(roomCode);
+            subscribeToRealtimeRoom(currentRoomId);
+            btn.innerText = "Gerar Código & Criar Sala";
+        }
+
+        async function joinSudokuRoom() {
+            const input = document.getElementById('room-code-input');
+            const code = input.value.trim();
+            if(!code) return showToast("Digite um código de sala válido!", "error");
+            
+            isOnlineGame = true;
+            const btn = document.querySelector('button[onclick="joinSudokuRoom()"]');
+            btn.innerText = "⏳";
+
+            const { data, error } = await _supabase.from('sudoku_rooms').select('*').eq('room_code', code).single();
+
+            if (error || !data) {
+                showToast("Sala não encontrada!", "error");
+                btn.innerText = "Entrar";
+                return;
+            }
+
+            // Puxa o tabuleiro do banco de dados para a sua tela
+            currentRoomId = data.id;
+            sudokuInitial = data.board_initial;
+            sudokuCurrent = data.board_current;
+            sudokuSolution = data.board_solution;
+            sudokuPlayerMap = data.player_map;
+            sudokuScores.LÉO = data.score_leo || 0;
+            sudokuScores.EME = data.score_eme || 0;
+            sudokuNotesMap = Array(9).fill(0).map(() => Array(9).fill(0).map(() => Array(10).fill(false)));
+            sudokuSelectedCell = null;
+
+            setupOnlineUI(code);
+            subscribeToRealtimeRoom(currentRoomId);
+            renderSudokuBoard();
+            btn.innerText = "Entrar";
+            input.value = '';
+        }
+
+        function setupOnlineUI(roomCode) {
+            document.getElementById('sudoku-menu').style.display = 'none';
+            document.getElementById('sudoku-game').style.display = 'flex';
+            
+            document.getElementById('score-display-leo').style.display = 'inline';
+            document.getElementById('score-display-eme').style.display = 'inline';
+            document.getElementById('score-display-duo').style.display = 'inline';
+            
+            const toggleBtn = document.getElementById('sudoku-player-toggle');
+            toggleBtn.style.display = 'block';
+            sudokuActivePlayer = 'LÉO'; 
+            toggleBtn.innerText = "Sua Vez: LÉO";
+            toggleBtn.style.borderColor = "var(--leo)";
+            toggleBtn.style.background = "rgba(33, 150, 243, 0.1)";
+
+            document.getElementById('game-diff-label').innerHTML = `SALA: <b style="color:var(--primary); font-size:1.1rem;">${roomCode}</b>`;
             updateSudokuScoreboard();
-            generateSudoku(sudokuMenuDiff);
+        }
+
+        // ESPIONAGEM EM TEMPO REAL (WebSockets)
+        function subscribeToRealtimeRoom(roomId) {
+            if(realtimeChannel) _supabase.removeChannel(realtimeChannel);
+            
+            realtimeChannel = _supabase.channel('room_' + roomId)
+                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'sudoku_rooms', filter: 'id=eq.'+roomId }, payload => {
+                    // Quando o banco atualizar (o outro jogador fez uma jogada), atualizamos aqui sem alertar nada
+                    sudokuCurrent = payload.new.board_current;
+                    sudokuPlayerMap = payload.new.player_map;
+                    sudokuScores.LÉO = payload.new.score_leo;
+                    sudokuScores.EME = payload.new.score_eme;
+                    
+                    updateSudokuScoreboard();
+                    renderSudokuBoard();
+                }).subscribe();
+        }
+
+        async function syncRoomUpdate() {
+            if(!isOnlineGame || !currentRoomId) return;
+            
+            // Enviamos silenciosamente para o banco. O banco vai mandar pros outros jogadores via WebSocket.
+            await _supabase.from('sudoku_rooms').update({
+                board_current: sudokuCurrent,
+                player_map: sudokuPlayerMap,
+                score_leo: sudokuScores.LÉO,
+                score_eme: sudokuScores.EME
+            }).eq('id', currentRoomId);
         }
 
         function exitSudokuGame() {
-            if(confirm("Deseja sair do jogo atual? O progresso desta partida será perdido.")) {
+            if(confirm("Deseja sair do jogo atual?")) {
+                if(realtimeChannel) _supabase.removeChannel(realtimeChannel); // desconecta
                 document.getElementById('sudoku-game').style.display = 'none';
                 document.getElementById('sudoku-menu').style.display = 'flex';
                 renderSudokuTop3();
             }
         }
 
-        // --- LÓGICA DO JOGO SUDOKU ---
         function changeSudokuTurn() {
-            if(sudokuMenuMode !== 'DUO') return;
             const btn = document.getElementById('sudoku-player-toggle');
             if(sudokuActivePlayer === 'LÉO') {
                 sudokuActivePlayer = 'EME';
-                btn.innerText = "Vez de: EME";
+                btn.innerText = "Sua Vez: EME";
                 btn.style.borderColor = "var(--eme)";
                 btn.style.background = "rgba(255, 117, 143, 0.1)";
             } else {
                 sudokuActivePlayer = 'LÉO';
-                btn.innerText = "Vez de: LÉO";
+                btn.innerText = "Sua Vez: LÉO";
                 btn.style.borderColor = "var(--leo)";
                 btn.style.background = "rgba(33, 150, 243, 0.1)";
             }
@@ -517,35 +584,25 @@
             btn.classList.toggle('active-tool', sudokuNotesMode);
         }
 
-        function generateSudoku(diff) {
-            const baseBoard = [
-                [1,2,3, 4,5,6, 7,8,9], [4,5,6, 7,8,9, 1,2,3], [7,8,9, 1,2,3, 4,5,6],
-                [2,3,1, 5,6,4, 8,9,7], [5,6,4, 8,9,7, 2,3,1], [8,9,7, 2,3,1, 5,6,4],
-                [3,1,2, 6,4,5, 9,7,8], [6,4,5, 9,7,8, 3,1,2], [9,7,8, 3,1,2, 6,4,5]
-            ];
-
+        // Lógica puramente local de geração (é chamada ao criar o tabuleiro)
+        function generateSudokuArray(diff) {
+            const baseBoard = [[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];
             let map = [1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
             let board = baseBoard.map(row => row.map(val => map[val - 1]));
 
             for(let i=0; i<9; i+=3) {
                 let rows = [i, i+1, i+2].sort(() => Math.random() - 0.5);
                 let copy = [board[i], board[i+1], board[i+2]];
-                board[i] = copy[rows[0] - i];
-                board[i+1] = copy[rows[1] - i];
-                board[i+2] = copy[rows[2] - i];
+                board[i] = copy[rows[0]-i]; board[i+1] = copy[rows[1]-i]; board[i+2] = copy[rows[2]-i];
             }
 
             sudokuSolution = board.map(row => [...row]);
-
-            let missing = 35; // Fácil
-            if(diff === 'medio') missing = 45;
-            if(diff === 'dificil') missing = 54;
+            let missing = diff === 'facil' ? 35 : (diff === 'medio' ? 45 : 54);
 
             sudokuInitial = board.map(row => [...row]);
             let spots = [];
             for(let r=0; r<9; r++) { for(let c=0; c<9; c++) spots.push({r, c}); }
             spots.sort(() => Math.random() - 0.5);
-
             for(let i=0; i<missing; i++) { sudokuInitial[spots[i].r][spots[i].c] = 0; }
 
             sudokuCurrent = sudokuInitial.map(row => [...row]);
@@ -561,49 +618,29 @@
             if(!wrapper) return;
             wrapper.innerHTML = '';
 
-            // Determinar o número ativo para destacar
-            let activeNum = 0;
-            if (sudokuSelectedCell) {
-                activeNum = sudokuCurrent[sudokuSelectedCell.r][sudokuSelectedCell.c] || 0;
-            }
+            let activeNum = sudokuSelectedCell ? (sudokuCurrent[sudokuSelectedCell.r][sudokuSelectedCell.c] || 0) : 0;
 
             for(let r=0; r<9; r++) {
                 for(let c=0; c<9; c++) {
                     const val = sudokuCurrent[r][c];
                     const isClue = sudokuInitial[r][c] !== 0;
-
                     const cell = document.createElement('div');
                     cell.className = 'sudoku-cell';
 
                     if(r === 3 || r === 6) cell.classList.add('border-top');
                     if(c === 3 || c === 6) cell.classList.add('border-left');
 
-                    // Lógica de "Inteligência Visual" (Crosshair e Mesmos Números)
                     if (sudokuSelectedCell) {
-                        // Mesma linha, coluna ou bloco
                         let sameBlock = Math.floor(r/3) === Math.floor(sudokuSelectedCell.r/3) && Math.floor(c/3) === Math.floor(sudokuSelectedCell.c/3);
-                        if (r === sudokuSelectedCell.r || c === sudokuSelectedCell.c || sameBlock) {
-                            cell.classList.add('highlight-axis');
-                        }
-                        // Célula selecionada exata
-                        if (r === sudokuSelectedCell.r && c === sudokuSelectedCell.c) {
-                            cell.classList.add('selected');
-                        }
+                        if (r === sudokuSelectedCell.r || c === sudokuSelectedCell.c || sameBlock) cell.classList.add('highlight-axis');
+                        if (r === sudokuSelectedCell.r && c === sudokuSelectedCell.c) cell.classList.add('selected');
                     }
-
-                    // Destaca todos os números iguais na tela
-                    if (activeNum !== 0 && val === activeNum) {
-                        cell.classList.add('highlight-number');
-                    }
+                    if (activeNum !== 0 && val === activeNum) cell.classList.add('highlight-number');
 
                     if(isClue) {
                         cell.classList.add('clue');
                         cell.innerText = val;
-                        // Permite clicar na dica para iluminar as outras
-                        cell.onclick = () => {
-                            sudokuSelectedCell = {r, c};
-                            renderSudokuBoard();
-                        };
+                        cell.onclick = () => { sudokuSelectedCell = {r, c}; renderSudokuBoard(); };
                     } else {
                         if(val !== 0) {
                             cell.innerText = val;
@@ -612,7 +649,6 @@
                         } else {
                             let cellHasNotes = false;
                             for(let n=1; n<=9; n++) { if(sudokuNotesMap[r][c][n]) cellHasNotes = true; }
-
                             if(cellHasNotes) {
                                 const nGrid = document.createElement('div');
                                 nGrid.className = 'sudoku-notes-grid';
@@ -625,27 +661,17 @@
                                 cell.appendChild(nGrid);
                             }
                         }
-
-                        cell.onclick = () => {
-                            sudokuSelectedCell = {r, c};
-                            renderSudokuBoard();
-                        };
+                        cell.onclick = () => { sudokuSelectedCell = {r, c}; renderSudokuBoard(); };
                     }
                     wrapper.appendChild(cell);
                 }
             }
-            updateSudokuKeypad(); // Esconde as teclas dos números que já acabaram
+            updateSudokuKeypad();
         }
 
-        // Faz o botão do número "sumir" se ele já foi completado 9 vezes no tabuleiro
         function updateSudokuKeypad() {
             let counts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
-            for(let r=0; r<9; r++) {
-                for(let c=0; c<9; c++) {
-                    let v = sudokuCurrent[r][c];
-                    if(v !== 0) counts[v]++;
-                }
-            }
+            for(let r=0; r<9; r++) { for(let c=0; c<9; c++) { let v = sudokuCurrent[r][c]; if(v !== 0) counts[v]++; } }
             for(let i=1; i<=9; i++) {
                 let btn = document.getElementById('btn-keypad-'+i);
                 if(btn) {
@@ -660,11 +686,12 @@
             const {r, c} = sudokuSelectedCell;
             if(sudokuInitial[r][c] !== 0) return;
 
-            if(num === 0) { // Apagar
+            if(num === 0) {
                 sudokuCurrent[r][c] = 0;
                 sudokuPlayerMap[r][c] = '';
                 sudokuNotesMap[r][c] = Array(10).fill(false);
                 renderSudokuBoard();
+                syncRoomUpdate();
                 return;
             }
 
@@ -682,7 +709,6 @@
                     updateSudokuScoreboard();
                     checkSudokuWin();
                 } else {
-                    // Ao errar, avisa na tela e reseta a célula, não deixa o erro lá
                     sudokuScores[sudokuActivePlayer] = Math.max(0, sudokuScores[sudokuActivePlayer] - 15);
                     sudokuCurrent[r][c] = 0;
                     showToast(`❌ Ops! O número ${num} não vai aí. -15 pontos.`, 'error');
@@ -690,6 +716,7 @@
                 }
             }
             renderSudokuBoard();
+            syncRoomUpdate(); // Envia as alterações para a internet
         }
 
         function useSudokuHint() {
@@ -701,12 +728,12 @@
             sudokuCurrent[r][c] = correct;
             sudokuPlayerMap[r][c] = sudokuActivePlayer;
             sudokuNotesMap[r][c] = Array(10).fill(false);
-
             sudokuScores[sudokuActivePlayer] = Math.max(0, sudokuScores[sudokuActivePlayer] - 5);
+            
             showToast('💡 Dica usada. -5 pontos.', 'info');
             updateSudokuScoreboard();
-
             renderSudokuBoard();
+            syncRoomUpdate();
             checkSudokuWin();
         }
 
@@ -717,19 +744,15 @@
         }
 
         function checkSudokuWin() {
-            for(let r=0; r<9; r++) {
-                for(let c=0; c<9; c++) {
-                    if(sudokuCurrent[r][c] !== sudokuSolution[r][c]) return;
-                }
-            }
-            
+            for(let r=0; r<9; r++) { for(let c=0; c<9; c++) { if(sudokuCurrent[r][c] !== sudokuSolution[r][c]) return; } }
             sudokuScores[sudokuActivePlayer] += 100;
             updateSudokuScoreboard();
+            syncRoomUpdate();
             saveSudokuMatch();
             
-            showToast(`🎉 TABULEIRO RESOLVIDO! Pontos salvos no histórico.`, 'success');
-            
+            showToast(`🎉 TABULEIRO RESOLVIDO! Bônus +100!`, 'success');
             setTimeout(() => {
+                if(realtimeChannel) _supabase.removeChannel(realtimeChannel);
                 document.getElementById('sudoku-game').style.display = 'none';
                 document.getElementById('sudoku-menu').style.display = 'flex';
                 renderSudokuTop3();
@@ -738,24 +761,10 @@
 
         function saveSudokuMatch() {
             let history = JSON.parse(localStorage.getItem('sudoku_history_v1') || '[]');
+            let finalScore = isOnlineGame ? (sudokuScores.LÉO + sudokuScores.EME) : sudokuScores[sudokuActivePlayer];
+            let finalPlayerName = isOnlineGame ? "Equipe Online" : sudokuActivePlayer;
             
-            let finalScore = 0;
-            let finalPlayerName = "";
-            
-            if (sudokuMenuMode === 'DUO') {
-                finalScore = sudokuScores.LÉO + sudokuScores.EME;
-                finalPlayerName = "Os Dois 👩🏻‍❤️‍👨🏻";
-            } else {
-                finalScore = sudokuScores[sudokuMenuMode];
-                finalPlayerName = sudokuMenuMode;
-            }
-
-            history.push({
-                player: finalPlayerName,
-                score: finalScore,
-                diff: sudokuMenuDiff.charAt(0).toUpperCase() + sudokuMenuDiff.slice(1)
-            });
-
+            history.push({ player: finalPlayerName, score: finalScore, diff: "Completado" });
             localStorage.setItem('sudoku_history_v1', JSON.stringify(history));
         }
 
